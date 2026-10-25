@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>لوحة طابعتي</title>
+<script>
+// الوضع الليلي افتراضيًا، ويتذكر اختيارك
+(function(){var t="dark";try{t=localStorage.getItem("tabaety.theme")||"dark"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14181B; --ink-2:#5E6A73; --ink-3:#8A959C; --line:#DCE2E5; --line-2:#EBEFF1; --ground:#F4F6F6; --card:#FFFFFF;
+  --accent:#0A6B74; --accent-ink:#084F56; --accent-tint:#E1F0F1;
+  --ok:#1D7F48; --ok-tint:#E3F3E9; --warn:#8A5A0B; --warn-tint:#FBF0DC; --bad:#B83A26; --bad-tint:#FBE7E3; --mute-tint:#EEF1F2;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --on-accent:#FFFFFF; --hover-row:#FAFBFB; --danger-line:#EBC3BB; --bar-warn:#D99A2B; --toast:#14181B; --toast-ink:#FFFFFF; --logo:#14181B;
+  color-scheme:light;
+}
+/* الوضع الليلي (الافتراضي). يتبدّل من زر القمر/الشمس */
+:root[data-theme="dark"]{
+  --ink:#E6ECEE; --ink-2:#9AA6AD; --ink-3:#6E7A82; --line:#28323A; --line-2:#1F272D; --ground:#0D1114; --card:#151B1F;
+  --accent:#3BB0BB; --accent-ink:#5BC6D0; --accent-tint:#12313A;
+  --ok:#4CC183; --ok-tint:#12291E; --warn:#E0A84A; --warn-tint:#2C2312; --bad:#EF7A63; --bad-tint:#33190F; --mute-tint:#1D252A;
+  --on-accent:#06191C; --hover-row:#1A2227; --danger-line:#5A2A20; --bar-warn:#E0A84A; --toast:#E6ECEE; --toast-ink:#0D1114; --logo:#2A3A40;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:14px}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+.mono{font-family:var(--mono)} .ltr{direction:ltr;unicode-bidi:isolate}
+.muted{color:var(--ink-2)} .small{font-size:12px}
+
+/* تسجيل الدخول */
+.login{min-height:100dvh;display:grid;place-items:center;padding:16px}
+.login form{width:min(380px,100%);background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;display:flex;flex-direction:column;gap:14px}
+.login h1{margin:0;font-size:22px}
+
+/* الهيكل */
+.shell{display:grid;grid-template-columns:232px 1fr;min-height:100dvh}
+aside.nav{background:var(--card);border-left:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100dvh;align-self:start}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--logo);color:#fff;display:grid;place-items:center}
+.brand b{font-size:16px;display:block} .brand small{font-size:11px;color:var(--ink-2)}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 12px;border:0;border-radius:10px;background:transparent;text-align:right;font-weight:500;color:var(--ink-2)}
+.nav button:hover{background:var(--ground);color:var(--ink)}
+.nav button[aria-current="page"]{background:var(--accent-tint);color:var(--accent);font-weight:600}
+.nav .count{margin-inline-start:auto;font:600 11px var(--mono);background:var(--bad);color:#fff;border-radius:99px;padding:2px 7px}
+.nav .foot{margin-top:auto;padding:10px 8px 0;border-top:1px solid var(--line-2);display:flex;flex-direction:column;gap:8px}
+.live-dot{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2)}
+.live-dot i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.live-dot.off i{background:var(--bad)}
+main.page{padding:22px 26px 60px;min-width:0}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.head h1{margin:0;font-size:22px} .head p{margin:4px 0 0;color:var(--ink-2)}
+.tabs-m{display:none} .theme-m{display:none!important}
+
+/* عناصر عامة */
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(3,minmax(0,1fr))} .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.kpi span{font-size:12px;color:var(--ink-2);display:block} .kpi b{font:600 26px var(--mono);display:block;margin-top:4px} .kpi small{font-size:12px;color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:600;white-space:nowrap}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)} .btn.primary:hover{background:var(--accent-ink)}
+.btn.danger{color:var(--bad);border-color:var(--danger-line)} .btn.danger:hover{background:var(--bad-tint)}
+.btn.sm{min-height:32px;padding:0 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 9px;white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.ok{color:var(--ok);background:var(--ok-tint)} .warn{color:var(--warn);background:var(--warn-tint)} .bad{color:var(--bad);background:var(--bad-tint)} .mute{color:var(--ink-2);background:var(--mute-tint)} .info{color:var(--accent);background:var(--accent-tint)}
+.bar{height:8px;border-radius:4px;background:var(--line-2);overflow:hidden} .bar div{height:100%;border-radius:4px;background:var(--accent)}
+.bar.warn div{background:var(--bar-warn)} .bar.bad div{background:var(--bad)}
+.alert{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px}
+.alert b{font-weight:600}
+.alert .btn{margin-inline-start:auto}
+table{width:100%;border-collapse:collapse}
+th{font-size:12px;color:var(--ink-2);font-weight:500;text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--hover-row)}
+.table-wrap{overflow-x:auto}
+.empty{padding:28px;text-align:center;color:var(--ink-2)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input.f,select.f,textarea.f{min-height:38px;border:1px solid var(--line);border-radius:10px;padding:0 10px;background:var(--card)}
+textarea.f{padding:8px 10px;min-height:70px;resize:vertical}
+.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.form label{display:flex;flex-direction:column;gap:5px;font-size:13px;font-weight:500}
+.form label small{font-weight:400;color:var(--ink-2);font-size:12px}
+.form .full{grid-column:1/-1}
+.form .check{flex-direction:row;align-items:center;gap:8px}
+.form h3{grid-column:1/-1;margin:8px 0 0;font-size:13px;color:var(--ink-2);font-weight:600;border-top:1px solid var(--line-2);padding-top:12px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* بطاقة الطابعة */
+.pcard{display:flex;flex-direction:column;gap:12px;cursor:pointer}
+.pcard:hover{border-color:var(--ink-3)}
+.pcard .top{display:flex;align-items:center;gap:10px}
+.code{font:600 18px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:9px;padding:4px 9px;direction:ltr}
+.pcard .loc{flex:1;min-width:0} .pcard .loc b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .pcard .loc span{font-size:12px;color:var(--ink-2)}
+.meter{display:flex;flex-direction:column;gap:5px} .meter .row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2)} .meter .row b{color:var(--ink);font-family:var(--mono)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+
+/* الدرج الجانبي */
+.drawer-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
+.drawer{position:fixed;top:0;bottom:0;left:0;width:min(760px,100%);background:var(--ground);z-index:41;overflow-y:auto;box-shadow:20px 0 60px rgba(0,0,0,.15)}
+.drawer .dh{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:10px}
+.drawer .dh h2{margin:0;font-size:18px;flex:1;min-width:0}
+.drawer .db{padding:16px 18px 40px;display:flex;flex-direction:column;gap:14px}
+.subtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);background:var(--card);padding:0 18px;position:sticky;top:63px;z-index:1;overflow-x:auto}
+.subtabs button{border:0;background:transparent;padding:12px 12px;font-weight:600;color:var(--ink-2);border-bottom:2px solid transparent;white-space:nowrap}
+.subtabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px} .kv dt{color:var(--ink-2)} .kv dd{margin:0}
+.sensors{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.sensor{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px} .sensor span{font-size:11px;color:var(--ink-2);display:block} .sensor b{font:600 18px var(--mono)}
+.timeline{display:flex;flex-direction:column;gap:0;border-inline-start:2px solid var(--line);margin-inline-start:6px;padding-inline-start:14px}
+.timeline div{position:relative;padding:4px 0 10px;font-size:13px}
+.timeline div::before{content:"";position:absolute;inset-inline-start:-20px;top:9px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.timeline div.off::before{background:var(--line)}
+.qr{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;display:inline-block}
+.qr svg{display:block;width:150px;height:150px}
+.pairbox{font:600 32px var(--mono);letter-spacing:6px;background:var(--accent-tint);color:var(--accent);border-radius:12px;padding:12px 18px;text-align:center;direction:ltr}
+.chart{display:flex;align-items:flex-end;gap:4px;height:140px;padding-top:10px}
+.chart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.chart .col div{width:100%;max-width:26px;background:var(--accent);border-radius:4px 4px 0 0;min-height:2px}
+.chart .col span{font-size:10px;color:var(--ink-3);font-family:var(--mono)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--toast);color:var(--toast-ink);padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90vw}
+.toast.err{background:var(--bad)}
+dialog{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:20px;width:min(92vw,420px);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(20,24,27,.45)}
+dialog h3{margin:0 0 8px;font-size:17px} dialog p{margin:0 0 14px;color:var(--ink-2);line-height:1.6}
+dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
+.demo-banner{background:var(--warn-tint);color:var(--warn);padding:8px 14px;font-size:13px;text-align:center}
+
+@media (max-width:960px){
+  .shell{grid-template-columns:1fr}
+  aside.nav{display:none}
+  .theme-m{position:fixed;left:12px;bottom:12px;z-index:30;display:inline-flex!important}
+  .tabs-m{display:flex;gap:4px;overflow-x:auto;background:var(--card);border-bottom:1px solid var(--line);padding:8px 10px;position:sticky;top:0;z-index:20}
+  .tabs-m button{border:0;background:transparent;padding:8px 12px;border-radius:9px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+  .tabs-m button[aria-current="page"]{background:var(--accent-tint);color:var(--accent)}
+  main.page{padding:16px 14px 60px}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))} .g3,.g2{grid-template-columns:1fr}
+  .form{grid-template-columns:1fr}
+  .sensors{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+<div id="demoBanner" class="demo-banner" hidden>وضع العرض: بيانات تجريبية، وما فيه أي اتصال بقاعدة البيانات.</div>
+
+<section class="login" id="login" hidden>
+  <form id="loginForm">
+    <div class="brand" style="padding:0"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span><span><b>لوحة طابعتي</b><small>للمدراء فقط</small></span></div>
+    <h1>تسجيل الدخول</h1>
+    <label class="form" style="display:flex;flex-direction:column;gap:5px;font-weight:500">الإيميل<input class="f" id="email" type="email" autocomplete="username" required dir="ltr"></label>
+    <label class="form" style="display:flex;flex-direction:column;gap:5px;font-weight:500">كلمة المرور<input class="f" id="pass" type="password" autocomplete="current-password" required dir="ltr"></label>
+    <div id="loginErr" class="alert bad" hidden></div>
+    <button class="btn primary" id="loginBtn" style="min-height:44px">دخول</button>
+    <a class="small" href="?demo=1">تجربة اللوحة ببيانات وهمية</a>
+  </form>
+</section>
+
+<div class="shell" id="shell" hidden>
+  <aside class="nav" aria-label="القائمة">
+    <div class="brand"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span><span><b>لوحة طابعتي</b><small id="who"></small></span></div>
+    <div id="navBtns"></div>
+    <div class="foot">
+      <span class="live-dot" id="liveDot"><i></i><span>تحديث لحظي</span></span>
+      <button class="btn sm" data-theme-toggle>الوضع النهاري</button>
+      <button class="btn sm" id="logoutBtn">تسجيل خروج</button>
+    </div>
+  </aside>
+  <div style="min-width:0">
+    <nav class="tabs-m" id="tabsM" aria-label="القائمة"></nav>
+    <button class="btn sm theme-m" data-theme-toggle aria-label="تبديل الوضع الليلي">◐</button>
+    <main class="page" id="page"></main>
+  </div>
+</div>
+
+<div id="drawerRoot"></div>
+<dialog id="dlg"><h3 id="dlgT"></h3><div id="dlgB"></div><div class="acts"><button class="btn primary" id="dlgOk"></button><button class="btn" id="dlgNo">إلغاء</button></div></dialog>
+
+<script>
+"use strict";
+const CONFIG = {
+  url: "https://dloicztspjligjjowhps.supabase.co",
+  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTAXpb4whQ6h_NZwpe0bD43Ucye9M",
+  customerUrl: "https://www.tabaety.com/p/",
+};
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = (n) => Number(n || 0).toFixed(2);
+const ref = (id) => String(id || "").replace(/-/g, "").slice(0, 6).toUpperCase();
+const fmtTime = (t) => t ? new Date(t).toLocaleString("ar-u-ca-gregory-nu-latn", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "—";
+const ago = (t) => {
+  if (!t) return "أبدًا";
+  const s = Math.round((Date.now() - Date.parse(t)) / 1000);
+  if (s < 60) return "الحين"; if (s < 3600) return `قبل ${Math.round(s / 60)} د`;
+  if (s < 86400) return `قبل ${Math.round(s / 3600)} س`; return `قبل ${Math.round(s / 86400)} يوم`;
+};
+const dayKey = (t) => new Date(t).toLocaleDateString("en-CA", { timeZone: "Asia/Riyadh" });
+
+/* ================= طبقة البيانات (حقيقية أو تجريبية) ================= */
+const S = { db: null, demo: false, user: null, tab: "overview", kiosks: [], orders: [], payments: [], commands: [], settings: {},
+  drawer: null, filters: { kiosk: "", status: "", source: "", q: "", days: "7" }, live: false };
+
+const ORDER_COLS = "id,kiosk_id,source,payment_status,print_status,total_pages,copies,duplex,sheets_needed,total_amount,price_per_page,created_at,quoted_at,paid_at,released_at,printed_at,cancelled_at,error_message,refund_status,refund_note,original_name,file_kind,print_attempts,file_deleted_at";
+
+function realDb(sb) {
+  const q = async (p) => { const { data, error } = await p; if (error) throw error; return data; };
+  return {
+    kiosks: () => q(sb.from("kiosks").select("*").order("kiosk_id")),
+    orders: (sinceIso) => q(sb.from("orders").select(ORDER_COLS).gte("created_at", sinceIso).order("created_at", { ascending: false }).limit(2000)),
+    payments: (sinceIso) => q(sb.from("payments").select("*").gte("created_at", sinceIso).order("created_at", { ascending: false }).limit(2000)),
+    commands: () => q(sb.from("kiosk_commands").select("*").order("id", { ascending: false }).limit(100)),
+    events: (kid) => q(sb.from("kiosk_supply_events").select("*").eq("kiosk_id", kid).order("id", { ascending: false }).limit(60)),
+    settings: async () => Object.fromEntries((await q(sb.from("app_settings").select("key,value"))).map((r) => [r.key, r.value])),
+    sendCommand: (kid, command) => q(sb.from("kiosk_commands").insert({ kiosk_id: kid, command, created_by: S.user?.id })),
+    rpc: async (fn, args) => { const { data, error } = await sb.rpc(fn, args); if (error) throw error; return data; },
+  };
+}
+
+/* ================= أدوات الواجهة ================= */
+function toast(msg, err = false) {
+  const t = document.createElement("div"); t.className = "toast" + (err ? " err" : ""); t.textContent = msg; t.setAttribute("role", "status");
+  document.body.appendChild(t); setTimeout(() => t.remove(), err ? 6000 : 3000);
+}
+const ERRS = {
+  forbidden: "ما عندك صلاحية.", invalid_kiosk_id: "رقم الطابعة لازم يكون حروف إنجليزية أو أرقام (حتى 20)، بدون مسافات.",
+  location_required: "اكتب مكان الطابعة.", has_active_orders: "الطابعة عليها طلبات مدفوعة ما انطبعت. خلّصها أو ألغها أول.",
+  invalid_amount: "الرقم غير صحيح.", kiosk_not_found: "الطابعة غير موجودة.", cannot_cancel: "ما يمكن إلغاء طلب انطبع أو يطبع الحين.",
+  invalid_count: "العدد لازم يكون بين 1 و50.", try_again: "جرّب مرة ثانية.",
+};
+function errMsg(e) { const m = String(e?.message || e); for (const k in ERRS) if (m.includes(k)) return ERRS[k]; return "صار خطأ: " + m; }
+async function act(fn, okMsg) {
+  try { const r = await fn(); if (okMsg) toast(okMsg); await reload(); return r; }
+  catch (e) { toast(errMsg(e), true); throw e; }
+}
+function ask({ title, body = "", ok = "تأكيد", danger = false, form = null }) {
+  return new Promise((resolve) => {
+    const d = $("#dlg"); $("#dlgT").textContent = title; $("#dlgB").innerHTML = body;
+    const b = $("#dlgOk"); b.textContent = ok; b.className = "btn " + (danger ? "danger" : "primary");
+    const done = (v) => { d.close(); resolve(v); };
+    b.onclick = () => {
+      if (form) { const f = $("#dlgB form"); if (f && !f.reportValidity()) return; done(form(d)); } else done(true);
+    };
+    $("#dlgNo").onclick = () => done(null); d.oncancel = () => resolve(null);
+    d.showModal(); setTimeout(() => $("#dlgB input")?.focus(), 30);
+  });
+}
+
+/* ================= حالات الطابعة والطلب ================= */
+function kioskStatus(k) {
+  if (k.archived_at) return ["mute", "مؤرشفة", "archived"];
+  if (!k.is_enabled) return ["mute", "موقوفة من اللوحة", "disabled"];
+  if (!k.agent_token_hash && !k.device_id) return ["mute", "غير مربوطة", "unpaired"];
+  if (!k.last_ping || Date.now() - Date.parse(k.last_ping) > 180000) return ["bad", "غير متصلة", "offline"];
+  if (k.agent_paused) return ["warn", "متوقفة مؤقتًا", "paused"];
+  const ps = k.printer_state || {};
+  if (ps.can_print === false || ps.ok === false) return ["bad", "عطل في الطابعة", "printer_error"];
+  if ((k.ink_level_percent ?? 0) < k.ink_min_percent) return ["warn", "الحبر منخفض", "low_ink"];
+  if (paperAvail(k) <= 0) return ["bad", "الورق خلص", "no_paper"];
+  if (k.current_paper_count <= k.low_paper_alert) return ["warn", "الورق قليل", "low_paper"];
+  return ["ok", "جاهزة", "ok"];
+}
+const paperAvail = (k) => Math.max(0, (k.current_paper_count || 0) - (k.paper_reserved || 0) - (k.paper_safety_margin || 0));
+function orderStatus(o) {
+  if (o.refund_status === "needs_refund") return ["bad", "يحتاج استرجاع"];
+  if (o.refund_status === "refunded") return ["mute", "مسترجع"];
+  if (o.payment_status === "expired") return ["mute", "انتهى بدون دفع"];
+  if (o.payment_status === "cancelled" || o.print_status === "cancelled") return ["mute", "ملغي"];
+  if (o.print_status === "printed") return /^وضع التجربة/.test(o.error_message || "") ? ["info", "تم (تجربة)"] : ["ok", "تمت الطباعة"];
+  if (o.print_status === "failed") return ["bad", "فشل"];
+  if (o.print_status === "retryable_failed") return ["warn", "إعادة محاولة"];
+  if (o.print_status === "printing") return ["info", "يطبع"];
+  if (o.payment_status === "paid" && o.print_status === "queued") return o.source === "web" && !o.released_at ? ["warn", "ينتظر العميل"] : ["info", "في الطابور"];
+  if (o.print_status === "awaiting_release") return ["warn", "مدفوع، ينتظر العميل"];
+  if (o.print_status === "quoted" || o.payment_status === "pending") return ["mute", o.print_status === "awaiting_file" ? "يرفع الملف" : o.print_status === "awaiting_quote" ? "يختار الخيارات" : "بانتظار الدفع"];
+  return ["mute", o.print_status || "—"];
+}
+const SOURCE = { web: "الموقع", whatsapp: "واتساب", test: "تجربة" };
+const pill = ([cls, label]) => `<span class="pill ${cls}"><i></i>${esc(label)}</span>`;
+const isRevenue = (o) => o.payment_status === "paid" && o.source !== "test" && o.refund_status !== "refunded";
+const customerLink = (kid) => `${CONFIG.customerUrl}?k=${encodeURIComponent(kid)}`;
+
+function qrSvg(text, size = 150) {
+  if (!window.qrcode) return `<div class="small muted">ما قدرنا نحمّل مولّد الباركود</div>`;
+  const qr = qrcode(0, "M"); qr.addData(text); qr.make();
+  return qr.createSvgTag({ cellSize: 4, margin: 2, scalable: true }).replace("<svg ", `<svg role="img" aria-label="باركود صفحة الطباعة" width="${size}" height="${size}" `);
+}
+
+/* ================= التحميل والتحديث اللحظي ================= */
+async function reload() {
+  const days = Math.max(31, Number(S.filters.days) || 7);
+  const since = new Date(Date.now() - days * 86400000).toISOString();
+  const [kiosks, orders, payments, commands, settings] = await Promise.all([
+    S.db.kiosks(), S.db.orders(since), S.db.payments(since), S.db.commands(), S.db.settings()]);
+  Object.assign(S, { kiosks, orders, payments, commands, settings });
+  render();
+}
+let reloadTimer = null;
+const softReload = () => { clearTimeout(reloadTimer); reloadTimer = setTimeout(() => reload().catch(() => {}), 400); };
+
+/* ================= الصفحات ================= */
+const TABS = [
+  ["overview", "نظرة عامة", '<path d="M3 12l9-8 9 8"/><path d="M5 10v10h14V10"/>'],
+  ["printers", "الطابعات", '<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/>'],
+  ["orders", "الطلبات", '<path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/>'],
+  ["money", "المال والاسترجاع", '<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="2.5"/>'],
+  ["settings", "الإعدادات", '<circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L14 3h-4l-.5 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6A7 7 0 0 0 5 12c0 .4 0 .8.1 1.2l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L10 21h4l.5-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2z"/>'],
+];
+function renderNav() {
+  const refunds = S.orders.filter((o) => o.refund_status === "needs_refund").length;
+  const problems = S.kiosks.filter((k) => !k.archived_at && ["bad"].includes(kioskStatus(k)[0])).length;
+  const badge = { money: refunds, printers: problems };
+  $("#navBtns").innerHTML = TABS.map(([id, label, ic]) => `<button data-tab="${id}" ${S.tab === id ? 'aria-current="page"' : ""}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">${ic}</svg>${label}${badge[id] ? `<span class="count">${badge[id]}</span>` : ""}</button>`).join("");
+  $("#tabsM").innerHTML = TABS.map(([id, label]) => `<button data-tab="${id}" ${S.tab === id ? 'aria-current="page"' : ""}>${label}${badge[id] ? ` (${badge[id]})` : ""}</button>`).join("");
+  $$("[data-tab]").forEach((b) => b.onclick = () => { S.tab = b.dataset.tab; try { localStorage.setItem("tabaety.tab", S.tab); } catch { } render(); window.scrollTo(0, 0); });
+}
+function render() {
+  renderNav();
+  $("#page").innerHTML = PAGES[S.tab]();
+  PAGES_AFTER[S.tab]?.();
+  if (S.drawer) renderDrawer();
+}
+
+const PAGES = {}, PAGES_AFTER = {};
+
+/* ---------- نظرة عامة ---------- */
+PAGES.overview = () => {
+  const today = dayKey(Date.now());
+  const tOrders = S.orders.filter((o) => dayKey(o.created_at) === today && o.source !== "test");
+  const tPaid = tOrders.filter(isRevenue);
+  const tPages = S.orders.filter((o) => o.printed_at && dayKey(o.printed_at) === today && o.source !== "test").reduce((s, o) => s + o.total_pages * (o.copies || 1), 0);
+  const refunds = S.orders.filter((o) => o.refund_status === "needs_refund");
+  const active = S.kiosks.filter((k) => !k.archived_at);
+  const alerts = [];
+  for (const k of active) {
+    const [cls, label, code] = kioskStatus(k);
+    if (cls !== "ok" && code !== "disabled" && code !== "unpaired") alerts.push({ cls, html: `<b>طابعة ${esc(k.kiosk_id)}</b> — ${esc(label)}${code === "offline" ? ` (آخر اتصال ${ago(k.last_ping)})` : ""}`, kid: k.kiosk_id });
+  }
+  if (refunds.length) alerts.unshift({ cls: "bad", html: `<b>${refunds.length} طلب يحتاج استرجاع</b> — العملاء دفعوا وما انطبع`, tab: "money" });
+  const waiting = S.orders.filter((o) => o.print_status === "awaiting_release" && o.payment_status === "paid");
+  if (waiting.length) alerts.push({ cls: "info", html: `<b>${waiting.length} عميل دفع</b> وما ضغط «اطبع الآن» للحين`, tab: "orders" });
+  // آخر 14 يوم
+  const days = [...Array(14)].map((_, i) => dayKey(Date.now() - (13 - i) * 86400000));
+  const rev = days.map((d) => S.orders.filter((o) => isRevenue(o) && dayKey(o.paid_at || o.created_at) === d).reduce((s, o) => s + Number(o.total_amount || 0), 0));
+  const maxRev = Math.max(1, ...rev);
+  const recent = S.orders.filter((o) => o.source !== "test").slice(0, 8);
+  return `
+  <div class="head"><div><h1>نظرة عامة</h1><p>${new Date().toLocaleDateString("ar-u-ca-gregory-nu-latn", { weekday: "long", day: "numeric", month: "long" })}</p></div>
+    <div class="toolbar"><button class="btn" data-go="printers">+ طابعة جديدة</button></div></div>
+  <div class="grid g4">
+    <div class="card kpi"><span>طلبات اليوم</span><b>${tOrders.length}</b><small>${tPaid.length} مدفوع</small></div>
+    <div class="card kpi"><span>صفحات مطبوعة اليوم</span><b>${tPages}</b><small>بدون طلبات التجربة</small></div>
+    <div class="card kpi"><span>إيراد اليوم</span><b>${money(tPaid.reduce((s, o) => s + Number(o.total_amount || 0), 0))}</b><small>ريال</small></div>
+    <div class="card kpi"><span>الطابعات الجاهزة</span><b>${active.filter((k) => kioskStatus(k)[0] === "ok").length}</b><small>من ${active.length} طابعة</small></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card"><h2>تنبيهات</h2>
+      ${alerts.length ? `<div class="grid" style="gap:8px">${alerts.map((a) => `<div class="alert ${a.cls}"><span>${a.html}</span>${a.kid ? `<button class="btn sm" data-kiosk="${esc(a.kid)}">فتح</button>` : a.tab ? `<button class="btn sm" data-go="${a.tab}">عرض</button>` : ""}</div>`).join("")}</div>`
+        : `<div class="alert ok"><span>كل شي تمام. ما فيه تنبيهات.</span></div>`}
+    </div>
+    <div class="card"><h2>الإيراد — آخر 14 يوم <span class="muted small" style="font-weight:400">(ريال)</span></h2>
+      <div class="chart" role="img" aria-label="الإيراد اليومي لآخر 14 يوم">${rev.map((v, i) => `<div class="col" title="${days[i]}: ${money(v)} ر.س"><div style="height:${Math.round(v / maxRev * 110)}px;${v ? "" : "background:var(--line)"}"></div><span>${days[i].slice(8)}</span></div>`).join("")}</div>
+      <div class="small muted" style="margin-top:8px">المجموع: <b class="mono" style="color:var(--ink)">${money(rev.reduce((a, b) => a + b, 0))}</b> ريال</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>الطابعات</h2>
+    ${active.length ? `<div class="grid g3">${active.map(printerCard).join("")}</div>` : `<div class="empty">ما فيه طابعات. <button class="btn sm primary" data-new-kiosk>أضف أول طابعة</button></div>`}
+  </div>
+  <div class="card" style="margin-top:14px"><h2>آخر الطلبات</h2>${ordersTable(recent, true)}</div>`;
+};
+
+function printerCard(k) {
+  const st = kioskStatus(k);
+  const cap = Math.max(1, k.paper_capacity || 1);
+  const pPct = Math.round(100 * (k.current_paper_count || 0) / cap);
+  const ink = k.ink_level_percent ?? 0;
+  return `<div class="card pcard" data-kiosk="${esc(k.kiosk_id)}" tabindex="0" role="button" aria-label="فتح طابعة ${esc(k.kiosk_id)}">
+    <div class="top"><span class="code">${esc(k.kiosk_id)}</span><div class="loc"><b>${esc(k.location_name)}</b><span>${esc(k.model || "—")} · ${money(k.price_per_page)} ر.س/ص</span></div></div>
+    <div class="tags">${pill(st)}${k.agent_dry_run ? pill(["info", "وضع التجربة"]) : ""}${k.agent_paused && st[2] !== "paused" ? pill(["warn", "متوقف"]) : ""}</div>
+    <div class="meter"><div class="row"><span>الورق</span><b>${k.current_paper_count ?? 0} / ${k.paper_capacity}</b></div><div class="bar ${pPct < 15 ? "bad" : pPct < 30 ? "warn" : ""}"><div style="width:${Math.min(100, pPct)}%"></div></div></div>
+    <div class="meter"><div class="row"><span>الحبر ${k.ink_source === "printer" ? "(من الطابعة)" : k.ink_source === "manual" ? "(يدوي)" : "(تقديري)"}</span><b>${ink}%</b></div><div class="bar ${ink < k.ink_min_percent ? "bad" : ink < 30 ? "warn" : ""}"><div style="width:${ink}%"></div></div></div>
+    <div class="small muted">آخر اتصال: ${ago(k.last_ping)}</div>
+  </div>`;
+}
+
+function ordersTable(list, compact = false) {
+  if (!list.length) return `<div class="empty">ما فيه طلبات.</div>`;
+  return `<div class="table-wrap"><table><thead><tr><th>الطلب</th><th>الطابعة</th>${compact ? "" : "<th>المصدر</th><th>الملف</th>"}<th>صفحات</th><th>المبلغ</th><th>الحالة</th><th>الوقت</th></tr></thead><tbody>
+  ${list.map((o) => `<tr class="click" data-order="${o.id}"><td class="mono ltr">#${ref(o.id)}</td><td class="mono">${esc(o.kiosk_id)}</td>${compact ? "" : `<td>${SOURCE[o.source] || o.source}</td><td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;unicode-bidi:plaintext">${esc(o.original_name || "—")}</td>`}
+    <td class="mono">${o.total_pages || 0}×${o.copies || 1}${o.duplex ? " ⇆" : ""}</td><td class="mono">${money(o.total_amount)}</td><td>${pill(orderStatus(o))}</td><td class="small muted">${fmtTime(o.created_at)}</td></tr>`).join("")}
+  </tbody></table></div>`;
+}
+
+/* ---------- الطابعات ---------- */
+PAGES.printers = () => {
+  const active = S.kiosks.filter((k) => !k.archived_at), archived = S.kiosks.filter((k) => k.archived_at);
+  return `
+  <div class="head"><div><h1>الطابعات</h1><p>${active.length} طابعة. اضغط على أي طابعة لإعداداتها والربط والباركود والأوامر.</p></div>
+    <div class="toolbar"><button class="btn primary" data-new-kiosk>+ إضافة طابعة</button></div></div>
+  ${active.length ? `<div class="grid g3">${active.map(printerCard).join("")}</div>` : `<div class="card empty">ما فيه طابعات للحين. <button class="btn sm primary" data-new-kiosk>أضف أول طابعة</button></div>`}
+  ${archived.length ? `<div class="card" style="margin-top:14px"><h2>طابعات مؤرشفة</h2><div class="table-wrap"><table><thead><tr><th>الرقم</th><th>المكان</th><th>أُرشفت</th><th></th></tr></thead><tbody>
+    ${archived.map((k) => `<tr><td class="mono">${esc(k.kiosk_id)}</td><td>${esc(k.location_name)}</td><td class="small muted">${fmtTime(k.archived_at)}</td><td><button class="btn sm" data-restore="${esc(k.kiosk_id)}">استرجاع</button></td></tr>`).join("")}</tbody></table></div></div>` : ""}`;
+};
+PAGES_AFTER.printers = () => {
+  $$("[data-restore]").forEach((b) => b.onclick = () => act(() => S.db.rpc("admin_restore_kiosk", { p_kiosk: b.dataset.restore }), "رجعت الطابعة (موقوفة، فعّلها من صفحتها)"));
+};
+
+/* ---------- الطلبات ---------- */
+function filteredOrders() {
+  const f = S.filters, since = Date.now() - Number(f.days) * 86400000, q = f.q.trim().toUpperCase().replace(/^#/, "");
+  return S.orders.filter((o) => Date.parse(o.created_at) >= since
+    && (!f.kiosk || o.kiosk_id === f.kiosk) && (!f.source || o.source === f.source)
+    && (!f.status || orderStatus(o)[1] === f.status)
+    && (!q || ref(o.id).startsWith(q) || (o.original_name || "").toUpperCase().includes(q)));
+}
+PAGES.orders = () => {
+  const list = filteredOrders();
+  const statuses = [...new Set(S.orders.map((o) => orderStatus(o)[1]))];
+  const f = S.filters;
+  return `
+  <div class="head"><div><h1>الطلبات</h1><p>${list.length} طلب في الفترة المختارة.</p></div>
+    <div class="toolbar"><button class="btn" id="csvBtn">تصدير CSV</button></div></div>
+  <div class="filters">
+    <input class="f" id="fq" placeholder="رقم الطلب أو اسم الملف" value="${esc(f.q)}" aria-label="بحث">
+    <select class="f" id="fk" aria-label="الطابعة"><option value="">كل الطابعات</option>${S.kiosks.map((k) => `<option ${f.kiosk === k.kiosk_id ? "selected" : ""}>${esc(k.kiosk_id)}</option>`).join("")}</select>
+    <select class="f" id="fs" aria-label="الحالة"><option value="">كل الحالات</option>${statuses.map((s) => `<option ${f.status === s ? "selected" : ""}>${esc(s)}</option>`).join("")}</select>
+    <select class="f" id="fo" aria-label="المصدر"><option value="">كل المصادر</option>${Object.entries(SOURCE).map(([k, v]) => `<option value="${k}" ${f.source === k ? "selected" : ""}>${v}</option>`).join("")}</select>
+    <select class="f" id="fd" aria-label="الفترة">${[["1", "اليوم وأمس"], ["7", "آخر 7 أيام"], ["30", "آخر 30 يوم"]].map(([v, l]) => `<option value="${v}" ${f.days === v ? "selected" : ""}>${l}</option>`).join("")}</select>
+  </div>
+  <div class="card" style="padding:4px 6px">${ordersTable(list)}</div>`;
+};
+PAGES_AFTER.orders = () => {
+  const bind = (id, key) => { const el = $(id); el.oninput = el.onchange = () => { S.filters[key] = el.value; const pos = el.selectionStart; render(); const n = $(id); n.focus(); if (pos != null && n.setSelectionRange) n.setSelectionRange(pos, pos); }; };
+  bind("#fq", "q"); bind("#fk", "kiosk"); bind("#fs", "status"); bind("#fo", "source"); bind("#fd", "days");
+  $("#csvBtn").onclick = () => {
+    const rows = [["ref", "id", "kiosk", "source", "file", "pages", "copies", "duplex", "sheets", "amount", "status", "refund", "created", "paid", "printed"]];
+    for (const o of filteredOrders()) rows.push([ref(o.id), o.id, o.kiosk_id, o.source, o.original_name || "", o.total_pages, o.copies, o.duplex, o.sheets_needed ?? "", o.total_amount, orderStatus(o)[1], o.refund_status || "", o.created_at, o.paid_at || "", o.printed_at || ""]);
+    const csv = "﻿" + rows.map((r) => r.map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`).join(",")).join("\n");
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" })); a.download = `tabaety-orders-${dayKey(Date.now())}.csv`; a.click();
+  };
+};
+
+/* ---------- المال ---------- */
+PAGES.money = () => {
+  const refunds = S.orders.filter((o) => o.refund_status === "needs_refund");
+  const since30 = Date.now() - 30 * 86400000;
+  const paid30 = S.orders.filter((o) => isRevenue(o) && Date.parse(o.paid_at || o.created_at) >= since30);
+  const byKiosk = {};
+  for (const o of paid30) { const b = byKiosk[o.kiosk_id] ||= { n: 0, amt: 0, pages: 0 }; b.n++; b.amt += Number(o.total_amount || 0); b.pages += (o.total_pages || 0) * (o.copies || 1); }
+  const refunded = S.orders.filter((o) => o.refund_status === "refunded");
+  return `
+  <div class="head"><div><h1>المال والاسترجاع</h1><p>وضع الدفع الحالي: ${pill(S.settings.payment_mode === "live" ? ["ok", "حقيقي"] : S.settings.payment_mode === "off" ? ["bad", "موقوف"] : ["warn", "تجريبي"])}</p></div></div>
+  <div class="grid g3">
+    <div class="card kpi"><span>إيراد آخر 30 يوم</span><b>${money(paid30.reduce((s, o) => s + Number(o.total_amount || 0), 0))}</b><small>${paid30.length} طلب مدفوع</small></div>
+    <div class="card kpi"><span>بانتظار الاسترجاع</span><b style="color:${refunds.length ? "var(--bad)" : "inherit"}">${money(refunds.reduce((s, o) => s + Number(o.total_amount || 0), 0))}</b><small>${refunds.length} طلب</small></div>
+    <div class="card kpi"><span>تم استرجاعه</span><b>${money(refunded.reduce((s, o) => s + Number(o.total_amount || 0), 0))}</b><small>${refunded.length} طلب</small></div>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>يحتاج استرجاع</h2>
+    ${refunds.length ? `<div class="table-wrap"><table><thead><tr><th>الطلب</th><th>الطابعة</th><th>المبلغ</th><th>السبب</th><th>دفع</th><th></th></tr></thead><tbody>
+      ${refunds.map((o) => `<tr><td class="mono ltr"><a href="#" data-order="${o.id}">#${ref(o.id)}</a></td><td class="mono">${esc(o.kiosk_id)}</td><td class="mono">${money(o.total_amount)}</td><td class="small">${esc(o.error_message || "—")}</td><td class="small muted">${fmtTime(o.paid_at)}</td><td><button class="btn sm primary" data-refund="${o.id}">تم الاسترجاع</button></td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="alert ok"><span>ما فيه طلبات تحتاج استرجاع.</span></div>`}
+    <p class="small muted" style="margin:10px 0 0">الاسترجاع الحين يدوي: رجّع المبلغ من لوحة بوابة الدفع، بعدين اضغط «تم الاسترجاع» هنا.</p>
+  </div>
+  <div class="card" style="margin-top:14px"><h2>حسب الطابعة — آخر 30 يوم</h2>
+    ${Object.keys(byKiosk).length ? `<div class="table-wrap"><table><thead><tr><th>الطابعة</th><th>طلبات</th><th>صفحات</th><th>الإيراد</th><th>متوسط الطلب</th></tr></thead><tbody>
+      ${Object.entries(byKiosk).sort((a, b) => b[1].amt - a[1].amt).map(([k, b]) => `<tr><td class="mono">${esc(k)}</td><td class="mono">${b.n}</td><td class="mono">${b.pages}</td><td class="mono">${money(b.amt)}</td><td class="mono">${money(b.amt / b.n)}</td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="empty">ما فيه مبيعات في آخر 30 يوم.</div>`}
+  </div>
+  <div class="card" style="margin-top:14px"><h2>آخر عمليات الدفع</h2>
+    ${S.payments.length ? `<div class="table-wrap"><table><thead><tr><th>الطلب</th><th>المزوّد</th><th>المرجع</th><th>المبلغ</th><th>الحالة</th><th>الوقت</th></tr></thead><tbody>
+      ${S.payments.slice(0, 30).map((p) => `<tr><td class="mono ltr"><a href="#" data-order="${p.order_id}">#${ref(p.order_id)}</a></td><td>${p.provider === "mock" ? "تجريبي" : esc(p.provider)}</td><td class="mono small ltr">${esc(p.provider_ref || "—")}</td><td class="mono">${money(p.amount)}</td><td>${pill(p.status === "paid" ? ["ok", "مدفوع"] : p.status === "refunded" ? ["mute", "مسترجع"] : ["bad", "فشل"])}</td><td class="small muted">${fmtTime(p.created_at)}</td></tr>`).join("")}
+    </tbody></table></div>` : `<div class="empty">ما فيه عمليات دفع.</div>`}
+  </div>`;
+};
+PAGES_AFTER.money = () => {
+  $$("[data-refund]").forEach((b) => b.onclick = () => refundOrder(b.dataset.refund));
+};
+async function refundOrder(id) {
+  const note = await ask({ title: `تأكيد استرجاع #${ref(id)}`, ok: "تم الاسترجاع",
+    body: `<p>تأكد إنك رجّعت المبلغ للعميل من بوابة الدفع.</p><form class="form" style="grid-template-columns:1fr"><label>ملاحظة (اختياري)<input class="f" id="rnote" placeholder="مثلًا: رقم عملية الاسترجاع"></label></form>`,
+    form: () => $("#rnote").value });
+  if (note === null) return;
+  await act(() => S.db.rpc("admin_mark_refunded", { p_order: id, p_note: note }), "تم تسجيل الاسترجاع");
+}
+
+/* ---------- الإعدادات ---------- */
+PAGES.settings = () => {
+  const s = S.settings;
+  return `
+  <div class="head"><div><h1>الإعدادات</h1><p>إعدادات عامة لكل الطابعات وصفحة العميل.</p></div></div>
+  <div class="grid g2">
+    <div class="card"><h2>الدفع</h2>
+      <div class="grid" style="gap:8px">
+        ${[["mock", "تجريبي", "العميل يضغط «ادفع» ويعتبر مدفوع بدون خصم. للاختبار فقط."], ["live", "حقيقي", "عبر بوابة الدفع (غير مربوطة للحين)."], ["off", "موقوف", "ما أحد يقدر يدفع أو يطبع."]].map(([v, t, d]) => `
+        <label class="alert ${s.payment_mode === v ? "info" : ""}" style="border:1px solid var(--line);cursor:pointer"><input type="radio" name="pm" value="${v}" ${s.payment_mode === v ? "checked" : ""} ${v === "live" ? "disabled" : ""}><span><b>${t}</b><br><span class="small muted">${d}</span></span></label>`).join("")}
+      </div>
+    </div>
+    <div class="card"><h2>صفحة العميل</h2>
+      <form class="form" style="grid-template-columns:1fr" id="setForm">
+        <label>رقم واتساب الدعم <small>بالصيغة الدولية بدون + (مثل 9665xxxxxxxx)</small><input class="f ltr" id="sw" value="${esc(s.support_whatsapp || "")}" inputmode="numeric" pattern="[0-9]{8,15}"></label>
+        <label>إعلان أعلى الصفحة <small>يظهر لكل العملاء. اتركه فاضي لإخفائه.</small><textarea class="f" id="ann" maxlength="200">${esc(s.announcement || "")}</textarea></label>
+        <div><button class="btn primary">حفظ</button></div>
+      </form>
+    </div>
+    <div class="card"><h2>روابط</h2>
+      <dl class="kv"><dt>صفحة العميل</dt><dd><a class="ltr" href="${CONFIG.customerUrl}" target="_blank" rel="noopener">${CONFIG.customerUrl}</a></dd>
+      <dt>الموقع</dt><dd><a class="ltr" href="https://www.tabaety.com" target="_blank" rel="noopener">tabaety.com</a></dd></dl>
+    </div>
+    <div class="card"><h2>الحساب</h2>
+      <dl class="kv"><dt>الإيميل</dt><dd class="ltr">${esc(S.user?.email || "—")}</dd><dt>الصلاحية</dt><dd>مدير</dd></dl>
+      <p class="small muted" style="margin:10px 0 0">لإضافة مدير ثاني: أنشئ حسابه من Supabase ← Authentication، وأرسل الإيميل لمدير المشروع.</p>
+    </div>
+  </div>`;
+};
+PAGES_AFTER.settings = () => {
+  $$("input[name=pm]").forEach((r) => r.onchange = async () => {
+    const v = r.value;
+    if (v === "off" && !(await ask({ title: "إيقاف الدفع؟", body: "<p>ما أحد بيقدر يطبع لين ترجعه.</p>", ok: "إيقاف", danger: true }))) return render();
+    act(() => S.db.rpc("admin_set_setting", { p_key: "payment_mode", p_value: v }), "تم الحفظ");
+  });
+  $("#setForm").onsubmit = async (e) => {
+    e.preventDefault();
+    await act(async () => {
+      await S.db.rpc("admin_set_setting", { p_key: "support_whatsapp", p_value: $("#sw").value.trim() });
+      await S.db.rpc("admin_set_setting", { p_key: "announcement", p_value: $("#ann").value.trim() || null });
+    }, "تم الحفظ");
+  };
+};
+
+/* ================= درج الطابعة ================= */
+function openKiosk(kid, sub = "status") { S.drawer = { type: "kiosk", id: kid, sub }; renderDrawer(); }
+function openNewKiosk() { S.drawer = { type: "kiosk", id: null, sub: "settings" }; renderDrawer(); }
+function openOrder(id) { S.drawer = { type: "order", id }; renderDrawer(); }
+function closeDrawer() { S.drawer = null; $("#drawerRoot").innerHTML = ""; }
+
+function renderDrawer() {
+  const d = S.drawer; if (!d) return;
+  const root = $("#drawerRoot");
+  const keepScroll = root.querySelector(".drawer")?.scrollTop || 0;
+  // لا نعيد رسم نموذج مفتوح أثناء الكتابة
+  if (d.type === "kiosk" && d.sub === "settings" && root.querySelector("#kForm") && document.activeElement?.closest("#kForm")) return;
+  root.innerHTML = `<div class="drawer-bg" id="dbg"></div><section class="drawer" role="dialog" aria-modal="true" aria-label="تفاصيل">${d.type === "kiosk" ? kioskDrawer(d) : orderDrawer(d)}</section>`;
+  root.querySelector(".drawer").scrollTop = keepScroll;
+  $("#dbg").onclick = closeDrawer; $("#dClose").onclick = closeDrawer;
+  (d.type === "kiosk" ? kioskDrawerAfter : orderDrawerAfter)(d);
+}
+
+function kioskDrawer(d) {
+  const k = S.kiosks.find((x) => x.kiosk_id === d.id);
+  const isNew = !k;
+  const SUBS = [["status", "الحالة"], ["supplies", "الورق والحبر"], ["settings", "الإعدادات"], ["device", "الجهاز والربط"], ["qr", "الباركود والملصق"], ["orders", "الطلبات"], ["tools", "أدوات"]];
+  const head = `<div class="dh">${isNew ? "" : `<span class="code">${esc(k.kiosk_id)}</span>`}<h2>${isNew ? "طابعة جديدة" : esc(k.location_name)}</h2>${isNew ? "" : pill(kioskStatus(k))}<button class="btn sm" id="dClose" aria-label="إغلاق">إغلاق</button></div>`;
+  if (isNew) return head + `<div class="db">${kioskForm(null)}</div>`;
+  const tabs = `<div class="subtabs" role="tablist">${SUBS.map(([id, l]) => `<button role="tab" data-sub="${id}" aria-selected="${d.sub === id}">${l}</button>`).join("")}</div>`;
+  return head + tabs + `<div class="db">${KSUB[d.sub](k)}</div>`;
+}
+
+const KSUB = {
+  status: (k) => {
+    const st = kioskStatus(k), ps = k.printer_state || {};
+    const snmp = ps.source === "snmp";
+    const errs = ps.errors_ar || [];
+    return `
+    <div class="card"><h2>الحالة الآن ${pill(st)}</h2>
+      <dl class="kv">
+        <dt>آخر اتصال</dt><dd>${ago(k.last_ping)} <span class="small muted">(${fmtTime(k.last_ping)})</span></dd>
+        <dt>يستقبل طلبات؟</dt><dd>${st[2] === "ok" || st[2] === "low_paper" ? pill(["ok", "نعم"]) : pill(["bad", "لا"])}</dd>
+        <dt>وضع البرنامج</dt><dd>${k.agent_dry_run ? pill(["info", "وضع التجربة (ما يطبع فعليًا)"]) : pill(["ok", "طباعة فعلية"])} ${k.agent_paused ? pill(["warn", "متوقف"]) : ""}</dd>
+        <dt>الحساسات</dt><dd>${snmp ? (ps.reachable ? "من الطابعة مباشرة (SNMP)" : pill(["bad", "الطابعة ما ترد على الشبكة"])) : "من Windows فقط (حط IP الطابعة في البرنامج للحساسات الكاملة)"}</dd>
+      </dl>
+      ${errs.length ? `<div class="grid" style="gap:6px;margin-top:12px">${errs.map((e) => `<div class="alert bad">${esc(e)}</div>`).join("")}</div>` : ""}
+      ${!snmp && ps.reason ? `<div class="alert warn" style="margin-top:12px">${esc(ps.reason)}</div>` : ""}
+    </div>
+    <div class="sensors">
+      <div class="sensor"><span>الورق</span><b>${k.current_paper_count ?? 0}</b><span>محجوز ${k.paper_reserved || 0} · متاح للبيع ${paperAvail(k)}</span></div>
+      <div class="sensor"><span>الحبر</span><b>${k.ink_level_percent ?? "—"}%</b><span>${k.ink_source === "printer" ? "قراءة الطابعة" : k.ink_source === "manual" ? "إدخال يدوي" : "تقدير"}</span></div>
+      <div class="sensor"><span>الدرم</span><b>${ps.drum_percent != null ? ps.drum_percent + "%" : "—"}</b><span>&nbsp;</span></div>
+      <div class="sensor"><span>عداد الطابعة</span><b>${ps.page_count ?? "—"}</b><span>صفحة منذ التصنيع</span></div>
+    </div>
+    <div class="card"><h2>أوامر سريعة</h2>
+      <div class="toolbar">
+        <button class="btn" data-cmd="test_print">اطبع صفحة اختبار</button>
+        <button class="btn" data-cmd="refresh_status">حدّث الحساسات</button>
+        ${k.agent_paused ? `<button class="btn" data-cmd="resume">شغّل البرنامج</button>` : `<button class="btn" data-cmd="pause">أوقف البرنامج مؤقتًا</button>`}
+        ${k.is_enabled ? `<button class="btn danger" id="disableK">أوقف استقبال الطلبات</button>` : `<button class="btn primary" id="enableK">فعّل استقبال الطلبات</button>`}
+      </div>
+      <p class="small muted" style="margin:10px 0 0">الأوامر توصل للجهاز مع النبض الجاي (خلال 20 ثانية تقريبًا).</p>
+      ${cmdList(k.kiosk_id)}
+    </div>`;
+  },
+  supplies: (k) => `
+    <div class="grid g2">
+      <div class="card"><h2>الورق</h2>
+        <div class="meter"><div class="row"><span>في الدرج</span><b>${k.current_paper_count ?? 0} / ${k.paper_capacity}</b></div><div class="bar"><div style="width:${Math.min(100, Math.round(100 * (k.current_paper_count || 0) / Math.max(1, k.paper_capacity)))}%"></div></div></div>
+        <dl class="kv" style="margin:12px 0"><dt>محجوز لطلبات مدفوعة</dt><dd class="mono">${k.paper_reserved || 0}</dd><dt>هامش الأمان</dt><dd class="mono">${k.paper_safety_margin}</dd><dt>متاح للبيع</dt><dd class="mono">${paperAvail(k)}</dd><dt>تنبيه عند</dt><dd class="mono">${k.low_paper_alert} ورقة</dd></dl>
+        <div class="toolbar"><button class="btn primary" id="refill">عبّيت ورق</button><button class="btn" id="setPaper">جرد: العدد الفعلي</button></div>
+      </div>
+      <div class="card"><h2>الحبر</h2>
+        <div class="meter"><div class="row"><span>${k.ink_source === "printer" ? "من الطابعة" : k.ink_source === "manual" ? "يدوي" : "تقديري"}</span><b>${k.ink_level_percent ?? 0}%</b></div><div class="bar ${(k.ink_level_percent ?? 0) < k.ink_min_percent ? "bad" : ""}"><div style="width:${k.ink_level_percent ?? 0}%"></div></div></div>
+        <dl class="kv" style="margin:12px 0"><dt>أقل نسبة نقبل عندها طلبات</dt><dd class="mono">${k.ink_min_percent}%</dd><dt>عمر الخرطوشة</dt><dd class="mono">${k.toner_yield_pages ? k.toner_yield_pages + " صفحة" : "غير محدد"}</dd><dt>صفحات منذ آخر تغيير</dt><dd class="mono">${k.pages_since_toner || 0}</dd></dl>
+        <div class="toolbar"><button class="btn primary" id="toner">غيّرت الحبر</button><button class="btn" id="setInk">إدخال النسبة يدويًا</button></div>
+      </div>
+    </div>
+    <div class="card"><h2>سجل المستلزمات</h2><div id="evts" class="small muted">نحمّل…</div></div>`,
+  settings: (k) => kioskForm(k),
+  device: (k) => `
+    <div class="card"><h2>الجهاز المربوط</h2>
+      ${k.device_id || k.agent_token_hash ? `<dl class="kv"><dt>رقم الجهاز</dt><dd class="mono ltr">${esc(k.device_id || "—")}</dd><dt>إصدار البرنامج</dt><dd class="mono">${esc(k.agent_version || "—")}</dd><dt>ربط من</dt><dd>${fmtTime(k.paired_at)}</dd><dt>آخر اتصال</dt><dd>${ago(k.last_ping)}</dd></dl>
+        <div class="toolbar" style="margin-top:12px"><button class="btn danger" id="unpair">فك الربط</button></div>
+        <p class="small muted" style="margin:10px 0 0">فك الربط يلغي رمز الجهاز فورًا (مثلًا لو انسرق أو تغيّر). بعدها تحتاج كود ربط جديد.</p>`
+      : `<div class="alert warn">ما فيه جهاز مربوط بهذي الطابعة.</div>`}
+    </div>
+    <div class="card"><h2>ربط جهاز جديد</h2>
+      <ol class="small" style="margin:0 0 12px;padding-inline-start:18px;line-height:1.9"><li>شغّل برنامج طابعتي على الجهاز (Windows أو Raspberry Pi)، واختر الطابعة.</li><li>اضغط «أنشئ كود ربط» هنا.</li><li>اكتب الكود في البرنامج ← «ربط». الكود صالح 15 دقيقة ولمرة وحدة.</li></ol>
+      <div id="pairOut"></div>
+      <button class="btn primary" id="pairBtn">أنشئ كود ربط</button>
+    </div>`,
+  qr: (k) => `
+    <div class="card"><h2>رابط صفحة العميل</h2>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <div class="qr">${qrSvg(customerLink(k.kiosk_id))}</div>
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+          <a class="ltr mono small" style="word-break:break-all" href="${customerLink(k.kiosk_id)}" target="_blank" rel="noopener">${customerLink(k.kiosk_id)}</a>
+          <div class="toolbar"><button class="btn" id="copyLink">نسخ الرابط</button><a class="btn" href="${customerLink(k.kiosk_id)}" target="_blank" rel="noopener">فتح الصفحة</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="card"><h2>ملصق الطابعة (A6)</h2>
+      <p class="small muted" style="margin:0 0 12px">ملصق جاهز للطباعة فيه الباركود ورقم الطابعة والسعر والخطوات ورقم الدعم. اطبعه على ورق ملصقات أو A4 وقصّه.</p>
+      <div class="toolbar"><button class="btn primary" id="sticker">افتح الملصق للطباعة</button><button class="btn" id="stickerTest">اطبعه على الطابعة نفسها</button></div>
+    </div>`,
+  orders: (k) => {
+    const list = S.orders.filter((o) => o.kiosk_id === k.kiosk_id).slice(0, 50);
+    return `<div class="card" style="padding:4px 6px">${ordersTable(list, true)}</div>`;
+  },
+  tools: (k) => `
+    <div class="card"><h2>اختبار الضغط</h2>
+      <p class="small muted" style="margin:0 0 12px">ينشئ طلبات مدفوعة وجاهزة للطباعة (صفحة اختبار وحدة لكل طلب). <b>شغّل «وضع التجربة» في البرنامج قبلها</b> عشان ما يطبع فعليًا ويستهلك ورق.</p>
+      <div class="toolbar"><input class="f mono" id="nTest" type="number" min="1" max="50" value="10" style="width:90px" aria-label="عدد الطلبات"><button class="btn primary" id="mkTest">أنشئ طلبات تجريبية</button></div>
+      <div class="small muted" style="margin-top:10px">طلبات التجربة على هذي الطابعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test").length} · بانتظار الطباعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test" && ["queued", "printing"].includes(o.print_status)).length}</div>
+    </div>
+    <div class="card" style="border-color:var(--danger-line)"><h2 style="color:var(--bad)">منطقة الخطر</h2>
+      <p class="small muted" style="margin:0 0 12px">الحذف: لو الطابعة عليها طلبات سابقة تنؤرشف (تختفي وتبقى السجلات والتقارير، وتقدر ترجعها)، وإلا تنحذف نهائيًا. وفي الحالتين ينفك ربط الجهاز.</p>
+      <button class="btn danger" id="delK">حذف الطابعة</button>
+    </div>`,
+};
+
+function cmdList(kid) {
+  const list = S.commands.filter((c) => c.kiosk_id === kid).slice(0, 6);
+  if (!list.length) return "";
+  const N = { test_print: "صفحة اختبار", refresh_status: "تحديث الحساسات", pause: "إيقاف مؤقت", resume: "تشغيل" };
+  return `<div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>الأمر</th><th>الحالة</th><th>النتيجة</th><th>الوقت</th></tr></thead><tbody>
+    ${list.map((c) => `<tr><td>${N[c.command] || c.command}</td><td>${pill(c.status === "done" ? ["ok", "تم"] : c.status === "failed" ? ["bad", "فشل"] : ["warn", "بانتظار الجهاز"])}</td><td class="small">${esc(c.result || "—")}</td><td class="small muted">${fmtTime(c.created_at)}</td></tr>`).join("")}</tbody></table></div>`;
+}
+
+function kioskForm(k) {
+  const v = (f, d = "") => esc(k?.[f] ?? d);
+  return `<form class="card form" id="kForm" novalidate>
+    <h3 style="border:0;padding:0;margin:0">الأساسيات</h3>
+    <label>رقم الطابعة <small>${k ? "ما يتغيّر بعد الإنشاء" : "يظهر على الملصق وفي الرابط. حروف إنجليزية وأرقام فقط، مثل 101"}</small><input class="f mono ltr" name="kiosk_id" required maxlength="20" pattern="[A-Za-z0-9_\\-]{1,20}" value="${v("kiosk_id")}" ${k ? "readonly" : ""}></label>
+    <label>المكان <small>يشوفه العميل</small><input class="f" name="location_name" required maxlength="80" value="${v("location_name")}" placeholder="مكتبة الجامعة — الدور الأرضي"></label>
+    <label class="full">ملاحظة للعميل <small>اختياري، مثل «جنب المصلى»</small><input class="f" name="public_note" maxlength="80" value="${v("public_note")}"></label>
+    <label>الموديل<input class="f ltr" name="model" maxlength="60" value="${v("model")}" placeholder="Brother HL-L6410DN"></label>
+    <label>عنوان IP للطابعة <small>للحساسات (يُكتب أيضًا في البرنامج)</small><input class="f mono ltr" name="printer_host" maxlength="60" value="${v("printer_host")}" placeholder="192.168.1.50"></label>
+    <h3>الموقع (يظهر في صفحة «وين الطابعات» على الموقع)</h3>
+    <label>المدينة<input class="f" name="city" list="cities" maxlength="40" value="${v("city")}" placeholder="الرياض"></label>
+    <label>الحي / الجهة<input class="f" name="area" maxlength="60" value="${v("area")}" placeholder="جامعة الملك سعود"></label>
+    <label class="full">رابط قوقل ماب <small>الصقه وتنعبّى الإحداثيات تلقائيًا (افتح المكان في قوقل ماب ← مشاركة ← نسخ الرابط الطويل)</small><input class="f ltr" id="mapLink" placeholder="https://www.google.com/maps/@24.72,46.62,17z"></label>
+    <label>خط العرض (lat)<input class="f mono ltr" name="lat" inputmode="decimal" value="${v("lat")}" placeholder="24.7136"></label>
+    <label>خط الطول (lng)<input class="f mono ltr" name="lng" inputmode="decimal" value="${v("lng")}" placeholder="46.6753"></label>
+    <label>ساعات التشغيل <small>اختياري</small><input class="f" name="hours" maxlength="60" value="${v("hours")}" placeholder="24 ساعة"></label>
+    <label class="check"><input type="checkbox" name="is_public" ${k ? (k.is_public !== false ? "checked" : "") : "checked"}> تظهر للعامة في الموقع</label>
+    <datalist id="cities">${["الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام", "الخبر", "الظهران", "الأحساء", "القصيم", "أبها", "تبوك", "حائل", "الطائف", "جازان", "نجران", "الجبيل", "ينبع"].map((c) => `<option value="${c}">`).join("")}</datalist>
+    <h3>التسعير والحدود</h3>
+    <label>سعر الصفحة (ر.س)<input class="f mono" name="price_per_page" type="number" step="0.05" min="0" max="10" required value="${v("price_per_page", "0.20")}"></label>
+    <label>أقل مبلغ للطلب (ر.س) <small>0 = بدون حد</small><input class="f mono" name="min_order_amount" type="number" step="0.5" min="0" max="100" value="${v("min_order_amount", "0")}"></label>
+    <label>أقصى صفحات للطلب<input class="f mono" name="max_pages_per_order" type="number" min="1" max="500" value="${v("max_pages_per_order", "100")}"></label>
+    <label>أقصى عدد نسخ<input class="f mono" name="max_copies" type="number" min="1" max="50" value="${v("max_copies", "20")}"></label>
+    <label class="check"><input type="checkbox" name="supports_duplex" ${k ? (k.supports_duplex ? "checked" : "") : "checked"}> تطبع على الوجهين</label>
+    <label>مقاس الورق<select class="f" name="paper_size">${["A4", "Letter"].map((s) => `<option ${(k?.paper_size || "A4") === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>
+    <h3>الورق والحبر</h3>
+    <label>سعة درج الورق<input class="f mono" name="paper_capacity" type="number" min="1" max="2000" value="${v("paper_capacity", "250")}"></label>
+    <label>هامش الأمان <small>آخر كم ورقة ما تنباع</small><input class="f mono" name="paper_safety_margin" type="number" min="0" max="200" value="${v("paper_safety_margin", "10")}"></label>
+    <label>تنبيه «الورق قليل» عند<input class="f mono" name="low_paper_alert" type="number" min="0" max="2000" value="${v("low_paper_alert", "30")}"></label>
+    <label>أقل نسبة حبر نقبل عندها طلبات (%)<input class="f mono" name="ink_min_percent" type="number" min="0" max="100" value="${v("ink_min_percent", "15")}"></label>
+    <label>عمر الخرطوشة (صفحات) <small>للتقدير إذا الطابعة ما تعطي نسبة</small><input class="f mono" name="toner_yield_pages" type="number" min="0" max="100000" value="${v("toner_yield_pages")}"></label>
+    <label class="full">ملاحظات داخلية <small>للمدراء فقط</small><textarea class="f" name="internal_note" maxlength="500">${v("internal_note")}</textarea></label>
+    <div class="full toolbar"><button class="btn primary" style="min-height:42px">${k ? "حفظ التعديلات" : "إضافة الطابعة"}</button>${k ? "" : `<span class="small muted">بعد الإضافة: «الجهاز والربط» ثم «الباركود والملصق».</span>`}</div>
+    <div id="kErr" class="full alert bad" hidden></div>
+  </form>`;
+}
+
+function kioskDrawerAfter(d) {
+  const k = S.kiosks.find((x) => x.kiosk_id === d.id);
+  $$("[data-sub]").forEach((b) => b.onclick = () => { d.sub = b.dataset.sub; renderDrawer(); });
+  const form = $("#kForm");
+  const ml = $("#mapLink");
+  if (ml) ml.oninput = () => {
+    const m = ml.value.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || ml.value.match(/[?&](?:q|query|ll)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/) || ml.value.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || ml.value.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/);
+    if (m) { form.lat.value = (+m[1]).toFixed(6); form.lng.value = (+m[2]).toFixed(6); toast("تعبّت الإحداثيات من الرابط"); }
+  };
+  if (form) form.onsubmit = async (e) => {
+    e.preventDefault();
+    if (!form.reportValidity()) return;
+    const fd = new FormData(form), p = {};
+    for (const [key, val] of fd.entries()) p[key] = String(val).trim();
+    p.supports_duplex = !!form.supports_duplex.checked;
+    p.is_public = !!form.is_public.checked;
+    for (const n of ["lat", "lng"]) { if (p[n] !== "" && !Number.isFinite(Number(p[n]))) { const b = $("#kErr"); b.textContent = "الإحداثيات لازم تكون أرقام."; b.hidden = false; return; } }
+    for (const n of ["price_per_page", "min_order_amount"]) p[n] = Number(p[n] || 0);
+    for (const n of ["max_pages_per_order", "max_copies", "paper_capacity", "paper_safety_margin", "low_paper_alert", "ink_min_percent"]) p[n] = parseInt(p[n] || "0", 10);
+    if (p.toner_yield_pages === "") p.toner_yield_pages = ""; else p.toner_yield_pages = parseInt(p.toner_yield_pages, 10);
+    try {
+      const r = await S.db.rpc("admin_save_kiosk", { p });
+      toast(r.created ? "انضافت الطابعة" : "تم الحفظ");
+      document.activeElement?.blur();
+      S.drawer = { type: "kiosk", id: p.kiosk_id, sub: r.created ? "device" : "settings" };
+      await reload();
+    } catch (er) { const b = $("#kErr"); b.textContent = errMsg(er); b.hidden = false; }
+  };
+  if (!k) return;
+  const kid = k.kiosk_id;
+  $$("[data-cmd]").forEach((b) => b.onclick = () => act(() => S.db.sendCommand(kid, b.dataset.cmd), "انرسل الأمر للجهاز"));
+  $("#disableK") && ($("#disableK").onclick = async () => { if (await ask({ title: "إيقاف استقبال الطلبات؟", body: "<p>العملاء بيشوفون الطابعة «خارج الخدمة» لين تفعّلها.</p>", ok: "إيقاف", danger: true })) act(() => S.db.rpc("admin_set_kiosk_enabled", { p_kiosk: kid, p_enabled: false }), "توقف استقبال الطلبات"); });
+  $("#enableK") && ($("#enableK").onclick = () => act(() => S.db.rpc("admin_set_kiosk_enabled", { p_kiosk: kid, p_enabled: true }), "رجعت تستقبل طلبات"));
+  if ($("#refill")) {
+    $("#refill").onclick = async () => {
+      const n = await ask({ title: "كم ورقة حطيت؟", ok: "إضافة", body: `<form class="form" style="grid-template-columns:1fr"><label>عدد الأوراق المضافة<input class="f mono" id="nIn" type="number" min="1" max="${k.paper_capacity}" required value="${Math.max(1, k.paper_capacity - (k.current_paper_count || 0))}"></label></form><p class="small" style="margin-top:8px">الحالي ${k.current_paper_count} من ${k.paper_capacity}.</p>`, form: () => parseInt($("#nIn").value, 10) });
+      if (n) act(() => S.db.rpc("admin_paper_refill", { p_kiosk: kid, p_added: n }), "انضاف الورق");
+    };
+    $("#setPaper").onclick = async () => {
+      const n = await ask({ title: "جرد الورق", ok: "حفظ", body: `<p>عدّيت الورق اللي في الدرج؟ اكتب العدد الفعلي.</p><form class="form" style="grid-template-columns:1fr"><label>العدد الفعلي<input class="f mono" id="nIn" type="number" min="0" max="${k.paper_capacity}" required value="${k.current_paper_count}"></label></form>`, form: () => parseInt($("#nIn").value, 10) });
+      if (n !== null && !Number.isNaN(n)) act(() => S.db.rpc("admin_set_paper", { p_kiosk: kid, p_count: n }), "تم الحفظ");
+    };
+    $("#toner").onclick = async () => { if (await ask({ title: "غيّرت خرطوشة الحبر؟", body: "<p>بنرجّع النسبة 100% ونصفّر عداد الصفحات.</p>", ok: "إيه، غيّرتها" })) act(() => S.db.rpc("admin_toner_replaced", { p_kiosk: kid }), "تم"); };
+    $("#setInk").onclick = async () => {
+      const n = await ask({ title: "نسبة الحبر", ok: "حفظ", body: `<form class="form" style="grid-template-columns:1fr"><label>النسبة (%)<input class="f mono" id="nIn" type="number" min="0" max="100" required value="${k.ink_level_percent ?? 100}"></label></form>`, form: () => parseInt($("#nIn").value, 10) });
+      if (n !== null && !Number.isNaN(n)) act(() => S.db.rpc("admin_set_ink", { p_kiosk: kid, p_percent: n }), "تم الحفظ");
+    };
+    S.db.events(kid).then((ev) => {
+      const N = { paper_refill: "تعبئة ورق", paper_set: "جرد ورق", paper_used: "استهلاك", toner_replaced: "تغيير حبر", ink_reading: "قراءة حبر", settings: "تعديل إعدادات" };
+      const el = $("#evts"); if (!el) return;
+      el.innerHTML = ev.length ? `<div class="table-wrap"><table><thead><tr><th>الحدث</th><th>الكمية</th><th>ملاحظة</th><th>الوقت</th></tr></thead><tbody>${ev.map((e) => `<tr><td>${N[e.kind] || e.kind}</td><td class="mono">${e.amount ?? "—"}</td><td class="small">${e.kind === "paper_used" ? `<a href="#" data-order="${esc(e.note)}">#${ref(e.note)}</a>` : esc(e.note || "")}</td><td class="small muted">${fmtTime(e.created_at)}</td></tr>`).join("")}</tbody></table></div>` : "ما فيه حركات.";
+      bindOrderLinks(el);
+    }).catch(() => { const el = $("#evts"); if (el) el.textContent = "تعذر التحميل."; });
+  }
+  if ($("#pairBtn")) {
+    $("#pairBtn").onclick = async () => {
+      try {
+        const code = await S.db.rpc("admin_create_pairing_code", { p_kiosk: kid });
+        $("#pairOut").innerHTML = `<div class="pairbox" aria-label="كود الربط">${esc(code)}</div><p class="small muted" style="text-align:center;margin:8px 0 12px">صالح 15 دقيقة. ما راح يظهر مرة ثانية.</p>`;
+      } catch (e) { toast(errMsg(e), true); }
+    };
+    $("#unpair") && ($("#unpair").onclick = async () => { if (await ask({ title: "فك ربط الجهاز؟", body: "<p>الجهاز بيوقف فورًا وما يقدر يسحب طلبات لين تربطه من جديد.</p>", ok: "فك الربط", danger: true })) act(() => S.db.rpc("admin_unpair_kiosk", { p_kiosk: kid }), "انفك الربط"); });
+  }
+  if ($("#copyLink")) {
+    $("#copyLink").onclick = async () => { try { await navigator.clipboard.writeText(customerLink(kid)); toast("انسخ الرابط"); } catch { toast("ما قدرنا ننسخ", true); } };
+    $("#sticker").onclick = () => openSticker(k);
+    $("#stickerTest").onclick = () => toast("هذي الميزة تجي مع تحديث برنامج الطباعة القادم.");
+  }
+  if ($("#mkTest")) {
+    $("#mkTest").onclick = async () => {
+      const n = parseInt($("#nTest").value, 10);
+      if (!k.agent_dry_run && !(await ask({ title: "البرنامج مو في وضع التجربة", body: `<p>الطابعة بتطبع ${n} ورقة فعليًا. متأكد؟</p>`, ok: "إيه، اطبع", danger: true }))) return;
+      act(() => S.db.rpc("admin_create_test_orders", { p_kiosk: kid, p_count: n, p_pages: 1 }), `انضاف ${n} طلب تجريبي`);
+    };
+    $("#delK").onclick = async () => {
+      const typed = await ask({ title: `حذف الطابعة ${kid}؟`, ok: "حذف", danger: true,
+        body: `<p>للتأكيد اكتب رقم الطابعة.</p><form class="form" style="grid-template-columns:1fr"><label>رقم الطابعة<input class="f mono ltr" id="cIn" required autocomplete="off"></label></form>`, form: () => $("#cIn").value.trim() });
+      if (typed === null) return;
+      if (typed !== kid) return toast("الرقم غير مطابق، ما انحذف شي.", true);
+      try { const r = await S.db.rpc("admin_delete_kiosk", { p_kiosk: kid }); toast(r === "archived" ? "انؤرشفت الطابعة (عليها طلبات سابقة)" : "انحذفت الطابعة"); closeDrawer(); await reload(); }
+      catch (e) { toast(errMsg(e), true); }
+    };
+  }
+  bindOrderLinks($(".drawer"));
+}
+
+function openSticker(k) {
+  const w = window.open("", "_blank"); if (!w) return toast("المتصفح منع النافذة. اسمح بالنوافذ المنبثقة.", true);
+  const wa = String(S.settings.support_whatsapp || "");
+  w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>ملصق ${esc(k.kiosk_id)}</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>@page{size:A6;margin:0}body{margin:0;font-family:'IBM Plex Sans Arabic',sans-serif;color:#14181B}
+  .s{width:105mm;height:148mm;box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden}
+  .h{background:#14181B;color:#fff;padding:5mm 6mm;display:flex;justify-content:space-between;align-items:center}.h b{font-size:20px}
+  .c{font:600 15px 'IBM Plex Mono',monospace;background:#0A6B74;border-radius:2mm;padding:1mm 3mm;direction:ltr}
+  h1{margin:5mm 6mm 0;font-size:25px}p{margin:1mm 6mm 0;color:#5E6A73;font-size:12.5px}
+  .m{display:flex;gap:5mm;align-items:center;padding:4mm 6mm}.q{width:42mm;height:42mm;border:.6mm solid #14181B;border-radius:3mm;padding:2mm;box-sizing:border-box;flex:none}.q svg{width:100%;height:100%}
+  ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3mm;font-size:13px}ol li{display:flex;gap:2mm}ol span{width:6mm;height:6mm;border-radius:50%;background:#E1F0F1;color:#0A6B74;display:grid;place-items:center;font:600 11px 'IBM Plex Mono';flex:none}
+  .p{margin:0 6mm;background:#F4F6F6;border-radius:3mm;padding:3mm 4mm;display:flex;justify-content:space-between;align-items:baseline}.p b{font:600 20px 'IBM Plex Mono'}
+  .f{margin-top:auto;padding:3mm 6mm;border-top:.3mm solid #DCE2E5;font-size:10.5px;color:#5E6A73;display:flex;justify-content:space-between}
+  @media screen{body{background:#ccc;padding:20px}.s{background:#fff;margin:auto;box-shadow:0 4px 20px rgba(0,0,0,.2)}.bar{text-align:center;margin-bottom:14px}}
+  @media print{.bar{display:none}}</style></head><body>
+  <div class="bar"><button onclick="print()" style="font:inherit;padding:8px 18px">اطبع</button></div>
+  <div class="s"><div class="h"><b>طابعتي</b><span class="c">${esc(k.kiosk_id)}</span></div>
+  <h1>اطبع من جوالك</h1><p>بدون تطبيق وبدون تسجيل. صوّر الكود وابدأ.</p>
+  <div class="m"><div class="q">${qrSvg(customerLink(k.kiosk_id), 150)}</div>
+  <ol><li><span>1</span><span style="all:unset"><b>صوّر الكود</b><br>بكاميرا الجوال</span></li><li><span>2</span><span style="all:unset"><b>اختر ملفك وادفع</b><br>السعر قدامك قبل الدفع</span></li><li><span>3</span><span style="all:unset"><b>«اطبع الآن»</b><br>وخذ أوراقك</span></li></ol></div>
+  <div class="p"><span>الصفحة · أبيض وأسود</span><b>${money(k.price_per_page)} <small style="font:400 12px 'IBM Plex Sans Arabic'">ر.س</small></b></div>
+  <div class="f"><span>${esc(k.location_name)}</span><span>واتساب: <b style="direction:ltr;unicode-bidi:isolate">${esc(wa ? "+" + wa : "—")}</b></span></div></div>
+  </body></html>`);
+  w.document.close();
+}
+
+/* ================= درج الطلب ================= */
+function orderDrawer(d) {
+  const o = S.orders.find((x) => x.id === d.id);
+  if (!o) return `<div class="dh"><h2>الطلب</h2><button class="btn sm" id="dClose">إغلاق</button></div><div class="db"><div class="empty">الطلب خارج الفترة المحمّلة.</div></div>`;
+  const steps = [
+    ["أنشئ", o.created_at], ["تم التسعير وحجز الورق", o.quoted_at], ["دفع", o.paid_at],
+    [o.source === "web" ? "ضغط «اطبع الآن»" : "دخل الطابور", o.released_at || (o.source !== "web" ? o.paid_at : null)],
+    ["انطبع", o.printed_at], ...(o.cancelled_at ? [["أُلغي / انتهى", o.cancelled_at]] : [])];
+  const canCancel = !["printed", "printing", "cancelled"].includes(o.print_status) && !["expired", "cancelled"].includes(o.payment_status);
+  const canRetry = o.payment_status === "paid" && ["failed", "retryable_failed"].includes(o.print_status);
+  return `<div class="dh"><span class="code">#${ref(o.id)}</span><h2>${esc(o.original_name || "طلب")}</h2>${pill(orderStatus(o))}<button class="btn sm" id="dClose">إغلاق</button></div>
+  <div class="db">
+    <div class="card"><dl class="kv">
+      <dt>الطابعة</dt><dd><a href="#" data-kiosk="${esc(o.kiosk_id)}" class="mono">${esc(o.kiosk_id)}</a></dd>
+      <dt>المصدر</dt><dd>${SOURCE[o.source] || o.source}</dd>
+      <dt>الملف</dt><dd>${o.file_kind === "image" ? "صورة" : "PDF"} · ${o.total_pages} صفحة ${o.file_deleted_at ? pill(["mute", "انحذف"]) : ""}</dd>
+      <dt>الخيارات</dt><dd>${o.copies} نسخة · ${o.duplex ? "وجهين" : "وجه واحد"} · ${o.sheets_needed ?? "—"} ورقة</dd>
+      <dt>المبلغ</dt><dd class="mono">${money(o.total_amount)} ر.س ${o.price_per_page ? `<span class="small muted">(${money(o.price_per_page)}/ص)</span>` : ""}</dd>
+      <dt>محاولات الطباعة</dt><dd class="mono">${o.print_attempts || 0}</dd>
+      ${o.error_message ? `<dt>ملاحظة</dt><dd>${esc(o.error_message)}</dd>` : ""}
+      ${o.refund_note ? `<dt>ملاحظة الاسترجاع</dt><dd>${esc(o.refund_note)}</dd>` : ""}
+      <dt>المعرّف</dt><dd class="mono small ltr">${o.id}</dd>
+    </dl></div>
+    <div class="card"><h2>المسار</h2><div class="timeline">${steps.map(([l, t]) => `<div class="${t ? "" : "off"}"><b>${l}</b> <span class="small muted">${t ? fmtTime(t) : "—"}</span></div>`).join("")}</div></div>
+    <div class="card"><h2>إجراءات</h2><div class="toolbar">
+      ${canRetry ? `<button class="btn primary" id="oRetry">أعد المحاولة</button>` : ""}
+      ${o.refund_status === "needs_refund" ? `<button class="btn primary" id="oRefund">تم الاسترجاع</button>` : ""}
+      ${canCancel ? `<button class="btn danger" id="oCancel">إلغاء الطلب</button>` : ""}
+      ${!canRetry && !canCancel && o.refund_status !== "needs_refund" ? `<span class="small muted">ما فيه إجراءات متاحة لهذي الحالة.</span>` : ""}
+    </div></div>
+  </div>`;
+}
+function orderDrawerAfter(d) {
+  $("#oRetry") && ($("#oRetry").onclick = () => act(() => S.db.rpc("admin_retry_order", { p_order: d.id }), "رجع للطابور"));
+  $("#oRefund") && ($("#oRefund").onclick = () => refundOrder(d.id));
+  $("#oCancel") && ($("#oCancel").onclick = async () => {
+    const o = S.orders.find((x) => x.id === d.id);
+    if (await ask({ title: "إلغاء الطلب؟", body: `<p>${o.payment_status === "paid" && o.source !== "test" ? "الطلب مدفوع، فبيدخل قائمة «يحتاج استرجاع»." : "بيرجع الورق المحجوز."}</p>`, ok: "إلغاء الطلب", danger: true }))
+      act(() => S.db.rpc("admin_cancel_order", { p_order: d.id }), "انلغى الطلب");
+  });
+  $$("[data-kiosk]", $(".drawer")).forEach((a) => a.onclick = (e) => { e.preventDefault(); openKiosk(a.dataset.kiosk); });
+}
+function bindOrderLinks(root) { $$("[data-order]", root).forEach((el) => el.onclick = (e) => { e.preventDefault(); openOrder(el.dataset.order); }); }
+
+/* الوضع الليلي/النهاري */
+function syncThemeButtons() {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  $$("[data-theme-toggle]").forEach((b) => { if (!b.classList.contains("theme-m")) b.textContent = dark ? "الوضع النهاري" : "الوضع الليلي"; });
+}
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("[data-theme-toggle]")) return;
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem("tabaety.theme", next); } catch { }
+  syncThemeButtons();
+});
+syncThemeButtons();
+
+/* أحداث عامة */
+document.addEventListener("click", (e) => {
+  const t = e.target.closest("[data-kiosk],[data-order],[data-go],[data-new-kiosk]");
+  if (!t || t.closest(".drawer")) return;
+  e.preventDefault();
+  if (t.dataset.kiosk) openKiosk(t.dataset.kiosk);
+  else if (t.dataset.order) openOrder(t.dataset.order);
+  else if (t.dataset.go) { S.tab = t.dataset.go; render(); }
+  else if (t.hasAttribute("data-new-kiosk")) openNewKiosk();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && S.drawer && !$("#dlg").open) closeDrawer();
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches(".pcard")) { e.preventDefault(); openKiosk(e.target.dataset.kiosk); }
+});
+
+/* ================= البداية ================= */
+function loadScript(src) { return new Promise((res, rej) => { const s = document.createElement("script"); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); }); }
+
+async function startApp() {
+  $("#login").hidden = true; $("#shell").hidden = false;
+  try { S.tab = localStorage.getItem("tabaety.tab") || "overview"; } catch { }
+  if (!PAGES[S.tab]) S.tab = "overview";
+  $("#who").textContent = S.user?.email || "";
+  await reload();
+  setInterval(() => { if (!document.hidden) render(); }, 30000); // «قبل كم دقيقة» والحالات تتحدث
+}
+
+(async function boot() {
+  loadScript("https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js").catch(() => {});
+  if (new URLSearchParams(location.search).has("demo")) {
+    S.demo = true; $("#demoBanner").hidden = false; S.db = demoDb(); S.user = { email: "demo@tabaety.com" };
+    $("#liveDot").classList.add("off"); $("#liveDot span").textContent = "وضع العرض";
+    $("#logoutBtn").onclick = () => location.href = location.pathname;
+    return startApp();
+  }
+  await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js");
+  const sb = window.supabase.createClient(CONFIG.url, CONFIG.anonKey);
+  S.db = realDb(sb);
+  $("#logoutBtn").onclick = async () => { await sb.auth.signOut(); location.reload(); };
+  const enter = async (session) => {
+    S.user = session.user;
+    const ok = await sb.rpc("is_admin");
+    if (!ok.data) { await sb.auth.signOut(); $("#login").hidden = false; const b = $("#loginErr"); b.textContent = "هذا الحساب ما عنده صلاحية مدير."; b.hidden = false; return; }
+    sb.channel("dash")
+      .on("postgres_changes", { event: "*", schema: "public", table: "kiosks" }, softReload)
+      .on("postgres_changes", { event: "*", schema: "public", table: "orders" }, softReload)
+      .on("postgres_changes", { event: "*", schema: "public", table: "kiosk_commands" }, softReload)
+      .on("postgres_changes", { event: "*", schema: "public", table: "payments" }, softReload)
+      .subscribe((st) => { const ok = st === "SUBSCRIBED"; $("#liveDot").classList.toggle("off", !ok); $("#liveDot span").textContent = ok ? "تحديث لحظي" : "غير متصل"; });
+    await startApp();
+  };
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) return enter(session);
+  $("#login").hidden = false;
+  $("#loginForm").onsubmit = async (e) => {
+    e.preventDefault(); const b = $("#loginBtn"); b.disabled = true; $("#loginErr").hidden = true;
+    const { data, error } = await sb.auth.signInWithPassword({ email: $("#email").value.trim(), password: $("#pass").value });
+    b.disabled = false;
+    if (error) { const x = $("#loginErr"); x.textContent = /invalid/i.test(error.message) ? "الإيميل أو كلمة المرور غلط." : error.message; x.hidden = false; return; }
+    enter(data.session);
+  };
+})();
+
+/* ================= بيانات العرض (?demo=1) ================= */
+function demoDb() {
+  const now = Date.now(), iso = (msAgo) => new Date(now - msAgo).toISOString(), M = 60000, H = 3600000, D = 86400000;
+  const base = { is_enabled: true, archived_at: null, paper_reserved: 0, paper_safety_margin: 10, ink_min_percent: 15, low_paper_alert: 30, supports_duplex: true, max_pages_per_order: 100, max_copies: 20, paper_size: "A4", min_order_amount: 0, pages_since_toner: 0, agent_paused: false, agent_dry_run: false };
+  const kiosks = [
+    { ...base, kiosk_id: "101", location_name: "مكتبة الجامعة — الدور الأرضي", public_note: "جنب المصلى", city: "الرياض", area: "جامعة الملك سعود", lat: 24.7166, lng: 46.6191, is_public: true, model: "Brother HL-L6410DN", price_per_page: 0.2, paper_capacity: 250, current_paper_count: 182, paper_reserved: 6, ink_level_percent: 64, ink_source: "printer", toner_yield_pages: 12000, last_ping: iso(12000), agent_token_hash: "x", device_id: "PRN-7K2Q", agent_version: "0.5.0", paired_at: iso(9 * D), printer_host: "192.168.1.50", printer_state: { source: "snmp", reachable: true, can_print: true, errors_ar: [], drum_percent: 88, page_count: 4120, toner_percent: 64 } },
+    { ...base, kiosk_id: "102", location_name: "كلية الهندسة — البهو", model: "Brother HL-L6410DN", price_per_page: 0.25, paper_capacity: 250, current_paper_count: 24, ink_level_percent: 41, ink_source: "printer", last_ping: iso(40000), agent_token_hash: "x", device_id: "PRN-3MZA", agent_version: "0.5.0", paired_at: iso(4 * D), agent_dry_run: true, printer_state: { source: "snmp", reachable: true, can_print: true, errors_ar: [], drum_percent: 95, page_count: 860 } },
+    { ...base, kiosk_id: "103", location_name: "السكن الجامعي — مبنى 4", model: "HP Laser MFP 137fnw", price_per_page: 0.2, paper_capacity: 150, current_paper_count: 90, ink_level_percent: 12, ink_source: "estimate", toner_yield_pages: 1000, last_ping: iso(26 * M), agent_token_hash: "x", device_id: "PRN-HP01", agent_version: "0.4.0", paired_at: iso(20 * D), printer_state: { source: "windows", ok: true } },
+    { ...base, kiosk_id: "201", location_name: "المكتبة المركزية (قريبًا)", price_per_page: 0.2, paper_capacity: 250, current_paper_count: 0, ink_level_percent: 100, ink_source: "estimate", last_ping: null, agent_token_hash: null, device_id: null },
+  ];
+  const names = ["محاضرة-الفصل-3.pdf", "واجب-الإحصاء.pdf", "CV-2026.pdf", "صورة-الهوية.jpg", "تقرير-المختبر.pdf", "Lecture 7 - Networks.pdf", "نموذج-تسجيل.pdf"];
+  const orders = []; let seed = 7;
+  const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  for (let i = 0; i < 140; i++) {
+    const age = Math.floor(rnd() * 14 * D) + 5 * M, kid = ["101", "101", "102", "103"][Math.floor(rnd() * 4)], pages = 1 + Math.floor(rnd() * 24), copies = rnd() < .8 ? 1 : 2, duplex = rnd() < .4;
+    const id = crypto.randomUUID(), k = kiosks.find((x) => x.kiosk_id === kid), amt = +(pages * copies * k.price_per_page).toFixed(2);
+    const created = iso(age), r = rnd();
+    const o = { id, kiosk_id: kid, source: "web", total_pages: pages, copies, duplex, sheets_needed: (duplex ? Math.ceil(pages / 2) : pages) * copies, total_amount: amt, price_per_page: k.price_per_page, created_at: created, quoted_at: created, original_name: names[i % names.length], file_kind: names[i % names.length].endsWith(".jpg") ? "image" : "pdf", print_attempts: 1, payment_status: "paid", print_status: "printed", paid_at: created, released_at: created, printed_at: created, file_deleted_at: created };
+    if (r < .1) Object.assign(o, { payment_status: "expired", print_status: "cancelled", paid_at: null, released_at: null, printed_at: null, cancelled_at: created });
+    else if (r < .13) Object.assign(o, { print_status: "failed", printed_at: null, error_message: "الورق منحشر", refund_status: "needs_refund" });
+    else if (r < .15) Object.assign(o, { print_status: "cancelled", printed_at: null, released_at: null, refund_status: "refunded", refund_note: "استرجاع من البوابة" });
+    orders.push(o);
+  }
+  orders.push({ id: crypto.randomUUID(), kiosk_id: "101", source: "web", total_pages: 8, copies: 1, duplex: true, sheets_needed: 4, total_amount: 1.6, price_per_page: .2, created_at: iso(4 * M), quoted_at: iso(3 * M), paid_at: iso(2 * M), payment_status: "paid", print_status: "awaiting_release", original_name: "ملخص-الاختبار.pdf", file_kind: "pdf", print_attempts: 0, release_deadline: new Date(now + 58 * M).toISOString() });
+  orders.push({ id: crypto.randomUUID(), kiosk_id: "101", source: "web", total_pages: 3, copies: 2, duplex: false, sheets_needed: 6, total_amount: 1.2, price_per_page: .2, created_at: iso(60000), quoted_at: iso(50000), paid_at: iso(40000), released_at: iso(10000), payment_status: "paid", print_status: "printing", original_name: "عرض-المشروع.pdf", file_kind: "pdf", print_attempts: 1 });
+  orders.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+  const payments = orders.filter((o) => o.paid_at).map((o, i) => ({ id: i + 1, order_id: o.id, provider: "mock", provider_ref: "MOCK-" + o.id.slice(0, 8), amount: o.total_amount, status: o.refund_status === "refunded" ? "refunded" : "paid", created_at: o.paid_at }));
+  const commands = [{ id: 3, kiosk_id: "101", command: "test_print", status: "done", result: "طُبعت صفحة الاختبار", created_at: iso(2 * H) }, { id: 4, kiosk_id: "102", command: "refresh_status", status: "pending", created_at: iso(30000) }];
+  const settings = { payment_mode: "mock", support_whatsapp: "966555807345", announcement: null };
+  const events = [{ id: 1, kind: "paper_refill", amount: 200, note: null, created_at: iso(2 * D) }, { id: 2, kind: "paper_used", amount: 4, note: orders[3].id, created_at: iso(3 * H) }, { id: 3, kind: "settings", note: "تعديل الإعدادات", created_at: iso(D) }];
+  const K = (id) => { const k = kiosks.find((x) => x.kiosk_id === id); if (!k) throw new Error("kiosk_not_found"); return k; };
+  const O = (id) => orders.find((x) => x.id === id);
+  const rpcs = {
+    admin_save_kiosk: ({ p }) => {
+      if (!/^[A-Za-z0-9_-]{1,20}$/.test(p.kiosk_id)) throw new Error("invalid_kiosk_id");
+      if (!p.location_name) throw new Error("location_required");
+      let k = kiosks.find((x) => x.kiosk_id === p.kiosk_id), created = !k;
+      if (!k) { k = { ...base, kiosk_id: p.kiosk_id, current_paper_count: 0, ink_level_percent: 100, ink_source: "estimate", last_ping: null }; kiosks.push(k); }
+      Object.assign(k, p, { toner_yield_pages: p.toner_yield_pages === "" ? null : p.toner_yield_pages }); return { kiosk_id: k.kiosk_id, created };
+    },
+    admin_delete_kiosk: ({ p_kiosk }) => { const k = K(p_kiosk); if (orders.some((o) => o.kiosk_id === p_kiosk)) { k.archived_at = new Date().toISOString(); k.is_enabled = false; k.agent_token_hash = null; k.device_id = null; return "archived"; } kiosks.splice(kiosks.indexOf(k), 1); return "deleted"; },
+    admin_restore_kiosk: ({ p_kiosk }) => { K(p_kiosk).archived_at = null; },
+    admin_paper_refill: ({ p_kiosk, p_added }) => { const k = K(p_kiosk); k.current_paper_count = Math.min(k.paper_capacity, k.current_paper_count + p_added); events.unshift({ id: Date.now(), kind: "paper_refill", amount: p_added, created_at: new Date().toISOString() }); return k.current_paper_count; },
+    admin_set_paper: ({ p_kiosk, p_count }) => { K(p_kiosk).current_paper_count = p_count; },
+    admin_toner_replaced: ({ p_kiosk }) => { Object.assign(K(p_kiosk), { ink_level_percent: 100, pages_since_toner: 0 }); },
+    admin_set_ink: ({ p_kiosk, p_percent }) => { Object.assign(K(p_kiosk), { ink_level_percent: p_percent, ink_source: "manual" }); },
+    admin_set_kiosk_enabled: ({ p_kiosk, p_enabled }) => { K(p_kiosk).is_enabled = p_enabled; },
+    admin_create_pairing_code: () => String(Math.floor(100000 + Math.random() * 899999)),
+    admin_unpair_kiosk: ({ p_kiosk }) => { Object.assign(K(p_kiosk), { agent_token_hash: null, device_id: null, paired_at: null }); },
+    admin_mark_refunded: ({ p_order, p_note }) => { Object.assign(O(p_order), { refund_status: "refunded", refund_note: p_note || null }); },
+    admin_cancel_order: ({ p_order }) => { const o = O(p_order); Object.assign(o, { print_status: "cancelled", cancelled_at: new Date().toISOString(), refund_status: o.payment_status === "paid" ? "needs_refund" : o.refund_status, payment_status: o.payment_status === "pending" ? "cancelled" : o.payment_status }); },
+    admin_retry_order: ({ p_order }) => { Object.assign(O(p_order), { print_status: "queued", error_message: null }); },
+    admin_create_test_orders: ({ p_kiosk, p_count }) => { for (let i = 0; i < p_count; i++) orders.unshift({ id: crypto.randomUUID(), kiosk_id: p_kiosk, source: "test", payment_status: "paid", print_status: "queued", total_pages: 1, copies: 1, duplex: false, total_amount: 0, created_at: new Date().toISOString(), paid_at: new Date().toISOString(), released_at: new Date().toISOString(), original_name: "طلب تجريبي " + (i + 1), file_kind: "pdf" }); return p_count; },
+    admin_set_setting: ({ p_key, p_value }) => { settings[p_key] = p_value; },
+  };
+  const wait = () => new Promise((r) => setTimeout(r, 120));
+  return {
+    kiosks: async () => (await wait(), kiosks.map((k) => ({ ...k }))),
+    orders: async () => orders.map((o) => ({ ...o })),
+    payments: async () => payments,
+    commands: async () => commands,
+    events: async () => events,
+    settings: async () => ({ ...settings }),
+    sendCommand: async (kid, command) => { commands.unshift({ id: Date.now(), kiosk_id: kid, command, status: "pending", created_at: new Date().toISOString() }); },
+    rpc: async (fn, args) => { await wait(); if (!rpcs[fn]) throw new Error("unknown rpc " + fn); return rpcs[fn](args); },
+  };
+}
+</script>
+</body>
+</html>
