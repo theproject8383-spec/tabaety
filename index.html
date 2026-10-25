@@ -492,7 +492,7 @@ const MW = M ? M.W : 660, MH = M ? M.H : 564;
 const PJ = (lo, la) => [(lo - M.LON0) * M.COS * M.K + M.PAD, (M.LAT1 - la) * M.K + M.PAD];
 const r1 = (n) => Math.round(n * 10) / 10;
 const SC = (k) => k.status === "ok" ? "ready" : (k.status === "soon" || k.status === "disabled") ? "idle" : k.status === "offline" ? "fault" : "wait";
-const plural = (n) => `${n} ${n === 1 ? "طابعة" : n === 2 ? "طابعتين" : n <= 10 ? "طابعات" : "طابعة"}`;
+const plural = (n) => n === 1 ? "طابعة وحدة" : n === 2 ? "طابعتين" : `${n} ${n <= 10 ? "طابعات" : "طابعة"}`;
 const MV = { built: false, city: null, vb: [0, 0, MW, MH], raf: 0 };
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -617,7 +617,7 @@ function drawCountry(list, city) {
   });
   if (!city) {
     $("#netTitle").textContent = "المملكة";
-    $("#netSub").textContent = nodes.length ? `${plural(list.length)} في ${nodes.length === 1 ? "مدينة وحدة" : nodes.length + " مدن"} · اضغط على المدينة` : "ما فيه طابعات بهالبحث";
+    $("#netSub").textContent = nodes.length ? `${plural(list.length)} في ${nodes.length === 1 ? "مدينة وحدة" : nodes.length === 2 ? "مدينتين" : nodes.length + " مدن"} · اضغط على المدينة` : "ما فيه طابعات بهالبحث";
   }
 }
 
