@@ -125,16 +125,44 @@ section{padding:84px 0;scroll-margin-top:60px}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap}
 .pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
 .pill.ok{color:var(--ok);background:var(--ok-tint)} .pill.warn{color:var(--warn);background:var(--warn-tint)} .pill.bad{color:var(--bad);background:var(--bad-tint)} .pill.soon{color:var(--ink-2);background:var(--line-2)}
-.map-box{position:relative;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--night);min-height:520px}
-#map{position:absolute;inset:0}
-.map-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--night-ink-2);text-align:center;padding:30px}
-.empty{padding:24px;text-align:center;color:var(--ink-2);border:1px dashed var(--line);border-radius:14px}
-.leaflet-container{font-family:inherit!important}
-.leaflet-popup-content{margin:12px 14px!important;font-size:14px;line-height:1.6;direction:rtl;text-align:right}
-.pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--accent);border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);display:grid;place-items:center}
-.pin span{transform:rotate(45deg);color:#fff;font:600 10px var(--mono)}
-.pin.soon{background:#8A959C}
-.pin.off{background:#B83A26}
+.map-box{position:relative;border-radius:18px;overflow:hidden;background:#0B1114;min-height:520px;border:1px solid #1C272C}
+.knet{position:relative;height:100%;min-height:520px;display:flex;flex-direction:column;color:#C9D6DA}
+.net-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #18242A;font-size:14px}
+.net-head b{color:#fff;font-size:16px}.net-head span{color:#7F9399;margin-inline-start:auto;font-size:13px}
+.net-back{background:transparent;border:1px solid #24343A;color:#BFD0D5;border-radius:9px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px}
+.net-back:hover{border-color:#3BB0BB;color:#fff}
+.net-svg{flex:1;width:100%;display:block;font-family:'IBM Plex Sans Arabic',sans-serif}
+.net-base{stroke:#2B3D44;stroke-width:3.2;stroke-linecap:round;fill:none}
+.net-grid{stroke:#15232A;stroke-width:1;fill:none}
+.net-link{stroke:#3BB0BB;stroke-opacity:.35;stroke-width:1.5;fill:none;stroke-dasharray:4 5}
+.net-cross{stroke:#3BB0BB;stroke-opacity:.5;stroke-width:1}
+.net-trace{stroke:#3BB0BB;stroke-opacity:0;stroke-width:1;transition:stroke-opacity .2s}
+.net-node{cursor:pointer;outline:none}
+.net-trace,.net-pulse,.net-cross,.net-label,.net-count,.net-code{pointer-events:none}
+.net-node:hover .net-trace,.net-node:focus-visible .net-trace,.net-node.on .net-trace{stroke-opacity:.45}
+.net-dot{fill:#0B1114;stroke-width:3}
+.net-node.ready .net-dot{stroke:#3BB0BB}.net-node.wait .net-dot{stroke:#E0A84A}.net-node.fault .net-dot{stroke:#EF7A63}.net-node.idle .net-dot{stroke:#6C7E84}
+.net-pulse{fill:none;stroke:#3BB0BB;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:netpulse 2.4s ease-out infinite}
+@keyframes netpulse{0%{opacity:.8;transform:scale(.6)}100%{opacity:0;transform:scale(2.2)}}
+.net-label{fill:#fff;font-size:15px;font-weight:700;text-anchor:middle}
+.net-count{fill:#8FA4AA;font-size:12px;text-anchor:middle}
+.net-chip{fill:#0F1A1E;stroke-width:2}
+.net-node.ready .net-chip{stroke:#3BB0BB}.net-node.wait .net-chip{stroke:#E0A84A}.net-node.fault .net-chip{stroke:#EF7A63}.net-node.idle .net-chip{stroke:#6C7E84}
+.net-node.on .net-chip{fill:#3BB0BB}.net-node.on .net-code{fill:#06191C}
+.net-code{fill:#fff;font-size:13px;font-weight:700;text-anchor:middle;font-family:'IBM Plex Mono',monospace}
+@media (max-width:600px){.net-label{font-size:24px}.net-count{font-size:19px}}
+.net-node:focus-visible .net-chip,.net-node:focus-visible .net-dot{stroke:#fff}
+.net-tip{padding:12px 18px 16px;color:#7F9399;font-size:13px;text-align:center}
+.net-empty{display:grid;place-items:center;height:100%;min-height:520px;color:#7F9399}
+.net-card{position:relative;margin:0 14px 14px;background:#fff;color:var(--ink);border-radius:14px;padding:14px;display:grid;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.net-card .t{display:flex;gap:10px;align-items:flex-start;padding-inline-end:26px}.net-card .t div{min-width:0}
+.net-card .t b{display:block;font-size:15px}.net-card .t div span{font-size:13px;color:var(--ink-2)}
+.net-card .code{font:600 15px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:8px;padding:3px 8px;direction:ltr}
+.net-card .m{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}.net-card .m b{color:var(--ink)}
+.net-card .a{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.net-card-x{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:8px;border:0;background:var(--line-2);font-size:18px;cursor:pointer;color:var(--ink)}
+.small-note{font-size:12.5px;color:var(--ink-2)}
+@media (prefers-reduced-motion:reduce){.net-pulse{animation:none;opacity:.5}}
 
 /* الثقة */
 .trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
@@ -179,7 +207,7 @@ footer a:hover{color:var(--glow)}
   .hero-visual{max-width:300px}
   .steps,.trust{grid-template-columns:1fr}
   .finder{grid-template-columns:1fr}
-  .map-box{min-height:320px}
+  .map-box,.knet{min-height:440px}
   .list{max-height:none}
   .partner{grid-template-columns:1fr;padding:28px}
   section{padding:60px 0}
@@ -258,7 +286,7 @@ footer a:hover{color:var(--glow)}
           <div class="chips" id="cities" role="group" aria-label="المدينة"></div>
           <div class="list" id="list" aria-live="polite"><div class="empty">نحمّل الطابعات…</div></div>
         </div>
-        <div class="map-box"><div id="map" role="region" aria-label="خريطة الطابعات"></div><div class="map-empty" id="mapEmpty">الخريطة تتحمل…</div></div>
+        <div class="map-box"><div id="kmap" class="knet" role="region" aria-label="شبكة الطابعات"></div><div hidden id="mapEmpty">الخريطة تتحمل…</div></div>
       </div>
     </div>
   </section>
@@ -325,7 +353,7 @@ const WA = "966555807345";
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const STATUS = { ok: ["ok", "متاحة الحين"], soon: ["soon", "قريبًا"], offline: ["bad", "غير متصلة"], paused: ["warn", "صيانة"], printer_error: ["warn", "صيانة"], low_ink: ["warn", "صيانة"], no_paper: ["warn", "تنتظر ورق"], disabled: ["soon", "خارج الخدمة"] };
-const S = { all: [], city: "", q: "", sel: null, map: null, markers: {} };
+const S = { all: [], city: "", q: "", sel: null, view: null };
 
 $("#yr").textContent = new Date().getFullYear();
 const waLink = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
@@ -374,7 +402,7 @@ function renderAll() {
   const cities = {}; all.forEach((k) => cities[k.city] = (cities[k.city] || 0) + 1);
   $("#cities").innerHTML = [["", "الكل", all.length], ...Object.entries(cities).sort((a, b) => b[1] - a[1]).map(([c, n]) => [c, c, n])]
     .map(([v, l, n]) => `<button class="chip" data-city="${esc(v)}" aria-pressed="${S.city === v}">${esc(l)}<small>${n}</small></button>`).join("");
-  document.querySelectorAll("[data-city]").forEach((b) => b.onclick = () => { S.city = b.dataset.city; renderAll(); fitMap(); });
+  document.querySelectorAll(".chips [data-city]").forEach((b) => b.onclick = () => { S.city = b.dataset.city; S.view = S.city ? { city: S.city } : null; S.sel = null; renderAll(); });
   renderList(); renderMarkers();
 }
 function renderList() {
@@ -398,59 +426,164 @@ function renderList() {
   });
 }
 function select(id, fromList) {
-  S.sel = id; renderList();
+  S.sel = id;
   const k = (S.all || []).find((x) => x.kiosk_id === id);
-  if (S.map && k && k.lat != null) { S.map.flyTo([k.lat, k.lng], 16, { duration: .6 }); S.markers[id]?.openPopup(); }
+  if (k) S.view = { city: k.city };
+  renderList(); renderNet();
   if (!fromList) document.querySelector(`.loc[data-k="${CSS.escape(id)}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
-/* الخريطة (Leaflet + OpenStreetMap) */
-function loadLeaflet() {
-  return new Promise((res, rej) => {
-    const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(l);
-    const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s);
-  });
-}
-async function initMap() {
-  try { await loadLeaflet(); } catch { $("#mapEmpty").textContent = "ما قدرنا نحمّل الخريطة."; return; }
-  $("#mapEmpty").hidden = true;
-  S.map = L.map("map", { zoomControl: true, scrollWheelZoom: false, attributionControl: true }).setView([24.7136, 46.6753], 6);
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  }).addTo(S.map);
-  renderMarkers(); fitMap();
-}
-function renderMarkers() {
-  if (!S.map || !S.all) return;
-  Object.values(S.markers).forEach((m) => m.remove()); S.markers = {};
-  const withGeo = filtered().filter((k) => k.lat != null && k.lng != null);
-  if (!withGeo.length) { $("#mapEmpty").hidden = false; $("#mapEmpty").textContent = S.all.length ? "المواقع على الخريطة قريبًا." : "أول طابعاتنا قريبًا."; return; }
-  $("#mapEmpty").hidden = true;
-  for (const k of withGeo) {
-    const cls = k.status === "ok" ? "" : k.status === "soon" ? " soon" : k.status === "offline" ? " off" : " soon";
-    const icon = L.divIcon({ className: "", html: `<div class="pin${cls}"><span>${esc(k.kiosk_id).slice(0, 4)}</span></div>`, iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
-    const [pc, pl] = STATUS[k.status] || ["soon", "غير متاحة"];
-    const m = L.marker([k.lat, k.lng], { icon, title: k.location }).addTo(S.map).bindPopup(
-      `<b>${esc(k.location)}</b><br><span class="pill ${pc}"><i></i>${pl}</span> · ${(+k.price_per_page).toFixed(2)} ر.س/ص<br>
-       <div style="display:flex;gap:6px;margin-top:8px">${k.status !== "soon" ? `<a class="btn teal sm" style="color:#fff" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}<a class="btn light sm" href="https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}" target="_blank" rel="noopener">الاتجاهات</a></div>`);
-    m.on("click", () => select(k.kiosk_id, false));
-    S.markers[k.kiosk_id] = m;
+/* ===== خريطة الشبكة: المملكة نقاط على شبكة، وكل طابعة عقدة عند تقاطع خطين ===== */
+// حدود تقريبية للمملكة (خط الطول، خط العرض)، تكفي لرسم الشبكة
+const KSA = [[34.95,29.36],[36.07,29.19],[36.75,29.86],[37.5,29.95],[37.67,30.34],[37.0,31.5],[39.0,32.0],[39.2,32.15],[40.4,31.95],[42.1,31.1],[44.7,29.2],[46.4,29.1],[47.45,29.0],[47.7,28.53],[48.42,28.54],[48.8,27.7],[49.3,27.1],[50.1,26.7],[50.2,26.0],[50.6,25.4],[50.8,24.75],[51.3,24.3],[51.6,24.25],[52.0,23.0],[55.2,22.7],[55.67,22.0],[55.0,20.0],[52.0,19.0],[49.0,18.6],[47.0,17.0],[46.4,17.2],[44.2,17.4],[43.4,17.5],[43.0,16.7],[42.8,16.4],[42.55,16.9],[41.8,17.9],[41.2,19.0],[40.0,20.3],[39.1,21.5],[38.6,22.6],[38.06,24.09],[37.27,25.02],[36.5,26.0],[35.6,27.4],[34.9,28.1],[34.6,28.1]];
+const CITIES = {
+  "الرياض": [46.68, 24.71], "جدة": [39.17, 21.54], "مكة المكرمة": [39.83, 21.42], "مكة": [39.83, 21.42], "المدينة المنورة": [39.61, 24.47], "المدينة": [39.61, 24.47],
+  "الدمام": [50.1, 26.43], "الخبر": [50.21, 26.28], "الظهران": [50.11, 26.29], "الأحساء": [49.58, 25.38], "الهفوف": [49.58, 25.38], "الجبيل": [49.66, 27.0],
+  "القصيم": [43.97, 26.33], "بريدة": [43.97, 26.33], "عنيزة": [43.99, 26.08], "حائل": [41.69, 27.52], "تبوك": [36.57, 28.38], "أبها": [42.5, 18.22], "خميس مشيط": [42.73, 18.3],
+  "الطائف": [40.42, 21.27], "جازان": [42.55, 16.89], "نجران": [44.13, 17.49], "ينبع": [38.06, 24.09], "الباحة": [41.47, 20.01], "الجوف": [40.2, 29.97], "سكاكا": [40.2, 29.97], "عرعر": [41.04, 30.98],
+};
+const NET = { W: 660, H: 540, step: 14, lon0: 34.3, lon1: 56.0, lat0: 16.0, lat1: 32.6 };
+const projX = (lon) => (lon - NET.lon0) / (NET.lon1 - NET.lon0) * NET.W;
+const projY = (lat) => (NET.lat1 - lat) / (NET.lat1 - NET.lat0) * NET.H;
+const snap = (v) => Math.round(v / NET.step) * NET.step;
+const KSA_PX = KSA.map(([lo, la]) => [projX(lo), projY(la)]);
+function inside(x, y, poly) {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
   }
+  return c;
 }
-function fitMap() {
-  if (!S.map) return;
-  renderMarkers();
-  const pts = filtered().filter((k) => k.lat != null).map((k) => [k.lat, k.lng]);
-  if (pts.length === 1) S.map.setView(pts[0], 15);
-  else if (pts.length > 1) S.map.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
+let BASE_DOTS = null;
+function baseDots() {
+  if (BASE_DOTS) return BASE_DOTS;
+  let d = "";
+  for (let y = NET.step; y < NET.H; y += NET.step) for (let x = NET.step; x < NET.W; x += NET.step)
+    if (inside(x, y, KSA_PX)) d += `M${x} ${y}h.01`;
+  return (BASE_DOTS = d);
+}
+const SC = (k) => k.status === "ok" ? "ready" : k.status === "soon" ? "idle" : k.status === "offline" ? "fault" : "wait";
+function cityPoint(name, list) {
+  const c = CITIES[name];
+  if (c) return [snap(projX(c[0])), snap(projY(c[1]))];
+  const g = list.find((k) => k.lat != null);
+  return g ? [snap(projX(g.lng)), snap(projY(g.lat))] : null;
 }
 
+function renderNet() {
+  const box = $("#kmap"); if (!box || !S.all) return;
+  const list = filtered();
+  if (!S.all.length) { box.innerHTML = `<div class="net-empty">أول طابعاتنا قريبًا.</div>`; return; }
+  if (S.view?.city) return renderCity(box, S.view.city, list.filter((k) => k.city === S.view.city));
+  renderCountry(box, list);
+}
+
+function renderCountry(box, list) {
+  const groups = {};
+  list.forEach((k) => (groups[k.city] ||= []).push(k));
+  const nodes = Object.entries(groups).map(([city, ks]) => ({ city, ks, p: cityPoint(city, ks) })).filter((n) => n.p);
+  // خطوط الشبكة بين المدن اللي فيها طابعات
+  let links = "";
+  for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+    const [a, b] = [nodes[i].p, nodes[j].p];
+    links += `<path d="M${a[0]} ${a[1]}H${b[0]}V${b[1]}" class="net-link"/>`;
+  }
+  const nodeSvg = nodes.map((n) => {
+    const live = n.ks.filter((k) => k.status === "ok").length;
+    const cls = live ? "ready" : n.ks.some((k) => k.status !== "soon") ? "wait" : "idle";
+    const [x, y] = n.p;
+    return `<g class="net-node ${cls}" tabindex="0" role="button" data-city="${esc(n.city)}" aria-label="${esc(n.city)}: ${n.ks.length} طابعة">
+      <path d="M${x - 22} ${y}H${x + 22}M${x} ${y - 22}V${y + 22}" class="net-cross"/>
+      ${live ? `<circle cx="${x}" cy="${y}" r="10" class="net-pulse"/>` : ""}
+      <circle cx="${x}" cy="${y}" r="7" class="net-dot"/>
+      <text x="${x}" y="${y - 16}" class="net-label">${esc(n.city)}</text>
+      <text x="${x}" y="${y + 26}" class="net-count">${n.ks.length} ${n.ks.length === 1 ? "طابعة" : "طابعات"}</text>
+    </g>`;
+  }).join("");
+  box.innerHTML = `
+    <div class="net-head"><b>المملكة</b><span>${nodes.length ? "اضغط على مدينة" : "ما فيه طابعات بهالبحث"}</span></div>
+    <svg viewBox="0 0 ${NET.W} ${NET.H}" class="net-svg" role="img" aria-label="خريطة شبكة طابعات طابعتي في المملكة">
+      <path d="${baseDots()}" class="net-base"/>
+      ${links}${nodeSvg}
+    </svg>`;
+  box.querySelectorAll(".net-node").forEach((g) => {
+    const go = () => { S.view = { city: g.dataset.city }; S.sel = null; renderNet(); };
+    g.onclick = go; g.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  });
+}
+
+function renderCity(box, city, ks) {
+  const W = 660, H = 420, step = 60, pad = 60;
+  const cols = Math.floor((W - pad * 2) / step), rows = Math.floor((H - pad * 2) / step);
+  // مكان كل طابعة: من إحداثياتها (نسبةً لبعض)، ويلتصق بأقرب تقاطع. اللي ما لها إحداثيات تاخذ تقاطعات فاضية حول الوسط
+  const geo = ks.filter((k) => k.lat != null);
+  const used = new Set(), pos = {};
+  const key = (c, r) => `${c},${r}`;
+  if (geo.length) {
+    const lats = geo.map((k) => k.lat), lngs = geo.map((k) => k.lng);
+    const [a0, a1, o0, o1] = [Math.min(...lats), Math.max(...lats), Math.min(...lngs), Math.max(...lngs)];
+    for (const k of geo) {
+      let c = o1 > o0 ? Math.round((k.lng - o0) / (o1 - o0) * (cols - 2)) + 1 : Math.floor(cols / 2);
+      let r = a1 > a0 ? Math.round((a1 - k.lat) / (a1 - a0) * (rows - 2)) + 1 : Math.floor(rows / 2);
+      while (used.has(key(c, r))) c = (c + 1) % (cols + 1);
+      used.add(key(c, r)); pos[k.kiosk_id] = [c, r];
+    }
+  }
+  const ring = [];
+  const cc = Math.floor(cols / 2), cr = Math.floor(rows / 2);
+  for (let d = 0; d <= Math.max(cols, rows); d++) for (let r = cr - d; r <= cr + d; r++) for (let c = cc - d; c <= cc + d; c++)
+    if (r >= 0 && c >= 0 && r <= rows && c <= cols && Math.max(Math.abs(r - cr), Math.abs(c - cc)) === d) ring.push([c, r]);
+  for (const k of ks.filter((k) => k.lat == null)) {
+    const spot = ring.find(([c, r]) => !used.has(key(c, r)));
+    used.add(key(...spot)); pos[k.kiosk_id] = spot;
+  }
+  const X = (c) => pad + c * step, Y = (r) => pad + r * step;
+  let grid = "";
+  for (let c = 0; c <= cols; c++) grid += `M${X(c)} ${Y(0)}V${Y(rows)}`;
+  for (let r = 0; r <= rows; r++) grid += `M${X(0)} ${Y(r)}H${X(cols)}`;
+  let dots = "";
+  for (let c = 0; c <= cols; c++) for (let r = 0; r <= rows; r++) dots += `M${X(c)} ${Y(r)}h.01`;
+  const nodes = ks.map((k) => {
+    const [c, r] = pos[k.kiosk_id], x = X(c), y = Y(r), cls = SC(k), on = S.sel === k.kiosk_id;
+    return `<g class="net-node ${cls}${on ? " on" : ""}" tabindex="0" role="button" data-k="${esc(k.kiosk_id)}" aria-label="طابعة ${esc(k.kiosk_id)}، ${esc(k.location)}">
+      <path d="M${X(0)} ${y}H${X(cols)}M${x} ${Y(0)}V${Y(rows)}" class="net-trace"/>
+      ${k.status === "ok" ? `<circle cx="${x}" cy="${y}" r="13" class="net-pulse"/>` : ""}
+      <rect x="${x - 20}" y="${y - 13}" width="40" height="26" rx="6" class="net-chip"/>
+      <text x="${x}" y="${y + 5}" class="net-code">${esc(k.kiosk_id)}</text>
+    </g>`;
+  }).join("");
+  const sel = ks.find((k) => k.kiosk_id === S.sel);
+  box.innerHTML = `
+    <div class="net-head"><button class="net-back" id="netBack">${"→"} المملكة</button><b>${esc(city)}</b><span>${ks.length} ${ks.length === 1 ? "طابعة" : "طابعات"}</span></div>
+    <svg viewBox="0 0 ${W} ${H}" class="net-svg" role="img" aria-label="طابعات ${esc(city)}">
+      <path d="${grid}" class="net-grid"/><path d="${dots}" class="net-base"/>${nodes}
+    </svg>
+    ${sel ? kioskCard(sel) : `<div class="net-tip">اضغط على أي طابعة تشوف تفاصيلها وموقعها بالضبط</div>`}`;
+  $("#netBack").onclick = () => { S.view = null; S.sel = null; renderNet(); renderList(); };
+  box.querySelectorAll(".net-node[data-k]").forEach((g) => {
+    const go = () => select(g.dataset.k, false);
+    g.onclick = go; g.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  });
+  box.querySelector(".net-card-x")?.addEventListener("click", () => { S.sel = null; renderNet(); renderList(); });
+}
+
+function kioskCard(k) {
+  const [cls, label] = STATUS[k.status] || ["soon", "غير متاحة"];
+  const where = [k.area, k.city].filter(Boolean).join("، ");
+  return `<div class="net-card" role="dialog" aria-label="${esc(k.location)}">
+    <button class="net-card-x" aria-label="إغلاق">×</button>
+    <div class="t"><span class="code">${esc(k.kiosk_id)}</span><div><b>${esc(k.location)}</b><span>${esc(where)}${k.note ? `، ${esc(k.note)}` : ""}</span></div></div>
+    <div class="m"><span class="pill ${cls}"><i></i>${label}</span><span><b class="mono">${(+k.price_per_page).toFixed(2)}</b> ر.س للصفحة</span>${k.hours ? `<span>${esc(k.hours)}</span>` : ""}</div>
+    <div class="a">${k.status !== "soon" ? `<a class="btn teal sm" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}
+      ${k.lat != null ? `<a class="btn light sm" href="https://www.google.com/maps/search/?api=1&query=${k.lat},${k.lng}" target="_blank" rel="noopener">الموقع بالضبط على قوقل ماب</a>` : `<span class="small-note">الموقع الدقيق يُضاف قريبًا</span>`}</div>
+  </div>`;
+}
+const fitMap = () => renderNet();
+const renderMarkers = () => renderNet();
+
 $("#q").oninput = (e) => { S.q = e.target.value; renderList(); renderMarkers(); };
-loadKiosks().then(() => {
-  // نحمّل الخريطة لما يقترب المستخدم منها
-  const io = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting)) { io.disconnect(); initMap(); } }, { rootMargin: "300px" });
-  io.observe($("#map"));
-});
+loadKiosks();
 setInterval(() => { if (!document.hidden) loadKiosks(); }, 60000);
 </script>
 </body>

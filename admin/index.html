@@ -189,6 +189,14 @@ dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
   .table-wrap{overflow:visible}
   .card[style*="padding:4px"]{padding:4px 8px!important;background:transparent;border:0}
 }
+.loc-state{padding:10px 12px;border-radius:10px;font-size:13.5px;line-height:1.7;border:1px solid transparent}
+.loc-state.ok{background:#E8F6F1;color:#11604A;border-color:#BFE5D6}
+.loc-state.warn{background:#FDF4E3;color:#7A5410;border-color:#F1DDB0}
+.loc-state.bad{background:#FDECE8;color:#8A2E1C;border-color:#F4C9BE}
+.loc-state a{color:inherit;font-weight:700;margin-inline-start:6px}
+:root[data-theme="dark"] .loc-state.ok{background:#12322A;color:#8EE0C2;border-color:#1E4F41}
+:root[data-theme="dark"] .loc-state.warn{background:#3A2E14;color:#F1CC80;border-color:#5A4720}
+:root[data-theme="dark"] .loc-state.bad{background:#3B1D17;color:#F4A898;border-color:#5C2C22}
 </style>
 </head>
 <body>
@@ -735,6 +743,7 @@ function kioskForm(k) {
     <label class="full">رابط قوقل ماب <small>الصقه وتنعبّى الإحداثيات تلقائيًا (افتح المكان في قوقل ماب ← مشاركة ← نسخ الرابط الطويل)</small><input class="f ltr" id="mapLink" placeholder="https://www.google.com/maps/@24.72,46.62,17z"></label>
     <label>خط العرض (lat)<input class="f mono ltr" name="lat" inputmode="decimal" value="${v("lat")}" placeholder="24.7136"></label>
     <label>خط الطول (lng)<input class="f mono ltr" name="lng" inputmode="decimal" value="${v("lng")}" placeholder="46.6753"></label>
+    <div class="full loc-state" id="locState"></div>
     <label>ساعات التشغيل <small>اختياري</small><input class="f" name="hours" maxlength="60" value="${v("hours")}" placeholder="24 ساعة"></label>
     <label class="check"><input type="checkbox" name="is_public" ${k ? (k.is_public !== false ? "checked" : "") : "checked"}> تظهر للعامة في الموقع</label>
     <datalist id="cities">${["الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام", "الخبر", "الظهران", "الأحساء", "القصيم", "أبها", "تبوك", "حائل", "الطائف", "جازان", "نجران", "الجبيل", "ينبع"].map((c) => `<option value="${c}">`).join("")}</datalist>
@@ -762,9 +771,32 @@ function kioskDrawerAfter(d) {
   $$("[data-sub]").forEach((b) => b.onclick = () => { d.sub = b.dataset.sub; renderDrawer(); });
   const form = $("#kForm");
   const ml = $("#mapLink");
+  const locState = () => {
+    const box = $("#locState"); if (!box || !form) return;
+    const la = form.lat.value.trim(), ln = form.lng.value.trim();
+    const savedLa = k?.lat != null ? String(k.lat) : "", savedLn = k?.lng != null ? String(k.lng) : "";
+    const valid = la !== "" && ln !== "" && Number.isFinite(+la) && Number.isFinite(+ln) && Math.abs(+la) <= 90 && Math.abs(+ln) <= 180;
+    const inKsa = valid && +la > 15 && +la < 33 && +ln > 34 && +ln < 57;
+    const dirty = la !== savedLa || ln !== savedLn;
+    const city = form.city.value.trim();
+    let cls = "bad", msg;
+    if (!valid && (la || ln)) msg = "⚠️ الإحداثيات ناقصة أو مو أرقام.";
+    else if (!valid) { cls = savedLa ? "bad" : "warn"; msg = city ? `📍 الموقع الدقيق <b>غير محدد</b> — الطابعة بتطلع في الخريطة داخل «${esc(city)}» بدون موقع دقيق.` : "📍 الموقع <b>غير محدد</b> والمدينة فاضية — الطابعة ما بتطلع في الخريطة. اكتب المدينة على الأقل."; }
+    else {
+      cls = dirty ? "warn" : "ok";
+      msg = (dirty ? "🟡 إحداثيات جديدة <b>ما انحفظت بعد</b> — اضغط «حفظ التعديلات»." : "✅ الموقع <b>محفوظ</b>.") + (inKsa ? "" : " ⚠️ النقطة برّا السعودية، تأكد إن lat و lng مو معكوسين.") +
+        ` <a href="https://www.google.com/maps/search/?api=1&query=${+la},${+ln}" target="_blank" rel="noopener">تأكد منه على قوقل ماب ↗</a>`;
+    }
+    box.className = "full loc-state " + cls; box.innerHTML = msg;
+  };
+  if (form) { form.lat.oninput = form.lng.oninput = form.city.oninput = locState; locState(); }
   if (ml) ml.oninput = () => {
-    const m = ml.value.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || ml.value.match(/[?&](?:q|query|ll)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/) || ml.value.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || ml.value.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/);
-    if (m) { form.lat.value = (+m[1]).toFixed(6); form.lng.value = (+m[2]).toFixed(6); toast("تعبّت الإحداثيات من الرابط"); }
+    const v = ml.value.trim();
+    const m = v.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || v.match(/[?&](?:q|query|ll|center)=(-?\d+\.\d+)(?:,|%2C)\s*(-?\d+\.\d+)/i) || v.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || v.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/);
+    if (m) { form.lat.value = (+m[1]).toFixed(6); form.lng.value = (+m[2]).toFixed(6); toast("تعبّت الإحداثيات من الرابط — لا تنسى تحفظ"); }
+    else if (/goo\.gl|maps\.app/i.test(v)) toast("هذا رابط مختصر وما فيه إحداثيات. افتحه في المتصفح وانسخ الرابط الطويل من الشريط، أو اضغط مطوّلًا على المكان في قوقل ماب وانسخ الرقمين (مثل 24.71, 46.67) والصقهم هنا.");
+    else if (v) toast("ما لقيت إحداثيات في الرابط.");
+    locState();
   };
   if (form) form.onsubmit = async (e) => {
     e.preventDefault();
