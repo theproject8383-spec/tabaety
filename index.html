@@ -3,258 +3,307 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>طابعتي — اطبع من جوالك واستلم من الطابعة</title>
-<meta name="description" content="طابعات خدمة ذاتية في الجامعات والأماكن العامة. صوّر الباركود، ارفع ملفك، ادفع، واضغط «اطبع الآن» وأنت عند الطابعة. بدون تطبيق وبدون تسجيل.">
-<meta name="theme-color" content="#171C20">
-<meta property="og:title" content="طابعتي — اطبع من جوالك واستلم من الطابعة">
+<title>طابعتي — اطبع من جوالك في ثواني</title>
+<meta name="description" content="طابعات خدمة ذاتية في الجامعات والأماكن العامة. صوّر الباركود، ارفع ملفك، ادفع، واطبع وأنت واقف عند الطابعة. بدون تطبيق وبدون تسجيل.">
+<meta name="theme-color" content="#0D1114">
+<meta property="og:title" content="طابعتي — اطبع من جوالك في ثواني">
 <meta property="og:description" content="صوّر الباركود، ارفع ملفك، ادفع، واطبع. بدون تطبيق وبدون تسجيل.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.tabaety.com/">
-<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230A6B74'/%3E%3Cpath d='M7 9V4h10v5M5 9h14v7H5zM7 14h10v6H7z' fill='none' stroke='white' stroke-width='1.8'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/tabaety.css">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px }
+:root{
+  --ink:#14181B; --ink-2:#5E6A73; --line:#DCE2E5; --line-2:#EBEFF1; --ground:#F4F6F6; --card:#FFFFFF;
+  --accent:#0A6B74; --accent-ink:#084F56; --accent-tint:#E1F0F1; --glow:#3BB0BB;
+  --night:#0D1114; --night-2:#151B1F; --night-line:#26313A; --night-ink:#E6ECEE; --night-ink-2:#9AA6AD;
+  --ok:#1D7F48; --ok-tint:#E3F3E9; --warn:#8A5A0B; --warn-tint:#FBF0DC; --bad:#B83A26; --bad-tint:#FBE7E3;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--accent)}
+button,input{font-family:inherit;font-size:inherit}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+.ltr{direction:ltr;unicode-bidi:isolate}
 
 /* الترويسة */
-.top { position: sticky; top: 0; z-index: 40; background: color-mix(in srgb, var(--desk) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule) }
-.top .wrap { display: flex; align-items: center; gap: 22px; height: 66px }
-.top nav { display: flex; gap: 2px; margin-inline-start: auto }
-.top nav a { color: var(--graphite); text-decoration: none; font-weight: 500; font-size: 15px; padding: 8px 12px; border-radius: 8px }
-.top nav a:hover { color: var(--toner); background: var(--rule-soft) }
-.menu-btn { display: none; width: 44px; height: 44px; border: 1px solid var(--rule); background: var(--sheet); border-radius: 10px; place-items: center }
-.mnav { display: none }
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,17,20,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--night-line)}
+header.top .wrap{display:flex;align-items:center;gap:18px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;font-size:19px}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+nav.links{display:flex;gap:4px;margin-inline-start:auto}
+nav.links a{color:var(--night-ink-2);text-decoration:none;font-size:14px;font-weight:500;padding:8px 12px;border-radius:9px}
+nav.links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.menu-btn{display:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--night-line);background:transparent;color:#fff;place-items:center;cursor:pointer}
+.mnav{display:flex;flex-direction:column;padding:6px 16px 14px;border-top:1px solid var(--night-line)}
+.mnav a{color:var(--night-ink);text-decoration:none;padding:13px 4px;border-bottom:1px solid var(--night-line);font-weight:500}
+.mnav a:last-child{border-bottom:0;color:var(--glow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;font-weight:700;text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--glow);color:#06191C}
+.btn.primary:hover{background:#5BC6D0}
+.btn.ghost{background:transparent;color:#fff;border:1px solid var(--night-line)}
+.btn.ghost:hover{border-color:var(--glow)}
+.btn.sm{min-height:38px;padding:0 14px;font-size:14px}
+.btn.light{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.light:hover{border-color:var(--accent)}
+.btn.teal{background:var(--accent);color:#fff}
+.btn.teal:hover{background:var(--accent-ink)}
 
-/* البطل: جسم الطابعة، والورقة تطلع من الفتحة وعليها العنوان */
-.hero { position: relative; padding-bottom: 72px; overflow: hidden }
-.machine { background: var(--machine); height: 132px; position: relative }
-.machine::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 46px, rgba(255,255,255,.025) 46px 47px) }
-.machine .panel-strip { position: absolute; top: 26px; inset-inline-start: max(20px, calc(50% - 540px)); display: flex; align-items: center; gap: 12px; color: #8E9AA1; font-size: 13px }
-.machine .panel-strip .lcd { background: #0E2A2E; color: #7BE0E9; font: 600 13px/1 var(--f-body); padding: 7px 12px; border-radius: 6px; letter-spacing: .3px; min-width: 190px }
-.machine .panel-strip .bulb { width: 9px; height: 9px; border-radius: 50%; background: #39D07F; box-shadow: 0 0 10px #39D07F }
-.slot { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: min(720px, calc(100% - 24px)); height: 14px; background: #050708; border-radius: 6px 6px 0 0; box-shadow: inset 0 3px 6px rgba(0,0,0,.8) }
-.slot::after { content: ""; position: absolute; inset: auto 10% 0; height: 2px; background: var(--brand-hi); opacity: .55; filter: blur(2px) }
-.feed { width: min(660px, calc(100% - 40px)); margin: 0 auto; position: relative; z-index: 2; clip-path: inset(0 -40px -60px -40px) }
-.page { padding: 56px 56px 0; animation: feed-out 1.25s cubic-bezier(.2, .7, .2, 1) .15s both }
-@keyframes feed-out { from { transform: translateY(-104%) } }
-.page h1 { font-size: clamp(32px, 5.4vw, 54px); line-height: 1.28; margin: 0 0 18px; font-weight: 800 }
-.page p.lead { font-size: 18px; color: var(--graphite); margin: 0 0 30px; max-width: 30em }
-.page .ctas { display: flex; gap: 10px; flex-wrap: wrap }
-.page .ctas .btn { min-height: 52px; font-size: 16px; padding: 0 24px }
-.spec { margin: 44px -56px 0; border-top: 1px solid var(--rule); display: grid; grid-template-columns: repeat(3, 1fr) }
-.spec div { padding: 18px 24px 22px; border-inline-start: 1px solid var(--rule) }
-.spec div:first-child { border-inline-start: 0 }
-.spec b { display: block; font: 700 22px/1.3 var(--f-head) }
-.spec > div > span { font-size: 13.5px; color: var(--graphite) }
-.regmark { position: absolute; top: 18px; left: 18px; width: 22px; height: 22px; opacity: .5 }
+/* البطل */
+.hero{background:var(--night);color:var(--night-ink);position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-top:72px;padding-bottom:84px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--glow);background:rgba(59,176,187,.1);border:1px solid rgba(59,176,187,.25);padding:4px 12px;border-radius:99px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--glow);box-shadow:0 0 0 0 rgba(59,176,187,.6);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(59,176,187,.6)}80%,100%{box-shadow:0 0 0 10px rgba(59,176,187,0)}}
+.hero h1{font-size:clamp(34px,5.2vw,58px);line-height:1.2;margin:18px 0 14px;color:#fff;letter-spacing:-.5px}
+.hero h1 span{color:var(--glow)}
+.hero p.lead{font-size:18px;color:var(--night-ink-2);max-width:520px;margin:0 0 28px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:28px;margin-top:38px;flex-wrap:wrap}
+.stats div b{display:block;font:600 26px var(--mono);color:#fff}
+.stats div span{font-size:13px;color:var(--night-ink-2)}
+.net{position:absolute;inset:0;z-index:0;opacity:.9}
+.hero-visual{position:relative;aspect-ratio:1/1;max-width:440px;justify-self:center;width:100%}
+.phone{position:absolute;inset:6% 18% 6% 18%;background:var(--night-2);border:1px solid var(--night-line);border-radius:34px;padding:16px;box-shadow:0 40px 80px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:10px}
+.phone .bar{height:6px;width:40%;margin:0 auto 6px;border-radius:3px;background:var(--night-line)}
+.phone .kc{display:flex;align-items:center;gap:8px;background:#0F1518;border:1px solid var(--night-line);border-radius:12px;padding:8px}
+.phone .kc b{font:600 14px var(--mono);color:var(--glow);background:rgba(59,176,187,.12);border-radius:7px;padding:2px 7px}
+.phone .kc span{font-size:11px;color:var(--night-ink-2)}
+.phone .kc em{margin-inline-start:auto;font-style:normal;font-size:10px;color:#4CC183;background:#12291E;border-radius:99px;padding:1px 8px}
+.phone .file{border:1.5px dashed #355058;border-radius:14px;padding:18px 10px;text-align:center;color:var(--night-ink-2);font-size:12px}
+.phone .file b{display:block;color:#fff;font-size:13px;margin-top:6px}
+.phone .sum{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--night-ink-2);border-top:1px solid var(--night-line);padding-top:10px}
+.phone .sum b{font:600 18px var(--mono);color:#fff}
+.phone .go{background:#1D7F48;color:#fff;border-radius:12px;text-align:center;padding:10px;font-size:13px;font-weight:700}
+.paper{position:absolute;width:30%;aspect-ratio:1/1.41;background:#fff;border-radius:4px;box-shadow:0 18px 40px rgba(0,0,0,.4);padding:10px;display:flex;flex-direction:column;gap:5px}
+.paper i{display:block;height:4px;border-radius:2px;background:#D9E0E3}
+.paper i:nth-child(1){width:70%;background:#0A6B74;height:6px}
+.paper i:nth-child(3){width:85%} .paper i:nth-child(5){width:60%}
+.paper.a{left:-3%;bottom:-3%;width:24%;transform:rotate(-9deg)}
+.paper.b{right:-1%;top:10%;transform:rotate(7deg);width:24%}
 
 /* الأقسام */
-.section { padding: 88px 0; scroll-margin-top: 66px }
-.section > .wrap > h2 { font-size: clamp(26px, 3.6vw, 38px); margin: 0 0 10px }
-.section > .wrap > .intro { color: var(--graphite); font-size: 17px; margin: 0 0 40px; max-width: 34em }
+section{padding:84px 0;scroll-margin-top:60px}
+.sec-head{max-width:640px;margin-bottom:36px}
+.sec-head .kick{font:600 13px var(--mono);color:var(--accent);letter-spacing:.5px}
+.sec-head h2{font-size:clamp(26px,3.4vw,38px);line-height:1.3;margin:8px 0 10px}
+.sec-head p{margin:0;color:var(--ink-2);font-size:17px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;position:relative}
+.step .n{font:600 13px var(--mono);color:var(--accent);background:var(--accent-tint);border-radius:8px;padding:3px 9px;display:inline-block}
+.step h3{margin:16px 0 6px;font-size:20px}
+.step p{margin:0;color:var(--ink-2)}
+.step .ic{position:absolute;left:22px;top:22px;color:#C7D3D7}
 
-/* الخطوات: مسار الورقة */
-.path { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; position: relative }
-.path::before { content: ""; position: absolute; top: 34px; right: 34px; left: 34px; border-top: 2px dashed var(--rule) }
-.stop { position: relative; padding-inline-end: 28px }
-.stop .n { width: 68px; height: 68px; border-radius: 50%; background: var(--sheet); border: 2px solid var(--toner); display: grid; place-items: center; font: 800 26px/1 var(--f-head); position: relative; z-index: 1; margin-bottom: 20px }
-.stop:last-child .n { background: var(--toner); color: var(--sheet) }
-.stop h3 { font-size: 20px; margin: 0 0 6px }
-.stop p { margin: 0; color: var(--graphite); max-width: 22em }
+/* المواقع */
+#where{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.finder{display:grid;grid-template-columns:340px 1fr;gap:18px;min-height:520px}
+.finder-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:var(--ground)}
+.search input{flex:1;border:0;background:transparent;min-height:46px;outline:none;min-width:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-size:14px;font-weight:500;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip small{font-family:var(--mono);opacity:.7;margin-inline-start:4px}
+.list{display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:560px;padding-inline-end:4px}
+.loc{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;background:var(--card);transition:border-color .15s}
+.loc:hover,.loc.on{border-color:var(--accent)}
+.loc .t{display:flex;align-items:flex-start;gap:10px}
+.loc .code{font:600 15px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:8px;padding:3px 8px;direction:ltr}
+.loc .t div{flex:1;min-width:0}
+.loc .t b{display:block;font-size:15px;line-height:1.4}
+.loc .t span{font-size:13px;color:var(--ink-2)}
+.loc .acts{display:flex;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.ok{color:var(--ok);background:var(--ok-tint)} .pill.warn{color:var(--warn);background:var(--warn-tint)} .pill.bad{color:var(--bad);background:var(--bad-tint)} .pill.soon{color:var(--ink-2);background:var(--line-2)}
+.map-box{position:relative;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--night);min-height:520px}
+#map{position:absolute;inset:0}
+.map-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--night-ink-2);text-align:center;padding:30px}
+.empty{padding:24px;text-align:center;color:var(--ink-2);border:1px dashed var(--line);border-radius:14px}
+.leaflet-container{font-family:inherit!important}
+.leaflet-popup-content{margin:12px 14px!important;font-size:14px;line-height:1.6;direction:rtl;text-align:right}
+.pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--accent);border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);display:grid;place-items:center}
+.pin span{transform:rotate(45deg);color:#fff;font:600 10px var(--mono)}
+.pin.soon{background:#8A959C}
+.pin.off{background:#B83A26}
 
-/* وين الطابعات */
-.finder { display: grid; grid-template-columns: 360px 1fr; gap: 22px; align-items: start }
-.side { display: flex; flex-direction: column; gap: 12px; min-width: 0 }
-.search { display: flex; align-items: center; gap: 8px; border: 1px solid var(--rule); border-radius: var(--r-m); background: var(--sheet); padding: 0 14px }
-.search:focus-within { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-wash) }
-.search input { flex: 1; border: 0; background: transparent; min-height: 50px; outline: none; min-width: 0 }
-.cities { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none }
-.cities button { border: 1px solid var(--rule); background: var(--sheet); border-radius: 99px; padding: 7px 15px; font-weight: 500; font-size: 14px; white-space: nowrap }
-.cities button[aria-pressed="true"] { background: var(--toner); border-color: var(--toner); color: var(--sheet) }
-.cities button small { opacity: .6; margin-inline-start: 5px }
-.list { display: flex; flex-direction: column; max-height: 560px; overflow-y: auto; border: 1px solid var(--rule); border-radius: var(--r-m); background: var(--sheet) }
-.loc { padding: 16px; border-bottom: 1px solid var(--rule-soft); cursor: pointer; display: grid; gap: 8px }
-.loc:last-child { border-bottom: 0 }
-.loc:hover, .loc.on { background: color-mix(in srgb, var(--brand-wash) 55%, var(--sheet)) }
-.loc .row1 { display: flex; align-items: flex-start; gap: 10px }
-.loc .code { font: 700 15px/1 var(--f-head); background: var(--toner); color: var(--sheet); border-radius: 6px; padding: 6px 8px; direction: ltr }
-.loc .name { flex: 1; min-width: 0 }
-.loc .name b { display: block; font-size: 15.5px; line-height: 1.45 }
-.loc .name span { font-size: 13.5px; color: var(--graphite) }
-.loc .row2 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 13.5px; color: var(--graphite) }
-.loc .row2 b { color: var(--toner); font-size: 15px }
-.loc .row2 .btn { margin-inline-start: auto }
-.mapwrap { position: relative; min-height: 560px; border-radius: var(--r-m); overflow: hidden; border: 1px solid var(--rule); background: var(--rule-soft) }
-#map { position: absolute; inset: 0 }
-.map-note { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: var(--graphite); padding: 30px }
-.empty { padding: 28px 20px; text-align: center; color: var(--graphite) }
-.leaflet-container { font-family: var(--f-body) !important; background: var(--rule-soft) }
-.leaflet-popup-content { margin: 14px 16px !important; font-size: 14px; line-height: 1.6; direction: rtl; text-align: right; min-width: 180px }
-.leaflet-popup-content b { font-size: 15px }
-.pin { width: 34px; height: 34px; border-radius: 50% 50% 50% 4px; transform: rotate(-45deg); background: var(--toner); border: 3px solid #fff; box-shadow: 0 6px 14px rgba(0,0,0,.3); display: grid; place-items: center }
-.pin span { transform: rotate(45deg); color: #fff; font: 700 10.5px var(--f-body) }
-.pin.ready { background: var(--brand) }
-.pin.fault { background: var(--led-fault) }
-.pin.idle { background: #8B979E }
+/* الثقة */
+.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.trust div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.trust svg{color:var(--accent)}
+.trust h3{margin:12px 0 4px;font-size:17px}
+.trust p{margin:0;color:var(--ink-2);font-size:14px}
 
-/* الوعود */
-.promises { display: grid; grid-template-columns: 1fr 1.3fr; gap: 56px; align-items: start }
-.promises h2 { font-size: clamp(26px, 3.6vw, 38px); margin: 0 }
-.promises ul { list-style: none; margin: 0; padding: 0 }
-.promises li { display: grid; grid-template-columns: 44px 1fr; gap: 4px 16px; padding: 22px 0; border-top: 1px solid var(--rule) }
-.promises li:last-child { border-bottom: 1px solid var(--rule) }
-.promises li svg { grid-row: span 2; color: var(--brand); margin-top: 4px }
-.promises li b { font: 700 18px/1.4 var(--f-head) }
-.promises li span { color: var(--graphite) }
+/* أسئلة */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px 18px}
+.faq summary{cursor:pointer;font-weight:600;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:600 20px var(--mono);color:var(--accent)}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:0 0 16px;color:var(--ink-2)}
 
-/* الأسئلة */
-.faq { max-width: 820px; border-top: 1px solid var(--rule) }
-.faq details { border-bottom: 1px solid var(--rule) }
-.faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; font-weight: 600; font-size: 17px }
-.faq summary::-webkit-details-marker { display: none }
-.faq summary i { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule); display: grid; place-items: center; flex: none; transition: transform .2s }
-.faq details[open] summary i { transform: rotate(45deg); background: var(--toner); color: var(--sheet); border-color: var(--toner) }
-.faq p { margin: -4px 0 22px; color: var(--graphite); max-width: 40em }
+/* شركاء */
+.partner{background:var(--night);color:var(--night-ink);border-radius:24px;padding:44px;display:grid;grid-template-columns:1.4fr 1fr;gap:30px;align-items:center;position:relative;overflow:hidden}
+.partner h2{color:#fff;margin:0 0 10px;font-size:clamp(24px,3vw,32px)}
+.partner p{margin:0;color:var(--night-ink-2)}
+.partner ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:6px;color:var(--night-ink)}
+.partner li::before{content:"✓";color:var(--glow);margin-inline-end:8px;font-weight:700}
+.partner .ctas{display:flex;flex-direction:column;gap:10px;align-items:stretch}
 
-/* للجهات */
-.partner { background: var(--machine); color: #E8EDEF; border-radius: var(--r-l); padding: 48px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 32px; align-items: end; position: relative; overflow: hidden }
-.partner::after { content: ""; position: absolute; bottom: 0; inset-inline: 48px; height: 6px; background: #050708; border-radius: 4px 4px 0 0 }
-.partner h2 { font-size: clamp(24px, 3vw, 32px); margin: 0 0 10px; color: #fff }
-.partner p { margin: 0; color: #9CA8AF; max-width: 32em }
-.partner .btn { justify-self: end; padding: 0 28px; background: var(--brand-hi); color: #04181B; min-height: 52px; font-size: 16px }
-.partner .btn:hover { background: #4CC6D2 }
+footer{background:var(--night);color:var(--night-ink-2);padding:40px 0;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--night-ink);text-decoration:none}
+footer a:hover{color:var(--glow)}
+.fl{display:flex;gap:18px;flex-wrap:wrap}
 
-footer { border-top: 1px solid var(--rule); padding: 30px 0 calc(30px + env(safe-area-inset-bottom)); color: var(--graphite); font-size: 14px }
-footer .wrap { display: flex; align-items: center; gap: 22px; flex-wrap: wrap }
-footer nav { display: flex; gap: 18px; flex-wrap: wrap; margin-inline-start: auto }
-footer a { color: var(--graphite); text-decoration: none } footer a:hover { color: var(--toner) }
-
-@media (max-width: 920px) {
-  .top nav, .top .btn-ink { display: none }
-  .menu-btn { display: grid; margin-inline-start: auto }
-  .mnav { display: flex; flex-direction: column; padding: 4px 20px 14px; border-top: 1px solid var(--rule); background: var(--desk) }
-  .mnav a { padding: 14px 2px; border-bottom: 1px solid var(--rule-soft); color: var(--toner); text-decoration: none; font-weight: 500 }
-  .mnav a:last-child { border-bottom: 0; color: var(--brand) }
-  .machine { height: 92px } .machine .panel-strip { top: 18px } .machine .panel-strip .lcd { min-width: 0 }
-  .page { padding: 40px 24px 0 }
-  .spec { margin: 34px -24px 0; grid-template-columns: 1fr }
-  .spec div { border-inline-start: 0; border-top: 1px solid var(--rule); padding: 14px 24px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px }
-  .spec div:first-child { border-top: 0 }
-  .spec b { font-size: 18px }
-  .page .ctas .btn { flex: 1 1 100% }
-  .section { padding: 64px 0 }
-  .path { grid-template-columns: 1fr; gap: 28px }
-  .path::before { top: 34px; bottom: 34px; left: auto; right: 33px; border-top: 0; border-right: 2px dashed var(--rule) }
-  .stop { display: grid; grid-template-columns: 68px 1fr; gap: 0 18px; padding: 0 }
-  .stop .n { grid-row: span 2; margin: 0 }
-  .finder { grid-template-columns: 1fr }
-  .mapwrap { min-height: 320px }
-  .list { max-height: none }
-  .promises { grid-template-columns: 1fr; gap: 20px }
-  .partner { grid-template-columns: 1fr; padding: 30px 24px 40px } .partner .btn { justify-self: stretch } .partner::after { inset-inline: 24px }
-  footer nav { margin-inline-start: 0 }
+@media (max-width:920px){
+  nav.links{display:none}
+  header.top .wrap{gap:10px;height:60px}
+  header.top .btn.primary.sm{margin-inline-start:auto}
+  .menu-btn{display:grid}
+  .hero .ctas .btn{flex:1}
+  .stats{gap:18px} .stats div b{font-size:22px}
+  .sec-head{margin-bottom:24px}
+  .loc .acts .btn{flex:1}
+  .hero .wrap{grid-template-columns:1fr;padding-top:44px;padding-bottom:56px}
+  .hero-visual{max-width:300px}
+  .steps,.trust{grid-template-columns:1fr}
+  .finder{grid-template-columns:1fr}
+  .map-box{min-height:320px}
+  .list{max-height:none}
+  .partner{grid-template-columns:1fr;padding:28px}
+  section{padding:60px 0}
 }
-@media (min-width: 921px) { .mnav { display: none !important } }
+@media (min-width:921px){.mnav{display:none!important}}
+@media (min-width:921px) and (max-width:1080px){.trust{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="wordmark" href="#top" aria-label="طابعتي — الرئيسية"><img class="mark" src="/assets/mark.svg" alt="" width="34" height="34">طابعتي</a>
-    <nav aria-label="الأقسام"><a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#promises">وعودنا</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a></nav>
-    <a class="btn btn-ink btn-sm" href="#where">لقّ أقرب طابعة</a>
+    <a class="brand" href="#top" aria-label="طابعتي"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span>طابعتي</a>
+    <nav class="links" aria-label="الأقسام">
+      <a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#trust">ليش طابعتي</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a>
+    </nav>
+    <a class="btn primary sm" href="#where">لقّ أقرب طابعة</a>
     <button class="menu-btn" id="menuBtn" aria-label="القائمة" aria-expanded="false" aria-controls="mnav"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
   <nav class="mnav" id="mnav" hidden aria-label="الأقسام">
-    <a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#promises">وعودنا</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a><a id="mnavWa" href="#" target="_blank" rel="noopener">كلمنا في واتساب</a>
+    <a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#trust">ليش طابعتي</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a><a id="mnavWa" href="#" target="_blank" rel="noopener">تواصل في واتساب</a>
   </nav>
 </header>
 
 <main id="top">
-  <section class="hero" aria-labelledby="h1">
-    <div class="machine" aria-hidden="true">
-      <div class="panel-strip"><span class="bulb"></span><span class="lcd" id="lcd">جاهزة للطباعة</span></div>
-      <div class="slot"></div>
-    </div>
-    <div class="feed">
-      <article class="sheet crop page"><span class="crop-b"></span>
-        <svg class="regmark" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="6"/><path d="M12 1v22M1 12h22"/></svg>
-        <h1 id="h1">اطبع ملفك من جوالك، واستلمه من الطابعة.</h1>
-        <p class="lead">صوّر الباركود اللي على الطابعة، ارفع الملف، ادفع، واضغط «اطبع الآن» وأنت واقف عندها. بدون تطبيق وبدون تسجيل.</p>
-        <div class="ctas">
-          <a class="btn btn-ink" href="#where"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>وين أقرب طابعة؟</a>
-          <a class="btn btn-line" href="#how">كيف تشتغل</a>
-        </div>
-        <div class="spec">
-          <div><b><span id="statPrice">0.20</span> ر.س</b><span>للصفحة، أبيض وأسود</span></div>
-          <div><b id="statKiosks">—</b><span id="statKiosksLbl">طابعة في الخدمة</span></div>
-          <div><b>بعد الطباعة</b><span>ملفك ينحذف تلقائيًا</span></div>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section class="section" id="how" aria-labelledby="how-h">
+  <!-- البطل -->
+  <section class="hero" style="padding:0">
+    <svg class="net" id="net" aria-hidden="true"></svg>
     <div class="wrap">
-      <h2 id="how-h">ثلاث خطوات، وأوراقك بيدك</h2>
-      <p class="intro">كل شي من متصفح جوالك. والطابعة ما تطبع إلا وأنت واقف عندها.</p>
-      <div class="path">
-        <div class="stop"><span class="n">١</span><h3>صوّر الباركود</h3><p>بكاميرا الجوال العادية. تنفتح صفحة الطابعة، وتشوف سعرها وحالتها قبل أي شي.</p></div>
-        <div class="stop"><span class="n">٢</span><h3>ارفع الملف وادفع</h3><p>PDF أو صورة. تختار النسخ والوجهين، وتشوف عدد الأوراق والمبلغ بالضبط قبل الدفع.</p></div>
-        <div class="stop"><span class="n">٣</span><h3>اضغط «اطبع الآن»</h3><p>لما توصل الطابعة. أوراقك تطلع خلال ثواني، وملفك ينحذف من عندنا.</p></div>
+      <div>
+        <span class="eyebrow"><i></i><span id="liveLine">طابعات خدمة ذاتية</span></span>
+        <h1>اطبع من جوالك<br><span>في ثواني.</span></h1>
+        <p class="lead">صوّر الباركود اللي على الطابعة، ارفع ملفك، ادفع، واضغط «اطبع الآن» وأنت واقف عندها. بدون تطبيق، وبدون تسجيل، وبدون طوابير.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#where"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>وين الطابعات؟</a>
+          <a class="btn ghost" href="#how">كيف تشتغل</a>
+        </div>
+        <div class="stats">
+          <div><b id="statPrice">0.20</b><span>ر.س للصفحة تبدأ من</span></div>
+          <div><b id="statKiosks">—</b><span>طابعة في الخدمة</span></div>
+          <div><b>0</b><span>تطبيقات تحتاج تنزّلها</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="paper b"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="phone">
+          <div class="bar"></div>
+          <div class="kc"><b>101</b><span>مكتبة الجامعة</span><em>متاحة</em></div>
+          <div class="file"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3BB0BB" stroke-width="2"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><b>محاضرة-الفصل-3.pdf</b>12 صفحة · وجهين</div>
+          <div class="sum"><span>المجموع</span><b>2.40 <small style="font:400 11px 'IBM Plex Sans Arabic'">ر.س</small></b></div>
+          <div class="go">أنا عند الطابعة — اطبع الآن</div>
+        </div>
+        <div class="paper a"><i></i><i></i><i></i><i></i><i></i></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="where" aria-labelledby="where-h" style="background:var(--sheet);border-block:1px solid var(--rule)">
+  <!-- كيف -->
+  <section id="how">
     <div class="wrap">
-      <h2 id="where-h">لقّ أقرب طابعة</h2>
-      <p class="intro">اختر مدينتك أو دوّر باسم المكان. حالة كل طابعة تتحدث مباشرة.</p>
+      <div class="sec-head"><span class="kick">01 — كيف تطبع</span><h2>ثلاث خطوات، وأوراقك بيدك</h2><p>كل شي من جوالك. الطابعة ما تطبع إلا لما تكون واقف عندها.</p></div>
+      <div class="steps">
+        <div class="step"><svg class="ic" aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-7"/></svg><span class="n">1</span><h3>صوّر الباركود</h3><p>بكاميرا الجوال العادية. تنفتح صفحة الطابعة مباشرة، وتشوف السعر وحالتها.</p></div>
+        <div class="step"><svg class="ic" aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span class="n">2</span><h3>ارفع ملفك وادفع</h3><p>PDF أو صورة. اختر النسخ والوجهين، وادفع بـ Apple Pay أو مدى. المبلغ قدامك قبل الدفع.</p></div>
+        <div class="step"><svg class="ic" aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg><span class="n">3</span><h3>«اطبع الآن»</h3><p>لما توصل الطابعة اضغط الزر، وتطلع أوراقك خلال ثواني. ملفك ينحذف بعدها تلقائيًا.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- وين -->
+  <section id="where">
+    <div class="wrap">
+      <div class="sec-head"><span class="kick">02 — وين الطابعات</span><h2>لقّ أقرب طابعة لك</h2><p>اختر مدينتك، أو دوّر باسم المكان. الحالة تتحدث مباشرة.</p></div>
       <div class="finder">
-        <div class="side">
-          <label class="search"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="جامعة، مكتبة، حي…" aria-label="بحث عن طابعة"></label>
-          <div class="cities" id="cities" role="group" aria-label="المدينة"></div>
+        <div class="finder-side">
+          <label class="search"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6A73" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="دوّر: جامعة، مكتبة، حي…" aria-label="بحث عن طابعة"></label>
+          <div class="chips" id="cities" role="group" aria-label="المدينة"></div>
           <div class="list" id="list" aria-live="polite"><div class="empty">نحمّل الطابعات…</div></div>
         </div>
-        <div class="mapwrap"><div id="map" role="region" aria-label="خريطة الطابعات"></div><div class="map-note" id="mapNote">الخريطة تتحمّل…</div></div>
+        <div class="map-box"><div id="map" role="region" aria-label="خريطة الطابعات"></div><div class="map-empty" id="mapEmpty">الخريطة تتحمل…</div></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="promises">
-    <div class="wrap promises">
-      <h2>أربع وعود على كل ورقة</h2>
-      <ul>
-        <li><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><b>تطبع وأنت عندها</b><span>ما تطلع ورقة قبل ما تضغط «اطبع الآن» وأنت واقف عند الطابعة.</span></li>
-        <li><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><b>ملفك يبقى لك</b><span>محفوظ في تخزين خاص، وينحذف بعد الطباعة، وما نطلب اسمك ولا رقمك.</span></li>
-        <li><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h7l5 5v13H7z"/><path d="M10 13h6M10 17h4"/></svg><b>المبلغ قبل الدفع</b><span>عدد الصفحات والأوراق والمجموع قدامك قبل ما تدفع.</span></li>
-        <li><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg><b>ما انطبع؟ نرجّع لك</b><span>إذا صار عطل وما طلعت أوراقك، يرجع لك المبلغ كامل.</span></li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="section" id="faq" style="padding-top:0" aria-labelledby="faq-h">
+  <!-- الثقة -->
+  <section id="trust">
     <div class="wrap">
-      <h2 id="faq-h">أسئلة تتكرر</h2>
-      <p class="intro">ما لقيت جوابك؟ <a id="faqWa" href="#" target="_blank" rel="noopener">اسألنا في واتساب</a>.</p>
-      <div class="faq">
-        <details><summary>وش الملفات اللي أقدر أطبعها؟<i aria-hidden="true">+</i></summary><p>PDF والصور (JPG وPNG وصور الآيفون). ملف Word أو PowerPoint: افتحه في جوالك، ثم «مشاركة» أو «طباعة»، ثم «حفظ PDF»، وارفعه.</p></details>
-        <details><summary>ملفي في واتساب، كيف أرفعه؟<i aria-hidden="true">+</i></summary><p>اضغط على الملف مطوّلًا في المحادثة، ثم «مشاركة»، ثم «حفظ في الملفات». بعدها اختاره من صفحة الطباعة.</p></details>
-        <details><summary>أحتاج تطبيق أو حساب؟<i aria-hidden="true">+</i></summary><p>لا. كل شي من متصفح الجوال.</p></details>
-        <details><summary>كم السعر؟<i aria-hidden="true">+</i></summary><p>مكتوب على كل طابعة وفي صفحتها، ويبدأ من <span id="faqPrice">0.20</span> ر.س للصفحة أبيض وأسود. المجموع يظهر لك قبل الدفع.</p></details>
-        <details><summary>دفعت وما وصلت الطابعة، يضيع طلبي؟<i aria-hidden="true">+</i></summary><p>لا. الطلب ينتظرك، وتفتح نفس الصفحة من جوالك لما توصل وتضغط «اطبع الآن». وإذا ما لحقت، يرجع لك المبلغ.</p></details>
-        <details><summary>دفعت وما طلعت أوراقي، وش أسوي؟<i aria-hidden="true">+</i></summary><p>كلمنا في واتساب ومعك رقم الطلب اللي في الصفحة. إذا ما انطبع، يرجع لك المبلغ كامل.</p></details>
+      <div class="sec-head"><span class="kick">03 — ليش طابعتي</span><h2>مصممة عشان ترتاح</h2></div>
+      <div class="trust">
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><h3>ملفك خاص</h3><p>ينحفظ مشفّر، وينحذف تلقائيًا بعد الطباعة. ما أحد يشوفه غيرك.</p></div>
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><h3>تطبع وأنت عندها</h3><p>أوراقك ما تطلع إلا لما تضغط «اطبع الآن» وأنت واقف عند الطابعة.</p></div>
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h7"/><path d="M17 15l2 2 4-4"/></svg><h3>السعر قبل الدفع</h3><p>تشوف عدد الصفحات والأوراق والمبلغ بالضبط قبل ما تدفع ريال.</p></div>
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg><h3>مضمون</h3><p>صار عطل وما انطبع طلبك؟ نرجع لك المبلغ كامل.</p></div>
       </div>
     </div>
   </section>
 
-  <section class="section" id="partner" style="padding-top:0">
+  <!-- أسئلة -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><span class="kick">04 — أسئلة</span><h2>أسئلة تتكرر</h2></div>
+      <div class="faq">
+        <details><summary>وش الملفات اللي أقدر أطبعها؟</summary><p>PDF والصور (JPG وPNG، وصور الآيفون). ملفات Word وPowerPoint: افتحها في جوالك ← «مشاركة» أو «طباعة» ← «حفظ PDF»، وبعدين ارفعها.</p></details>
+        <details><summary>ملفي في واتساب، كيف أرفعه؟</summary><p>اضغط على الملف مطوّلًا في المحادثة ← «مشاركة» ← «حفظ في الملفات». بعدها اختاره من صفحة الطباعة.</p></details>
+        <details><summary>أحتاج أحمّل تطبيق أو أسجّل؟</summary><p>لا. كل شي من متصفح الجوال، بدون تطبيق وبدون حساب.</p></details>
+        <details><summary>كم السعر؟</summary><p>السعر مكتوب على كل طابعة وفي صفحتها، ويبدأ من <span id="faqPrice">0.20</span> ر.س للصفحة أبيض وأسود. تشوف المجموع قبل الدفع.</p></details>
+        <details><summary>دفعت وما طلعت الأوراق، وش أسوي؟</summary><p>تواصل معنا في واتساب ومعك رقم الطلب اللي في الصفحة. إذا ما انطبع الطلب نرجع لك المبلغ كامل.</p></details>
+        <details><summary>دفعت وما وصلت الطابعة، يضيع طلبي؟</summary><p>لا. الطلب ينتظرك ساعة كاملة. افتح نفس الصفحة من جوالك لما توصل واضغط «اطبع الآن». وإذا ما لحقت، نرجع لك المبلغ.</p></details>
+        <details><summary>وش يصير لملفي بعد الطباعة؟</summary><p>ينحذف تلقائيًا من عندنا بعد الطباعة مباشرة، وكحد أقصى بعد 24 ساعة لو ما انطبع.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- للجهات -->
+  <section id="partner" style="padding-top:0">
     <div class="wrap">
       <div class="partner">
-        <div><h2>عندكم مكان يحتاج طابعة؟</h2><p>جامعات ومكتبات وسكن طلاب ومقرات عمل. نركّب الطابعة ونشغّلها ونعبّي ورقها وحبرها بنفسنا، ونراقبها عن بُعد.</p></div>
-        <a class="btn" id="partnerWa" href="#" target="_blank" rel="noopener">نتكلم في واتساب</a>
+        <div>
+          <h2>عندك مكان يحتاج طابعة؟</h2>
+          <p>جامعات، مكتبات، سكن طلاب، مستشفيات، مقرات عمل. نركّب الطابعة ونشغّلها ونعبّيها بنفسنا.</p>
+          <ul><li>بدون تكلفة تشغيل عليكم</li><li>نراقب الورق والحبر عن بُعد</li><li>صيانة ودعم سريع</li></ul>
+        </div>
+        <div class="ctas">
+          <a class="btn primary" id="partnerWa" href="#" target="_blank" rel="noopener">كلمنا في واتساب</a>
+        </div>
       </div>
     </div>
   </section>
@@ -262,8 +311,8 @@ footer a { color: var(--graphite); text-decoration: none } footer a:hover { colo
 
 <footer>
   <div class="wrap">
-    <a class="wordmark" href="#top" style="font-size:17px"><img class="mark" src="/assets/mark.svg" alt="" width="28" height="28" style="width:28px;height:28px">طابعتي</a>
-    <nav aria-label="روابط"><a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#faq">أسئلة</a><a id="footWa" href="#" target="_blank" rel="noopener">واتساب <span class="ltr" id="waNum"></span></a></nav>
+    <a class="brand" href="#top"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span>طابعتي</a>
+    <div class="fl"><a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#faq">أسئلة</a><a id="footWa" href="#" target="_blank" rel="noopener">واتساب: <span class="ltr" id="waNum"></span></a></div>
     <span>© <span id="yr">2026</span> طابعتي</span>
   </div>
 </footer>
@@ -275,18 +324,31 @@ const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const WA = "966555807345";
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-const STATUS = { ok: ["ready", "متاحة"], soon: ["idle", "قريبًا"], offline: ["fault", "غير متصلة"], paused: ["wait", "صيانة"], printer_error: ["wait", "صيانة"], low_ink: ["wait", "صيانة"], no_paper: ["wait", "تنتظر ورق"], disabled: ["idle", "خارج الخدمة"] };
+const STATUS = { ok: ["ok", "متاحة الحين"], soon: ["soon", "قريبًا"], offline: ["bad", "غير متصلة"], paused: ["warn", "صيانة"], printer_error: ["warn", "صيانة"], low_ink: ["warn", "صيانة"], no_paper: ["warn", "تنتظر ورق"], disabled: ["soon", "خارج الخدمة"] };
 const S = { all: [], city: "", q: "", sel: null, map: null, markers: {} };
-const waLink = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
 
 $("#yr").textContent = new Date().getFullYear();
-$("#waNum").textContent = "+" + WA;
+const waLink = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
 $("#partnerWa").href = waLink("السلام عليكم، عندنا مكان ونبي نركّب طابعة طابعتي");
-$("#footWa").href = $("#mnavWa").href = $("#faqWa").href = waLink("السلام عليكم، عندي سؤال عن طابعتي");
-
+$("#footWa").href = waLink("السلام عليكم، عندي استفسار عن طابعتي");
+$("#waNum").textContent = "+" + WA;
+$("#mnavWa").href = waLink("السلام عليكم، عندي استفسار عن طابعتي");
 const mb = $("#menuBtn"), mn = $("#mnav");
 mb.onclick = () => { const open = mn.hidden; mn.hidden = !open; mb.setAttribute("aria-expanded", String(open)); };
 mn.addEventListener("click", (e) => { if (e.target.closest("a")) { mn.hidden = true; mb.setAttribute("aria-expanded", "false"); } });
+addEventListener("resize", () => { if (innerWidth > 920) mn.hidden = true; });
+
+/* الشبكة المتحركة في الخلفية */
+(function net() {
+  const svg = $("#net"); const W = 1200, H = 640;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const pts = Array.from({ length: 34 }, () => [rnd() * W, rnd() * H]);
+  let lines = "", dots = "";
+  pts.forEach((a, i) => pts.slice(i + 1).forEach((b) => { const d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (d < 190) lines += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#3BB0BB" stroke-opacity="${(0.22 * (1 - d / 190)).toFixed(3)}"/>`; }));
+  pts.forEach((p, i) => { dots += `<circle cx="${p[0]}" cy="${p[1]}" r="${i % 5 ? 1.8 : 3.2}" fill="#3BB0BB" fill-opacity="${i % 5 ? .35 : .8}">${i % 5 ? "" : `<animate attributeName="r" values="3.2;6;3.2" dur="${3 + (i % 3)}s" repeatCount="indefinite"/>`}</circle>`; });
+  svg.innerHTML = `<defs><radialGradient id="fade" cx="20%" cy="40%" r="80%"><stop offset="0" stop-color="#0D1114" stop-opacity="0"/><stop offset="1" stop-color="#0D1114" stop-opacity=".9"/></radialGradient></defs>${lines}${dots}<rect width="${W}" height="${H}" fill="url(#fade)"/>`;
+})();
 
 /* الطابعات */
 async function loadKiosks() {
@@ -297,40 +359,37 @@ async function loadKiosks() {
   } catch { S.all = null; }
   renderAll();
 }
-const filtered = () => {
+function filtered() {
   const q = S.q.trim();
   return (S.all || []).filter((k) => (!S.city || k.city === S.city) && (!q || [k.location, k.area, k.city, k.kiosk_id, k.note].join(" ").includes(q)));
-};
+}
 function renderAll() {
   const all = S.all;
   if (all === null) { $("#list").innerHTML = `<div class="empty">ما قدرنا نحمّل الطابعات. حدّث الصفحة.</div>`; return; }
   const live = all.filter((k) => k.status === "ok").length;
-  const active = all.filter((k) => k.status !== "soon").length;
-  $("#statKiosks").textContent = active || all.length || "قريبًا";
-  $("#statKiosksLbl").textContent = active ? (live ? `طابعة، ${live} متاحة الحين` : "طابعة في الخدمة") : "أول طابعاتنا";
-  $("#lcd").textContent = live ? `${live} طابعة جاهزة الحين` : "جاهزة للطباعة";
-  const prices = all.map((k) => +k.price_per_page).filter((n) => n > 0);
-  if (prices.length) { const m = Math.min(...prices).toFixed(2); $("#statPrice").textContent = m; $("#faqPrice").textContent = m; }
+  $("#statKiosks").textContent = all.filter((k) => k.status !== "soon").length || all.length;
+  $("#liveLine").textContent = live ? `${live} طابعة متاحة الحين` : "طابعات خدمة ذاتية";
+  const minP = Math.min(...all.map((k) => +k.price_per_page).filter((n) => n > 0));
+  if (Number.isFinite(minP)) { $("#statPrice").textContent = minP.toFixed(2); $("#faqPrice").textContent = minP.toFixed(2); }
   const cities = {}; all.forEach((k) => cities[k.city] = (cities[k.city] || 0) + 1);
-  const opts = [["", "كل المدن", all.length], ...Object.entries(cities).sort((a, b) => b[1] - a[1]).map(([c, n]) => [c, c, n])];
-  $("#cities").innerHTML = opts.length > 2 ? opts.map(([v, l, n]) => `<button data-city="${esc(v)}" aria-pressed="${S.city === v}">${esc(l)}<small>${n}</small></button>`).join("") : "";
+  $("#cities").innerHTML = [["", "الكل", all.length], ...Object.entries(cities).sort((a, b) => b[1] - a[1]).map(([c, n]) => [c, c, n])]
+    .map(([v, l, n]) => `<button class="chip" data-city="${esc(v)}" aria-pressed="${S.city === v}">${esc(l)}<small>${n}</small></button>`).join("");
   document.querySelectorAll("[data-city]").forEach((b) => b.onclick = () => { S.city = b.dataset.city; renderAll(); fitMap(); });
   renderList(); renderMarkers();
 }
 function renderList() {
   const list = filtered();
   if (!list.length) {
-    $("#list").innerHTML = `<div class="empty">${S.all.length ? "ما فيه طابعة تطابق بحثك." : "أول طابعاتنا قريبًا."}<br><a href="${waLink("السلام عليكم، أبي طابعة طابعتي في مكاني")}" target="_blank" rel="noopener">تبي طابعة في مكانك؟ كلمنا</a></div>`;
+    $("#list").innerHTML = `<div class="empty">${S.all.length ? "ما لقينا طابعة بهالبحث." : "أول طابعاتنا قريبًا. تابعنا!"}<br><a href="${waLink("السلام عليكم، أبي طابعة طابعتي في مكاني")}" target="_blank" rel="noopener">تبي طابعة في مكانك؟ كلمنا</a></div>`;
     return;
   }
   $("#list").innerHTML = list.map((k) => {
-    const [cls, label] = STATUS[k.status] || ["idle", "غير متاحة"];
-    const where = [k.area, k.city].filter(Boolean).join("، ");
-    return `<article class="loc${S.sel === k.kiosk_id ? " on" : ""}" data-k="${esc(k.kiosk_id)}" tabindex="0" aria-label="${esc(k.location)}">
-      <div class="row1"><span class="code">${esc(k.kiosk_id)}</span><div class="name"><b>${esc(k.location)}</b><span>${esc(where)}${k.note ? `، ${esc(k.note)}` : ""}</span></div><span class="led ${cls}">${label}</span></div>
-      <div class="row2"><span><b>${(+k.price_per_page).toFixed(2)}</b> ر.س للصفحة</span>${k.hours ? `<span>${esc(k.hours)}</span>` : ""}
-        ${k.lat != null ? `<a class="btn btn-quiet btn-sm" href="https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}" target="_blank" rel="noopener">الاتجاهات</a>` : ""}
-        ${k.status !== "soon" ? `<a class="btn btn-ink btn-sm" ${k.lat == null ? 'style="margin-inline-start:auto"' : ""} href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}</div>
+    const [cls, label] = STATUS[k.status] || ["soon", "غير متاحة"];
+    const dir = k.lat != null ? `https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}` : null;
+    return `<article class="loc${S.sel === k.kiosk_id ? " on" : ""}" data-k="${esc(k.kiosk_id)}" tabindex="0">
+      <div class="t"><span class="code">${esc(k.kiosk_id)}</span><div><b>${esc(k.location)}</b><span>${esc([k.area, k.city].filter(Boolean).join(" · "))}${k.note ? " · " + esc(k.note) : ""}</span></div><span class="pill ${cls}"><i></i>${label}</span></div>
+      <div class="t" style="font-size:13px;color:var(--ink-2)"><span><b class="mono" style="display:inline;color:var(--ink)">${(+k.price_per_page).toFixed(2)}</b> ر.س/صفحة${k.supports_duplex ? " · وجهين" : ""}${k.hours ? " · " + esc(k.hours) : ""}</span></div>
+      <div class="acts">${k.status !== "soon" ? `<a class="btn teal sm" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}${dir ? `<a class="btn light sm" href="${dir}" target="_blank" rel="noopener">الاتجاهات</a>` : ""}</div>
     </article>`;
   }).join("");
   document.querySelectorAll(".loc").forEach((el) => {
@@ -345,7 +404,7 @@ function select(id, fromList) {
   if (!fromList) document.querySelector(`.loc[data-k="${CSS.escape(id)}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
 }
 
-/* الخريطة */
+/* الخريطة (Leaflet + OpenStreetMap) */
 function loadLeaflet() {
   return new Promise((res, rej) => {
     const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(l);
@@ -353,26 +412,27 @@ function loadLeaflet() {
   });
 }
 async function initMap() {
-  try { await loadLeaflet(); } catch { $("#mapNote").textContent = "ما قدرنا نحمّل الخريطة."; return; }
-  S.map = L.map("map", { scrollWheelZoom: false }).setView([24.7136, 46.6753], 5);
+  try { await loadLeaflet(); } catch { $("#mapEmpty").textContent = "ما قدرنا نحمّل الخريطة."; return; }
+  $("#mapEmpty").hidden = true;
+  S.map = L.map("map", { zoomControl: true, scrollWheelZoom: false, attributionControl: true }).setView([24.7136, 46.6753], 6);
   L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
     maxZoom: 19, subdomains: "abcd", attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
   }).addTo(S.map);
-  fitMap();
+  renderMarkers(); fitMap();
 }
 function renderMarkers() {
   if (!S.map || !S.all) return;
   Object.values(S.markers).forEach((m) => m.remove()); S.markers = {};
-  const geo = filtered().filter((k) => k.lat != null && k.lng != null);
-  const note = $("#mapNote");
-  if (!geo.length) { note.hidden = false; note.textContent = S.all.length ? "مواقع الطابعات على الخريطة قريبًا." : "أول طابعاتنا قريبًا."; return; }
-  note.hidden = true;
-  for (const k of geo) {
-    const [cls, label] = STATUS[k.status] || ["idle", "غير متاحة"];
-    const icon = L.divIcon({ className: "", html: `<div class="pin ${cls === "ready" ? "ready" : cls === "fault" ? "fault" : "idle"}"><span>${esc(k.kiosk_id).slice(0, 4)}</span></div>`, iconSize: [34, 34], iconAnchor: [17, 34], popupAnchor: [0, -30] });
+  const withGeo = filtered().filter((k) => k.lat != null && k.lng != null);
+  if (!withGeo.length) { $("#mapEmpty").hidden = false; $("#mapEmpty").textContent = S.all.length ? "المواقع على الخريطة قريبًا." : "أول طابعاتنا قريبًا."; return; }
+  $("#mapEmpty").hidden = true;
+  for (const k of withGeo) {
+    const cls = k.status === "ok" ? "" : k.status === "soon" ? " soon" : k.status === "offline" ? " off" : " soon";
+    const icon = L.divIcon({ className: "", html: `<div class="pin${cls}"><span>${esc(k.kiosk_id).slice(0, 4)}</span></div>`, iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+    const [pc, pl] = STATUS[k.status] || ["soon", "غير متاحة"];
     const m = L.marker([k.lat, k.lng], { icon, title: k.location }).addTo(S.map).bindPopup(
-      `<b>${esc(k.location)}</b><div style="margin:6px 0 10px"><span class="led ${cls}">${label}</span> ${(+k.price_per_page).toFixed(2)} ر.س للصفحة</div>
-       <div style="display:flex;gap:6px">${k.status !== "soon" ? `<a class="btn btn-ink btn-sm" style="color:#fff" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}<a class="btn btn-line btn-sm" href="https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}" target="_blank" rel="noopener">الاتجاهات</a></div>`);
+      `<b>${esc(k.location)}</b><br><span class="pill ${pc}"><i></i>${pl}</span> · ${(+k.price_per_page).toFixed(2)} ر.س/ص<br>
+       <div style="display:flex;gap:6px;margin-top:8px">${k.status !== "soon" ? `<a class="btn teal sm" style="color:#fff" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}<a class="btn light sm" href="https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}" target="_blank" rel="noopener">الاتجاهات</a></div>`);
     m.on("click", () => select(k.kiosk_id, false));
     S.markers[k.kiosk_id] = m;
   }
@@ -387,6 +447,7 @@ function fitMap() {
 
 $("#q").oninput = (e) => { S.q = e.target.value; renderList(); renderMarkers(); };
 loadKiosks().then(() => {
+  // نحمّل الخريطة لما يقترب المستخدم منها
   const io = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting)) { io.disconnect(); initMap(); } }, { rootMargin: "300px" });
   io.observe($("#map"));
 });

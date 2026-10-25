@@ -11,20 +11,27 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/tabaety.css">
-<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:var(--toner); --ink-2:var(--graphite); --ink-3:color-mix(in srgb,var(--graphite) 70%,var(--desk)); --line:var(--rule); --line-2:var(--rule-soft); --ground:var(--desk); --card:var(--sheet);
-  --accent:var(--brand); --accent-ink:var(--brand-deep); --accent-tint:var(--brand-wash);
-  --ok:var(--led-ready); --ok-tint:var(--led-ready-wash); --warn:var(--led-wait); --warn-tint:var(--led-wait-wash); --bad:var(--led-fault); --bad-tint:var(--led-fault-wash); --mute-tint:var(--rule-soft);
-  --mono:var(--f-head);
-  --hover-row:color-mix(in srgb,var(--brand-wash) 45%,var(--sheet)); --danger-line:color-mix(in srgb,var(--led-fault) 35%,var(--rule)); --bar-warn:var(--led-wait); --toast:var(--toner); --toast-ink:var(--sheet); --logo:var(--machine);
+  --ink:#14181B; --ink-2:#5E6A73; --ink-3:#8A959C; --line:#DCE2E5; --line-2:#EBEFF1; --ground:#F4F6F6; --card:#FFFFFF;
+  --accent:#0A6B74; --accent-ink:#084F56; --accent-tint:#E1F0F1;
+  --ok:#1D7F48; --ok-tint:#E3F3E9; --warn:#8A5A0B; --warn-tint:#FBF0DC; --bad:#B83A26; --bad-tint:#FBE7E3; --mute-tint:#EEF1F2;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --on-accent:#FFFFFF; --hover-row:#FAFBFB; --danger-line:#EBC3BB; --bar-warn:#D99A2B; --toast:#14181B; --toast-ink:#FFFFFF; --logo:#14181B;
+  color-scheme:light;
+}
+/* الوضع الليلي (الافتراضي). يتبدّل من زر القمر/الشمس */
+:root[data-theme="dark"]{
+  --ink:#E6ECEE; --ink-2:#9AA6AD; --ink-3:#6E7A82; --line:#28323A; --line-2:#1F272D; --ground:#0D1114; --card:#151B1F;
+  --accent:#3BB0BB; --accent-ink:#5BC6D0; --accent-tint:#12313A;
+  --ok:#4CC183; --ok-tint:#12291E; --warn:#E0A84A; --warn-tint:#2C2312; --bad:#EF7A63; --bad-tint:#33190F; --mute-tint:#1D252A;
+  --on-accent:#06191C; --hover-row:#1A2227; --danger-line:#5A2A20; --bar-warn:#E0A84A; --toast:#E6ECEE; --toast-ink:#0D1114; --logo:#2A3A40;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.6}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:14px}
 button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -42,7 +49,7 @@ a{color:var(--accent)}
 aside.nav{background:var(--card);border-left:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100dvh;align-self:start}
 .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
 .brand .logo{width:34px;height:34px;border-radius:9px;background:var(--logo);color:#fff;display:grid;place-items:center}
-.brand b{font:800 16px/1.3 var(--f-head);display:block} .brand small{font-size:11px;color:var(--ink-2)}
+.brand b{font-size:16px;display:block} .brand small{font-size:11px;color:var(--ink-2)}
 .nav button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 12px;border:0;border-radius:10px;background:transparent;text-align:right;font-weight:500;color:var(--ink-2)}
 .nav button:hover{background:var(--ground);color:var(--ink)}
 .nav button[aria-current="page"]{background:var(--accent-tint);color:var(--accent);font-weight:600}
@@ -53,7 +60,7 @@ aside.nav{background:var(--card);border-left:1px solid var(--line);padding:18px 
 .live-dot.off i{background:var(--bad)}
 main.page{padding:22px 26px 60px;min-width:0}
 .head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.head h1{margin:0;font-size:24px} .head p{margin:4px 0 0;color:var(--ink-2)}
+.head h1{margin:0;font-size:22px} .head p{margin:4px 0 0;color:var(--ink-2)}
 .tabs-m,.mtop{display:none}
 .icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer}
 
@@ -62,7 +69,7 @@ main.page{padding:22px 26px 60px;min-width:0}
 .card h2{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
 .grid{display:grid;gap:14px}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))} .g3{grid-template-columns:repeat(3,minmax(0,1fr))} .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
-.kpi span{font-size:12.5px;color:var(--ink-2);display:block} .kpi b{font:800 28px/1.3 var(--f-head);display:block;margin-top:4px;font-variant-numeric:tabular-nums} .kpi small{font-size:12px;color:var(--ink-2)}
+.kpi span{font-size:12px;color:var(--ink-2);display:block} .kpi b{font:600 26px var(--mono);display:block;margin-top:4px} .kpi small{font-size:12px;color:var(--ink-2)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:600;white-space:nowrap}
 .btn:hover{border-color:var(--ink-3)}
 .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)} .btn.primary:hover{background:var(--accent-ink)}
@@ -96,10 +103,10 @@ textarea.f{padding:8px 10px;min-height:70px;resize:vertical}
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
 /* بطاقة الطابعة */
-.pcard{display:flex;flex-direction:column;gap:12px;cursor:pointer;border-radius:4px}
+.pcard{display:flex;flex-direction:column;gap:12px;cursor:pointer}
 .pcard:hover{border-color:var(--ink-3)}
 .pcard .top{display:flex;align-items:center;gap:10px}
-.code{font:800 17px/1 var(--f-head);background:var(--ink);color:var(--card);border-radius:6px;padding:7px 9px;direction:ltr}
+.code{font:600 18px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:9px;padding:4px 9px;direction:ltr}
 .pcard .loc{flex:1;min-width:0} .pcard .loc b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} .pcard .loc span{font-size:12px;color:var(--ink-2)}
 .meter{display:flex;flex-direction:column;gap:5px} .meter .row{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-2)} .meter .row b{color:var(--ink);font-family:var(--mono)}
 .tags{display:flex;gap:6px;flex-wrap:wrap}
@@ -189,7 +196,7 @@ dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
 
 <section class="login" id="login" hidden>
   <form id="loginForm">
-    <div class="brand" style="padding:0"><img class="mark" src="/assets/mark.svg" alt="" width="34" height="34"><span><b>لوحة طابعتي</b><small>للمدراء فقط</small></span></div>
+    <div class="brand" style="padding:0"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span><span><b>لوحة طابعتي</b><small>للمدراء فقط</small></span></div>
     <h1>تسجيل الدخول</h1>
     <label class="form" style="display:flex;flex-direction:column;gap:5px;font-weight:500">الإيميل<input class="f" id="email" type="email" autocomplete="username" required dir="ltr"></label>
     <label class="form" style="display:flex;flex-direction:column;gap:5px;font-weight:500">كلمة المرور<input class="f" id="pass" type="password" autocomplete="current-password" required dir="ltr"></label>
@@ -200,7 +207,7 @@ dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
 
 <div class="shell" id="shell" hidden>
   <aside class="nav" aria-label="القائمة">
-    <div class="brand"><img class="mark" src="/assets/mark.svg" alt="" width="34" height="34"><span><b>لوحة طابعتي</b><small id="who"></small></span></div>
+    <div class="brand"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span><span><b>لوحة طابعتي</b><small id="who"></small></span></div>
     <div id="navBtns"></div>
     <div class="foot">
       <span class="live-dot" id="liveDot"><i></i><span>تحديث لحظي</span></span>
@@ -210,7 +217,7 @@ dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
   </aside>
   <div style="min-width:0">
     <header class="mtop">
-      <img class="mark" src="/assets/mark.svg" alt="" width="30" height="30" style="width:30px;height:30px">
+      <span class="logo"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span>
       <b>لوحة طابعتي</b>
       <span class="live-dot" id="liveDotM"><i></i></span>
       <button class="icon-btn" data-theme-toggle aria-label="تبديل الوضع الليلي/النهاري"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
@@ -392,9 +399,9 @@ PAGES.overview = () => {
   const alerts = [];
   for (const k of active) {
     const [cls, label, code] = kioskStatus(k);
-    if (cls !== "ok" && code !== "disabled" && code !== "unpaired") alerts.push({ cls, html: `<b>طابعة ${esc(k.kiosk_id)}</b>: ${esc(label)}${code === "offline" ? ` (آخر اتصال ${ago(k.last_ping)})` : ""}`, kid: k.kiosk_id });
+    if (cls !== "ok" && code !== "disabled" && code !== "unpaired") alerts.push({ cls, html: `<b>طابعة ${esc(k.kiosk_id)}</b> — ${esc(label)}${code === "offline" ? ` (آخر اتصال ${ago(k.last_ping)})` : ""}`, kid: k.kiosk_id });
   }
-  if (refunds.length) alerts.unshift({ cls: "bad", html: `<b>${refunds.length} طلب يحتاج استرجاع</b>: العملاء دفعوا وما انطبع`, tab: "money" });
+  if (refunds.length) alerts.unshift({ cls: "bad", html: `<b>${refunds.length} طلب يحتاج استرجاع</b> — العملاء دفعوا وما انطبع`, tab: "money" });
   const waiting = S.orders.filter((o) => o.print_status === "awaiting_release" && o.payment_status === "paid");
   if (waiting.length) alerts.push({ cls: "info", html: `<b>${waiting.length} عميل دفع</b> وما ضغط «اطبع الآن» للحين`, tab: "orders" });
   // آخر 14 يوم
@@ -416,7 +423,7 @@ PAGES.overview = () => {
       ${alerts.length ? `<div class="grid" style="gap:8px">${alerts.map((a) => `<div class="alert ${a.cls}"><span>${a.html}</span>${a.kid ? `<button class="btn sm" data-kiosk="${esc(a.kid)}">فتح</button>` : a.tab ? `<button class="btn sm" data-go="${a.tab}">عرض</button>` : ""}</div>`).join("")}</div>`
         : `<div class="alert ok"><span>كل شي تمام. ما فيه تنبيهات.</span></div>`}
     </div>
-    <div class="card"><h2>الإيراد في آخر 14 يوم <span class="muted small" style="font-weight:400">(ريال)</span></h2>
+    <div class="card"><h2>الإيراد — آخر 14 يوم <span class="muted small" style="font-weight:400">(ريال)</span></h2>
       <div class="chart" role="img" aria-label="الإيراد اليومي لآخر 14 يوم">${rev.map((v, i) => `<div class="col" title="${days[i]}: ${money(v)} ر.س"><div style="height:${Math.round(v / maxRev * 110)}px;${v ? "" : "background:var(--line)"}"></div><span>${days[i].slice(8)}</span></div>`).join("")}</div>
       <div class="small muted" style="margin-top:8px">المجموع: <b class="mono" style="color:var(--ink)">${money(rev.reduce((a, b) => a + b, 0))}</b> ريال</div>
     </div>
@@ -433,7 +440,7 @@ function printerCard(k) {
   const pPct = Math.round(100 * (k.current_paper_count || 0) / cap);
   const ink = k.ink_level_percent ?? 0;
   return `<div class="card pcard" data-kiosk="${esc(k.kiosk_id)}" tabindex="0" role="button" aria-label="فتح طابعة ${esc(k.kiosk_id)}">
-    <div class="top"><span class="code">${esc(k.kiosk_id)}</span><div class="loc"><b>${esc(k.location_name)}</b><span>${esc(k.model || "بدون موديل")}، ${money(k.price_per_page)} ر.س للصفحة</span></div></div>
+    <div class="top"><span class="code">${esc(k.kiosk_id)}</span><div class="loc"><b>${esc(k.location_name)}</b><span>${esc(k.model || "—")} · ${money(k.price_per_page)} ر.س/ص</span></div></div>
     <div class="tags">${pill(st)}${k.agent_dry_run ? pill(["info", "وضع التجربة"]) : ""}${k.agent_paused && st[2] !== "paused" ? pill(["warn", "متوقف"]) : ""}</div>
     <div class="meter"><div class="row"><span>الورق</span><b>${k.current_paper_count ?? 0} / ${k.paper_capacity}</b></div><div class="bar ${pPct < 15 ? "bad" : pPct < 30 ? "warn" : ""}"><div style="width:${Math.min(100, pPct)}%"></div></div></div>
     <div class="meter"><div class="row"><span>الحبر ${k.ink_source === "printer" ? "(من الطابعة)" : k.ink_source === "manual" ? "(يدوي)" : "(تقديري)"}</span><b>${ink}%</b></div><div class="bar ${ink < k.ink_min_percent ? "bad" : ink < 30 ? "warn" : ""}"><div style="width:${ink}%"></div></div></div>
@@ -519,7 +526,7 @@ PAGES.money = () => {
     </tbody></table></div>` : `<div class="alert ok"><span>ما فيه طلبات تحتاج استرجاع.</span></div>`}
     <p class="small muted" style="margin:10px 0 0">الاسترجاع الحين يدوي: رجّع المبلغ من لوحة بوابة الدفع، بعدين اضغط «تم الاسترجاع» هنا.</p>
   </div>
-  <div class="card" style="margin-top:14px"><h2>حسب الطابعة، آخر 30 يوم</h2>
+  <div class="card" style="margin-top:14px"><h2>حسب الطابعة — آخر 30 يوم</h2>
     ${Object.keys(byKiosk).length ? `<div class="table-wrap"><table><thead><tr><th>الطابعة</th><th>طلبات</th><th>صفحات</th><th>الإيراد</th><th>متوسط الطلب</th></tr></thead><tbody>
       ${Object.entries(byKiosk).sort((a, b) => b[1].amt - a[1].amt).map(([k, b]) => `<tr><td class="mono">${esc(k)}</td><td class="mono">${b.n}</td><td class="mono">${b.pages}</td><td class="mono">${money(b.amt)}</td><td class="mono">${money(b.amt / b.n)}</td></tr>`).join("")}
     </tbody></table></div>` : `<div class="empty">ما فيه مبيعات في آخر 30 يوم.</div>`}
@@ -632,7 +639,7 @@ const KSUB = {
       ${!snmp && ps.reason ? `<div class="alert warn" style="margin-top:12px">${esc(ps.reason)}</div>` : ""}
     </div>
     <div class="sensors">
-      <div class="sensor"><span>الورق</span><b>${k.current_paper_count ?? 0}</b><span>محجوز ${k.paper_reserved || 0}، متاح ${paperAvail(k)}</span></div>
+      <div class="sensor"><span>الورق</span><b>${k.current_paper_count ?? 0}</b><span>محجوز ${k.paper_reserved || 0} · متاح للبيع ${paperAvail(k)}</span></div>
       <div class="sensor"><span>الحبر</span><b>${k.ink_level_percent ?? "—"}%</b><span>${k.ink_source === "printer" ? "قراءة الطابعة" : k.ink_source === "manual" ? "إدخال يدوي" : "تقدير"}</span></div>
       <div class="sensor"><span>الدرم</span><b>${ps.drum_percent != null ? ps.drum_percent + "%" : "—"}</b><span>&nbsp;</span></div>
       <div class="sensor"><span>عداد الطابعة</span><b>${ps.page_count ?? "—"}</b><span>صفحة منذ التصنيع</span></div>
@@ -697,7 +704,7 @@ const KSUB = {
     <div class="card"><h2>اختبار الضغط</h2>
       <p class="small muted" style="margin:0 0 12px">ينشئ طلبات مدفوعة وجاهزة للطباعة (صفحة اختبار وحدة لكل طلب). <b>شغّل «وضع التجربة» في البرنامج قبلها</b> عشان ما يطبع فعليًا ويستهلك ورق.</p>
       <div class="toolbar"><input class="f mono" id="nTest" type="number" min="1" max="50" value="10" style="width:90px" aria-label="عدد الطلبات"><button class="btn primary" id="mkTest">أنشئ طلبات تجريبية</button></div>
-      <div class="small muted" style="margin-top:10px">طلبات التجربة على هذي الطابعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test").length}، بانتظار الطباعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test" && ["queued", "printing"].includes(o.print_status)).length}</div>
+      <div class="small muted" style="margin-top:10px">طلبات التجربة على هذي الطابعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test").length} · بانتظار الطباعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test" && ["queued", "printing"].includes(o.print_status)).length}</div>
     </div>
     <div class="card" style="border-color:var(--danger-line)"><h2 style="color:var(--bad)">منطقة الخطر</h2>
       <p class="small muted" style="margin:0 0 12px">الحذف: لو الطابعة عليها طلبات سابقة تنؤرشف (تختفي وتبقى السجلات والتقارير، وتقدر ترجعها)، وإلا تنحذف نهائيًا. وفي الحالتين ينفك ربط الجهاز.</p>
@@ -840,12 +847,12 @@ function openSticker(k) {
   const w = window.open("", "_blank"); if (!w) return toast("المتصفح منع النافذة. اسمح بالنوافذ المنبثقة.", true);
   const wa = String(S.settings.support_whatsapp || "");
   w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>ملصق ${esc(k.kiosk_id)}</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Noto+Kufi+Arabic:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
   <style>@page{size:A6;margin:0}body{margin:0;font-family:'IBM Plex Sans Arabic',sans-serif;color:#14181B}
   .s{width:105mm;height:148mm;box-sizing:border-box;display:flex;flex-direction:column;overflow:hidden}
   .h{background:#14181B;color:#fff;padding:5mm 6mm;display:flex;justify-content:space-between;align-items:center}.h b{font-size:20px}
   .c{font:600 15px 'IBM Plex Mono',monospace;background:#0A6B74;border-radius:2mm;padding:1mm 3mm;direction:ltr}
-  h1{margin:5mm 6mm 0;font:800 25px/1.3 'Noto Kufi Arabic',sans-serif}p{margin:1mm 6mm 0;color:#5E6A73;font-size:12.5px}
+  h1{margin:5mm 6mm 0;font-size:25px}p{margin:1mm 6mm 0;color:#5E6A73;font-size:12.5px}
   .m{display:flex;gap:5mm;align-items:center;padding:4mm 6mm}.q{width:42mm;height:42mm;border:.6mm solid #14181B;border-radius:3mm;padding:2mm;box-sizing:border-box;flex:none}.q svg{width:100%;height:100%}
   ol{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3mm;font-size:13px}ol li{display:flex;gap:2mm}ol span{width:6mm;height:6mm;border-radius:50%;background:#E1F0F1;color:#0A6B74;display:grid;place-items:center;font:600 11px 'IBM Plex Mono';flex:none}
   .p{margin:0 6mm;background:#F4F6F6;border-radius:3mm;padding:3mm 4mm;display:flex;justify-content:space-between;align-items:baseline}.p b{font:600 20px 'IBM Plex Mono'}
@@ -853,11 +860,11 @@ function openSticker(k) {
   @media screen{body{background:#ccc;padding:20px}.s{background:#fff;margin:auto;box-shadow:0 4px 20px rgba(0,0,0,.2)}.bar{text-align:center;margin-bottom:14px}}
   @media print{.bar{display:none}}</style></head><body>
   <div class="bar"><button onclick="print()" style="font:inherit;padding:8px 18px">اطبع</button></div>
-  <div class="s"><div class="h"><b style="display:flex;align-items:center;gap:8px;font-family:'Noto Kufi Arabic',sans-serif"><img src="${location.origin}/assets/mark.svg" width="26" height="26" alt="">طابعتي</b><span class="c">${esc(k.kiosk_id)}</span></div>
+  <div class="s"><div class="h"><b>طابعتي</b><span class="c">${esc(k.kiosk_id)}</span></div>
   <h1>اطبع من جوالك</h1><p>بدون تطبيق وبدون تسجيل. صوّر الكود وابدأ.</p>
   <div class="m"><div class="q">${qrSvg(customerLink(k.kiosk_id), 150)}</div>
   <ol><li><span>1</span><span style="all:unset"><b>صوّر الكود</b><br>بكاميرا الجوال</span></li><li><span>2</span><span style="all:unset"><b>اختر ملفك وادفع</b><br>السعر قدامك قبل الدفع</span></li><li><span>3</span><span style="all:unset"><b>«اطبع الآن»</b><br>وخذ أوراقك</span></li></ol></div>
-  <div class="p"><span>الصفحة، أبيض وأسود</span><b>${money(k.price_per_page)} <small style="font:400 12px 'IBM Plex Sans Arabic'">ر.س</small></b></div>
+  <div class="p"><span>الصفحة · أبيض وأسود</span><b>${money(k.price_per_page)} <small style="font:400 12px 'IBM Plex Sans Arabic'">ر.س</small></b></div>
   <div class="f"><span>${esc(k.location_name)}</span><span>واتساب: <b style="direction:ltr;unicode-bidi:isolate">${esc(wa ? "+" + wa : "—")}</b></span></div></div>
   </body></html>`);
   w.document.close();
@@ -878,8 +885,8 @@ function orderDrawer(d) {
     <div class="card"><dl class="kv">
       <dt>الطابعة</dt><dd><a href="#" data-kiosk="${esc(o.kiosk_id)}" class="mono">${esc(o.kiosk_id)}</a></dd>
       <dt>المصدر</dt><dd>${SOURCE[o.source] || o.source}</dd>
-      <dt>الملف</dt><dd>${o.file_kind === "image" ? "صورة" : "PDF"}، ${o.total_pages} صفحة ${o.file_deleted_at ? pill(["mute", "انحذف"]) : ""}</dd>
-      <dt>الخيارات</dt><dd>${o.copies} نسخة، ${o.duplex ? "وجهين" : "وجه واحد"}، ${o.sheets_needed ?? "—"} ورقة</dd>
+      <dt>الملف</dt><dd>${o.file_kind === "image" ? "صورة" : "PDF"} · ${o.total_pages} صفحة ${o.file_deleted_at ? pill(["mute", "انحذف"]) : ""}</dd>
+      <dt>الخيارات</dt><dd>${o.copies} نسخة · ${o.duplex ? "وجهين" : "وجه واحد"} · ${o.sheets_needed ?? "—"} ورقة</dd>
       <dt>المبلغ</dt><dd class="mono">${money(o.total_amount)} ر.س ${o.price_per_page ? `<span class="small muted">(${money(o.price_per_page)}/ص)</span>` : ""}</dd>
       <dt>محاولات الطباعة</dt><dd class="mono">${o.print_attempts || 0}</dd>
       ${o.error_message ? `<dt>ملاحظة</dt><dd>${esc(o.error_message)}</dd>` : ""}
