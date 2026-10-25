@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>لوحة طابعتي</title>
+<script>
+// الوضع الليلي افتراضيًا، ويتذكر اختيارك
+(function(){var t="dark";try{t=localStorage.getItem("tabaety.theme")||"dark"}catch(e){}document.documentElement.setAttribute("data-theme",t)})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,6 +18,16 @@
   --accent:#0A6B74; --accent-ink:#084F56; --accent-tint:#E1F0F1;
   --ok:#1D7F48; --ok-tint:#E3F3E9; --warn:#8A5A0B; --warn-tint:#FBF0DC; --bad:#B83A26; --bad-tint:#FBE7E3; --mute-tint:#EEF1F2;
   --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --on-accent:#FFFFFF; --hover-row:#FAFBFB; --danger-line:#EBC3BB; --bar-warn:#D99A2B; --toast:#14181B; --toast-ink:#FFFFFF; --logo:#14181B;
+  color-scheme:light;
+}
+/* الوضع الليلي (الافتراضي). يتبدّل من زر القمر/الشمس */
+:root[data-theme="dark"]{
+  --ink:#E6ECEE; --ink-2:#9AA6AD; --ink-3:#6E7A82; --line:#28323A; --line-2:#1F272D; --ground:#0D1114; --card:#151B1F;
+  --accent:#3BB0BB; --accent-ink:#5BC6D0; --accent-tint:#12313A;
+  --ok:#4CC183; --ok-tint:#12291E; --warn:#E0A84A; --warn-tint:#2C2312; --bad:#EF7A63; --bad-tint:#33190F; --mute-tint:#1D252A;
+  --on-accent:#06191C; --hover-row:#1A2227; --danger-line:#5A2A20; --bar-warn:#E0A84A; --toast:#E6ECEE; --toast-ink:#0D1114; --logo:#2A3A40;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -34,7 +48,7 @@ a{color:var(--accent)}
 .shell{display:grid;grid-template-columns:232px 1fr;min-height:100dvh}
 aside.nav{background:var(--card);border-left:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100dvh;align-self:start}
 .brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
-.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--ink);color:#fff;display:grid;place-items:center}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--logo);color:#fff;display:grid;place-items:center}
 .brand b{font-size:16px;display:block} .brand small{font-size:11px;color:var(--ink-2)}
 .nav button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:0 12px;border:0;border-radius:10px;background:transparent;text-align:right;font-weight:500;color:var(--ink-2)}
 .nav button:hover{background:var(--ground);color:var(--ink)}
@@ -47,7 +61,7 @@ aside.nav{background:var(--card);border-left:1px solid var(--line);padding:18px 
 main.page{padding:22px 26px 60px;min-width:0}
 .head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
 .head h1{margin:0;font-size:22px} .head p{margin:4px 0 0;color:var(--ink-2)}
-.tabs-m{display:none}
+.tabs-m{display:none} .theme-m{display:none!important}
 
 /* عناصر عامة */
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
@@ -57,22 +71,22 @@ main.page{padding:22px 26px 60px;min-width:0}
 .kpi span{font-size:12px;color:var(--ink-2);display:block} .kpi b{font:600 26px var(--mono);display:block;margin-top:4px} .kpi small{font-size:12px;color:var(--ink-2)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--card);font-weight:600;white-space:nowrap}
 .btn:hover{border-color:var(--ink-3)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff} .btn.primary:hover{background:var(--accent-ink)}
-.btn.danger{color:var(--bad);border-color:#EBC3BB} .btn.danger:hover{background:var(--bad-tint)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)} .btn.primary:hover{background:var(--accent-ink)}
+.btn.danger{color:var(--bad);border-color:var(--danger-line)} .btn.danger:hover{background:var(--bad-tint)}
 .btn.sm{min-height:32px;padding:0 10px;font-size:13px}
 .btn:disabled{opacity:.5;cursor:default}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 9px;white-space:nowrap}
 .pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
 .ok{color:var(--ok);background:var(--ok-tint)} .warn{color:var(--warn);background:var(--warn-tint)} .bad{color:var(--bad);background:var(--bad-tint)} .mute{color:var(--ink-2);background:var(--mute-tint)} .info{color:var(--accent);background:var(--accent-tint)}
 .bar{height:8px;border-radius:4px;background:var(--line-2);overflow:hidden} .bar div{height:100%;border-radius:4px;background:var(--accent)}
-.bar.warn div{background:#D99A2B} .bar.bad div{background:var(--bad)}
+.bar.warn div{background:var(--bar-warn)} .bar.bad div{background:var(--bad)}
 .alert{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:13px}
 .alert b{font-weight:600}
 .alert .btn{margin-inline-start:auto}
 table{width:100%;border-collapse:collapse}
 th{font-size:12px;color:var(--ink-2);font-weight:500;text-align:right;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
 td{padding:10px;border-bottom:1px solid var(--line-2);vertical-align:middle}
-tr.click{cursor:pointer} tr.click:hover td{background:#FAFBFB}
+tr.click{cursor:pointer} tr.click:hover td{background:var(--hover-row)}
 .table-wrap{overflow-x:auto}
 .empty{padding:28px;text-align:center;color:var(--ink-2)}
 .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -96,7 +110,7 @@ textarea.f{padding:8px 10px;min-height:70px;resize:vertical}
 .tags{display:flex;gap:6px;flex-wrap:wrap}
 
 /* الدرج الجانبي */
-.drawer-bg{position:fixed;inset:0;background:rgba(20,24,27,.4);z-index:40}
+.drawer-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:40}
 .drawer{position:fixed;top:0;bottom:0;left:0;width:min(760px,100%);background:var(--ground);z-index:41;overflow-y:auto;box-shadow:20px 0 60px rgba(0,0,0,.15)}
 .drawer .dh{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--line);padding:14px 18px;display:flex;align-items:center;gap:10px}
 .drawer .dh h2{margin:0;font-size:18px;flex:1;min-width:0}
@@ -118,17 +132,18 @@ textarea.f{padding:8px 10px;min-height:70px;resize:vertical}
 .chart .col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
 .chart .col div{width:100%;max-width:26px;background:var(--accent);border-radius:4px 4px 0 0;min-height:2px}
 .chart .col span{font-size:10px;color:var(--ink-3);font-family:var(--mono)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90vw}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--toast);color:var(--toast-ink);padding:10px 16px;border-radius:12px;font-size:14px;z-index:60;max-width:90vw}
 .toast.err{background:var(--bad)}
-dialog{border:0;border-radius:16px;padding:20px;width:min(92vw,420px);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+dialog{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:20px;width:min(92vw,420px);box-shadow:0 20px 60px rgba(0,0,0,.25)}
 dialog::backdrop{background:rgba(20,24,27,.45)}
 dialog h3{margin:0 0 8px;font-size:17px} dialog p{margin:0 0 14px;color:var(--ink-2);line-height:1.6}
 dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
-.demo-banner{background:var(--warn-tint);color:#6B4508;padding:8px 14px;font-size:13px;text-align:center}
+.demo-banner{background:var(--warn-tint);color:var(--warn);padding:8px 14px;font-size:13px;text-align:center}
 
 @media (max-width:960px){
   .shell{grid-template-columns:1fr}
   aside.nav{display:none}
+  .theme-m{position:fixed;left:12px;bottom:12px;z-index:30;display:inline-flex!important}
   .tabs-m{display:flex;gap:4px;overflow-x:auto;background:var(--card);border-bottom:1px solid var(--line);padding:8px 10px;position:sticky;top:0;z-index:20}
   .tabs-m button{border:0;background:transparent;padding:8px 12px;border-radius:9px;font-weight:600;color:var(--ink-2);white-space:nowrap}
   .tabs-m button[aria-current="page"]{background:var(--accent-tint);color:var(--accent)}
@@ -160,11 +175,13 @@ dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
     <div id="navBtns"></div>
     <div class="foot">
       <span class="live-dot" id="liveDot"><i></i><span>تحديث لحظي</span></span>
+      <button class="btn sm" data-theme-toggle>الوضع النهاري</button>
       <button class="btn sm" id="logoutBtn">تسجيل خروج</button>
     </div>
   </aside>
   <div style="min-width:0">
     <nav class="tabs-m" id="tabsM" aria-label="القائمة"></nav>
+    <button class="btn sm theme-m" data-theme-toggle aria-label="تبديل الوضع الليلي">◐</button>
     <main class="page" id="page"></main>
   </div>
 </div>
@@ -635,7 +652,7 @@ const KSUB = {
       <div class="toolbar"><input class="f mono" id="nTest" type="number" min="1" max="50" value="10" style="width:90px" aria-label="عدد الطلبات"><button class="btn primary" id="mkTest">أنشئ طلبات تجريبية</button></div>
       <div class="small muted" style="margin-top:10px">طلبات التجربة على هذي الطابعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test").length} · بانتظار الطباعة: ${S.orders.filter((o) => o.kiosk_id === k.kiosk_id && o.source === "test" && ["queued", "printing"].includes(o.print_status)).length}</div>
     </div>
-    <div class="card" style="border-color:#EBC3BB"><h2 style="color:var(--bad)">منطقة الخطر</h2>
+    <div class="card" style="border-color:var(--danger-line)"><h2 style="color:var(--bad)">منطقة الخطر</h2>
       <p class="small muted" style="margin:0 0 12px">الحذف: لو الطابعة عليها طلبات سابقة تنؤرشف (تختفي وتبقى السجلات والتقارير، وتقدر ترجعها)، وإلا تنحذف نهائيًا. وفي الحالتين ينفك ربط الجهاز.</p>
       <button class="btn danger" id="delK">حذف الطابعة</button>
     </div>`,
@@ -658,6 +675,15 @@ function kioskForm(k) {
     <label class="full">ملاحظة للعميل <small>اختياري، مثل «جنب المصلى»</small><input class="f" name="public_note" maxlength="80" value="${v("public_note")}"></label>
     <label>الموديل<input class="f ltr" name="model" maxlength="60" value="${v("model")}" placeholder="Brother HL-L6410DN"></label>
     <label>عنوان IP للطابعة <small>للحساسات (يُكتب أيضًا في البرنامج)</small><input class="f mono ltr" name="printer_host" maxlength="60" value="${v("printer_host")}" placeholder="192.168.1.50"></label>
+    <h3>الموقع (يظهر في صفحة «وين الطابعات» على الموقع)</h3>
+    <label>المدينة<input class="f" name="city" list="cities" maxlength="40" value="${v("city")}" placeholder="الرياض"></label>
+    <label>الحي / الجهة<input class="f" name="area" maxlength="60" value="${v("area")}" placeholder="جامعة الملك سعود"></label>
+    <label class="full">رابط قوقل ماب <small>الصقه وتنعبّى الإحداثيات تلقائيًا (افتح المكان في قوقل ماب ← مشاركة ← نسخ الرابط الطويل)</small><input class="f ltr" id="mapLink" placeholder="https://www.google.com/maps/@24.72,46.62,17z"></label>
+    <label>خط العرض (lat)<input class="f mono ltr" name="lat" inputmode="decimal" value="${v("lat")}" placeholder="24.7136"></label>
+    <label>خط الطول (lng)<input class="f mono ltr" name="lng" inputmode="decimal" value="${v("lng")}" placeholder="46.6753"></label>
+    <label>ساعات التشغيل <small>اختياري</small><input class="f" name="hours" maxlength="60" value="${v("hours")}" placeholder="24 ساعة"></label>
+    <label class="check"><input type="checkbox" name="is_public" ${k ? (k.is_public !== false ? "checked" : "") : "checked"}> تظهر للعامة في الموقع</label>
+    <datalist id="cities">${["الرياض", "جدة", "مكة المكرمة", "المدينة المنورة", "الدمام", "الخبر", "الظهران", "الأحساء", "القصيم", "أبها", "تبوك", "حائل", "الطائف", "جازان", "نجران", "الجبيل", "ينبع"].map((c) => `<option value="${c}">`).join("")}</datalist>
     <h3>التسعير والحدود</h3>
     <label>سعر الصفحة (ر.س)<input class="f mono" name="price_per_page" type="number" step="0.05" min="0" max="10" required value="${v("price_per_page", "0.20")}"></label>
     <label>أقل مبلغ للطلب (ر.س) <small>0 = بدون حد</small><input class="f mono" name="min_order_amount" type="number" step="0.5" min="0" max="100" value="${v("min_order_amount", "0")}"></label>
@@ -681,12 +707,19 @@ function kioskDrawerAfter(d) {
   const k = S.kiosks.find((x) => x.kiosk_id === d.id);
   $$("[data-sub]").forEach((b) => b.onclick = () => { d.sub = b.dataset.sub; renderDrawer(); });
   const form = $("#kForm");
+  const ml = $("#mapLink");
+  if (ml) ml.oninput = () => {
+    const m = ml.value.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || ml.value.match(/[?&](?:q|query|ll)=(-?\d+\.\d+),\s*(-?\d+\.\d+)/) || ml.value.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || ml.value.match(/^\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*$/);
+    if (m) { form.lat.value = (+m[1]).toFixed(6); form.lng.value = (+m[2]).toFixed(6); toast("تعبّت الإحداثيات من الرابط"); }
+  };
   if (form) form.onsubmit = async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
     const fd = new FormData(form), p = {};
     for (const [key, val] of fd.entries()) p[key] = String(val).trim();
     p.supports_duplex = !!form.supports_duplex.checked;
+    p.is_public = !!form.is_public.checked;
+    for (const n of ["lat", "lng"]) { if (p[n] !== "" && !Number.isFinite(Number(p[n]))) { const b = $("#kErr"); b.textContent = "الإحداثيات لازم تكون أرقام."; b.hidden = false; return; } }
     for (const n of ["price_per_page", "min_order_amount"]) p[n] = Number(p[n] || 0);
     for (const n of ["max_pages_per_order", "max_copies", "paper_capacity", "paper_safety_margin", "low_paper_alert", "ink_min_percent"]) p[n] = parseInt(p[n] || "0", 10);
     if (p.toner_yield_pages === "") p.toner_yield_pages = ""; else p.toner_yield_pages = parseInt(p.toner_yield_pages, 10);
@@ -827,6 +860,20 @@ function orderDrawerAfter(d) {
 }
 function bindOrderLinks(root) { $$("[data-order]", root).forEach((el) => el.onclick = (e) => { e.preventDefault(); openOrder(el.dataset.order); }); }
 
+/* الوضع الليلي/النهاري */
+function syncThemeButtons() {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  $$("[data-theme-toggle]").forEach((b) => { if (!b.classList.contains("theme-m")) b.textContent = dark ? "الوضع النهاري" : "الوضع الليلي"; });
+}
+document.addEventListener("click", (e) => {
+  if (!e.target.closest("[data-theme-toggle]")) return;
+  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem("tabaety.theme", next); } catch { }
+  syncThemeButtons();
+});
+syncThemeButtons();
+
 /* أحداث عامة */
 document.addEventListener("click", (e) => {
   const t = e.target.closest("[data-kiosk],[data-order],[data-go],[data-new-kiosk]");
@@ -895,7 +942,7 @@ function demoDb() {
   const now = Date.now(), iso = (msAgo) => new Date(now - msAgo).toISOString(), M = 60000, H = 3600000, D = 86400000;
   const base = { is_enabled: true, archived_at: null, paper_reserved: 0, paper_safety_margin: 10, ink_min_percent: 15, low_paper_alert: 30, supports_duplex: true, max_pages_per_order: 100, max_copies: 20, paper_size: "A4", min_order_amount: 0, pages_since_toner: 0, agent_paused: false, agent_dry_run: false };
   const kiosks = [
-    { ...base, kiosk_id: "101", location_name: "مكتبة الجامعة — الدور الأرضي", public_note: "جنب المصلى", model: "Brother HL-L6410DN", price_per_page: 0.2, paper_capacity: 250, current_paper_count: 182, paper_reserved: 6, ink_level_percent: 64, ink_source: "printer", toner_yield_pages: 12000, last_ping: iso(12000), agent_token_hash: "x", device_id: "PRN-7K2Q", agent_version: "0.5.0", paired_at: iso(9 * D), printer_host: "192.168.1.50", printer_state: { source: "snmp", reachable: true, can_print: true, errors_ar: [], drum_percent: 88, page_count: 4120, toner_percent: 64 } },
+    { ...base, kiosk_id: "101", location_name: "مكتبة الجامعة — الدور الأرضي", public_note: "جنب المصلى", city: "الرياض", area: "جامعة الملك سعود", lat: 24.7166, lng: 46.6191, is_public: true, model: "Brother HL-L6410DN", price_per_page: 0.2, paper_capacity: 250, current_paper_count: 182, paper_reserved: 6, ink_level_percent: 64, ink_source: "printer", toner_yield_pages: 12000, last_ping: iso(12000), agent_token_hash: "x", device_id: "PRN-7K2Q", agent_version: "0.5.0", paired_at: iso(9 * D), printer_host: "192.168.1.50", printer_state: { source: "snmp", reachable: true, can_print: true, errors_ar: [], drum_percent: 88, page_count: 4120, toner_percent: 64 } },
     { ...base, kiosk_id: "102", location_name: "كلية الهندسة — البهو", model: "Brother HL-L6410DN", price_per_page: 0.25, paper_capacity: 250, current_paper_count: 24, ink_level_percent: 41, ink_source: "printer", last_ping: iso(40000), agent_token_hash: "x", device_id: "PRN-3MZA", agent_version: "0.5.0", paired_at: iso(4 * D), agent_dry_run: true, printer_state: { source: "snmp", reachable: true, can_print: true, errors_ar: [], drum_percent: 95, page_count: 860 } },
     { ...base, kiosk_id: "103", location_name: "السكن الجامعي — مبنى 4", model: "HP Laser MFP 137fnw", price_per_page: 0.2, paper_capacity: 150, current_paper_count: 90, ink_level_percent: 12, ink_source: "estimate", toner_yield_pages: 1000, last_ping: iso(26 * M), agent_token_hash: "x", device_id: "PRN-HP01", agent_version: "0.4.0", paired_at: iso(20 * D), printer_state: { source: "windows", ok: true } },
     { ...base, kiosk_id: "201", location_name: "المكتبة المركزية (قريبًا)", price_per_page: 0.2, paper_capacity: 250, current_paper_count: 0, ink_level_percent: 100, ink_source: "estimate", last_ping: null, agent_token_hash: null, device_id: null },

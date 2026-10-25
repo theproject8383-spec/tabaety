@@ -1,129 +1,436 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>طابعتي | لخدمات الطباعة الذاتية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Tajawal', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        .header {
-            background-color: #ffffff;
-            padding: 20px 50px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #0056b3;
-            text-decoration: none;
-        }
-        .hero {
-            background: linear-gradient(135deg, #0056b3, #00a8ff);
-            color: white;
-            text-align: center;
-            padding: 80px 20px;
-        }
-        .hero h1 {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-        .hero p {
-            font-size: 1.3em;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-            line-height: 1.6;
-            color: #e0f2ff;
-        }
-        .cta-button {
-            background-color: #25D366; /* لون واتساب */
-            color: white;
-            padding: 15px 40px;
-            text-decoration: none;
-            font-size: 1.2em;
-            font-weight: bold;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
-            transition: 0.3s;
-            display: inline-block;
-        }
-        .cta-button:hover {
-            background-color: #128C7E;
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
-        }
-        .features {
-            padding: 60px 20px;
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .features h2 {
-            color: #0056b3;
-            margin-bottom: 20px;
-        }
-        .features p {
-            font-size: 1.1em;
-            line-height: 1.8;
-            color: #555;
-        }
-        .footer {
-            background-color: #1a1a1a;
-            color: #b3b3b3;
-            text-align: center;
-            padding: 40px 20px;
-            font-size: 0.95em;
-            line-height: 2;
-        }
-        .footer strong {
-            color: #ffffff;
-        }
-        .footer a {
-            color: #00a8ff;
-            text-decoration: none;
-        }
-        /* تحسين العرض للجوال */
-        @media (max-width: 600px) {
-            .header { flex-direction: column; text-align: center; padding: 15px; }
-            .hero h1 { font-size: 2em; }
-            .hero p { font-size: 1.1em; }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>طابعتي — اطبع من جوالك في ثواني</title>
+<meta name="description" content="طابعات خدمة ذاتية في الجامعات والأماكن العامة. صوّر الباركود، ارفع ملفك، ادفع، واطبع وأنت واقف عند الطابعة. بدون تطبيق وبدون تسجيل.">
+<meta name="theme-color" content="#0D1114">
+<meta property="og:title" content="طابعتي — اطبع من جوالك في ثواني">
+<meta property="og:description" content="صوّر الباركود، ارفع ملفك، ادفع، واطبع. بدون تطبيق وبدون تسجيل.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.tabaety.com/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%230A6B74'/%3E%3Cpath d='M7 9V4h10v5M5 9h14v7H5zM7 14h10v6H7z' fill='none' stroke='white' stroke-width='1.8'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14181B; --ink-2:#5E6A73; --line:#DCE2E5; --line-2:#EBEFF1; --ground:#F4F6F6; --card:#FFFFFF;
+  --accent:#0A6B74; --accent-ink:#084F56; --accent-tint:#E1F0F1; --glow:#3BB0BB;
+  --night:#0D1114; --night-2:#151B1F; --night-line:#26313A; --night-ink:#E6ECEE; --night-ink-2:#9AA6AD;
+  --ok:#1D7F48; --ok-tint:#E3F3E9; --warn:#8A5A0B; --warn-tint:#FBF0DC; --bad:#B83A26; --bad-tint:#FBE7E3;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;font-size:16px;line-height:1.7}
+a{color:var(--accent)}
+button,input{font-family:inherit;font-size:inherit}
+:focus-visible{outline:2px solid var(--glow);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+.ltr{direction:ltr;unicode-bidi:isolate}
+
+/* الترويسة */
+header.top{position:sticky;top:0;z-index:50;background:rgba(13,17,20,.86);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--night-line)}
+header.top .wrap{display:flex;align-items:center;gap:18px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;font-size:19px}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+nav.links{display:flex;gap:4px;margin-inline-start:auto}
+nav.links a{color:var(--night-ink-2);text-decoration:none;font-size:14px;font-weight:500;padding:8px 12px;border-radius:9px}
+nav.links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;font-weight:700;text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--glow);color:#06191C}
+.btn.primary:hover{background:#5BC6D0}
+.btn.ghost{background:transparent;color:#fff;border:1px solid var(--night-line)}
+.btn.ghost:hover{border-color:var(--glow)}
+.btn.sm{min-height:38px;padding:0 14px;font-size:14px}
+.btn.light{background:var(--card);color:var(--ink);border:1px solid var(--line)}
+.btn.light:hover{border-color:var(--accent)}
+.btn.teal{background:var(--accent);color:#fff}
+.btn.teal:hover{background:var(--accent-ink)}
+
+/* البطل */
+.hero{background:var(--night);color:var(--night-ink);position:relative;overflow:hidden}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-top:72px;padding-bottom:84px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--glow);background:rgba(59,176,187,.1);border:1px solid rgba(59,176,187,.25);padding:4px 12px;border-radius:99px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--glow);box-shadow:0 0 0 0 rgba(59,176,187,.6);animation:ping 2s infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 rgba(59,176,187,.6)}80%,100%{box-shadow:0 0 0 10px rgba(59,176,187,0)}}
+.hero h1{font-size:clamp(34px,5.2vw,58px);line-height:1.2;margin:18px 0 14px;color:#fff;letter-spacing:-.5px}
+.hero h1 span{color:var(--glow)}
+.hero p.lead{font-size:18px;color:var(--night-ink-2);max-width:520px;margin:0 0 28px}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.stats{display:flex;gap:28px;margin-top:38px;flex-wrap:wrap}
+.stats div b{display:block;font:600 26px var(--mono);color:#fff}
+.stats div span{font-size:13px;color:var(--night-ink-2)}
+.net{position:absolute;inset:0;z-index:0;opacity:.9}
+.hero-visual{position:relative;aspect-ratio:1/1;max-width:440px;justify-self:center;width:100%}
+.phone{position:absolute;inset:6% 18% 6% 18%;background:var(--night-2);border:1px solid var(--night-line);border-radius:34px;padding:16px;box-shadow:0 40px 80px rgba(0,0,0,.45);display:flex;flex-direction:column;gap:10px}
+.phone .bar{height:6px;width:40%;margin:0 auto 6px;border-radius:3px;background:var(--night-line)}
+.phone .kc{display:flex;align-items:center;gap:8px;background:#0F1518;border:1px solid var(--night-line);border-radius:12px;padding:8px}
+.phone .kc b{font:600 14px var(--mono);color:var(--glow);background:rgba(59,176,187,.12);border-radius:7px;padding:2px 7px}
+.phone .kc span{font-size:11px;color:var(--night-ink-2)}
+.phone .kc em{margin-inline-start:auto;font-style:normal;font-size:10px;color:#4CC183;background:#12291E;border-radius:99px;padding:1px 8px}
+.phone .file{border:1.5px dashed #355058;border-radius:14px;padding:18px 10px;text-align:center;color:var(--night-ink-2);font-size:12px}
+.phone .file b{display:block;color:#fff;font-size:13px;margin-top:6px}
+.phone .sum{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--night-ink-2);border-top:1px solid var(--night-line);padding-top:10px}
+.phone .sum b{font:600 18px var(--mono);color:#fff}
+.phone .go{background:#1D7F48;color:#fff;border-radius:12px;text-align:center;padding:10px;font-size:13px;font-weight:700}
+.paper{position:absolute;width:30%;aspect-ratio:1/1.41;background:#fff;border-radius:4px;box-shadow:0 18px 40px rgba(0,0,0,.4);padding:10px;display:flex;flex-direction:column;gap:5px}
+.paper i{display:block;height:4px;border-radius:2px;background:#D9E0E3}
+.paper i:nth-child(1){width:70%;background:#0A6B74;height:6px}
+.paper i:nth-child(3){width:85%} .paper i:nth-child(5){width:60%}
+.paper.a{left:-3%;bottom:-3%;width:24%;transform:rotate(-9deg)}
+.paper.b{right:-1%;top:10%;transform:rotate(7deg);width:24%}
+
+/* الأقسام */
+section{padding:84px 0}
+.sec-head{max-width:640px;margin-bottom:36px}
+.sec-head .kick{font:600 13px var(--mono);color:var(--accent);letter-spacing:.5px}
+.sec-head h2{font-size:clamp(26px,3.4vw,38px);line-height:1.3;margin:8px 0 10px}
+.sec-head p{margin:0;color:var(--ink-2);font-size:17px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px;position:relative}
+.step .n{font:600 13px var(--mono);color:var(--accent);background:var(--accent-tint);border-radius:8px;padding:3px 9px;display:inline-block}
+.step h3{margin:16px 0 6px;font-size:20px}
+.step p{margin:0;color:var(--ink-2)}
+.step .ic{position:absolute;left:22px;top:22px;color:#C7D3D7}
+
+/* المواقع */
+#where{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.finder{display:grid;grid-template-columns:340px 1fr;gap:18px;min-height:520px}
+.finder-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.search{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:0 12px;background:var(--ground)}
+.search input{flex:1;border:0;background:transparent;min-height:46px;outline:none;min-width:0}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-size:14px;font-weight:500;cursor:pointer;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip small{font-family:var(--mono);opacity:.7;margin-inline-start:4px}
+.list{display:flex;flex-direction:column;gap:10px;overflow-y:auto;max-height:560px;padding-inline-end:4px}
+.loc{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;background:var(--card);transition:border-color .15s}
+.loc:hover,.loc.on{border-color:var(--accent)}
+.loc .t{display:flex;align-items:flex-start;gap:10px}
+.loc .code{font:600 15px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:8px;padding:3px 8px;direction:ltr}
+.loc .t div{flex:1;min-width:0}
+.loc .t b{display:block;font-size:15px;line-height:1.4}
+.loc .t span{font-size:13px;color:var(--ink-2)}
+.loc .acts{display:flex;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.ok{color:var(--ok);background:var(--ok-tint)} .pill.warn{color:var(--warn);background:var(--warn-tint)} .pill.bad{color:var(--bad);background:var(--bad-tint)} .pill.soon{color:var(--ink-2);background:var(--line-2)}
+.map-box{position:relative;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--night);min-height:520px}
+#map{position:absolute;inset:0}
+.map-empty{position:absolute;inset:0;display:grid;place-items:center;color:var(--night-ink-2);text-align:center;padding:30px}
+.empty{padding:24px;text-align:center;color:var(--ink-2);border:1px dashed var(--line);border-radius:14px}
+.leaflet-container{font-family:inherit!important}
+.leaflet-popup-content{margin:12px 14px!important;font-size:14px;line-height:1.6;direction:rtl;text-align:right}
+.pin{width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--accent);border:3px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.35);display:grid;place-items:center}
+.pin span{transform:rotate(45deg);color:#fff;font:600 10px var(--mono)}
+.pin.soon{background:#8A959C}
+.pin.off{background:#B83A26}
+
+/* الثقة */
+.trust{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.trust div{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.trust svg{color:var(--accent)}
+.trust h3{margin:12px 0 4px;font-size:17px}
+.trust p{margin:0;color:var(--ink-2);font-size:14px}
+
+/* أسئلة */
+.faq{display:grid;gap:10px;max-width:820px}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px 18px}
+.faq summary{cursor:pointer;font-weight:600;padding:14px 0;list-style:none;display:flex;justify-content:space-between;gap:12px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:600 20px var(--mono);color:var(--accent)}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:0 0 16px;color:var(--ink-2)}
+
+/* شركاء */
+.partner{background:var(--night);color:var(--night-ink);border-radius:24px;padding:44px;display:grid;grid-template-columns:1.4fr 1fr;gap:30px;align-items:center;position:relative;overflow:hidden}
+.partner h2{color:#fff;margin:0 0 10px;font-size:clamp(24px,3vw,32px)}
+.partner p{margin:0;color:var(--night-ink-2)}
+.partner ul{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:6px;color:var(--night-ink)}
+.partner li::before{content:"✓";color:var(--glow);margin-inline-end:8px;font-weight:700}
+.partner .ctas{display:flex;flex-direction:column;gap:10px;align-items:stretch}
+
+footer{background:var(--night);color:var(--night-ink-2);padding:40px 0;font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer a{color:var(--night-ink);text-decoration:none}
+footer a:hover{color:var(--glow)}
+.fl{display:flex;gap:18px;flex-wrap:wrap}
+
+@media (max-width:920px){
+  nav.links{display:none}
+  .hero .wrap{grid-template-columns:1fr;padding-top:44px;padding-bottom:56px}
+  .hero-visual{max-width:300px}
+  .steps,.trust{grid-template-columns:1fr}
+  .finder{grid-template-columns:1fr}
+  .map-box{min-height:380px;order:-1}
+  .list{max-height:none}
+  .partner{grid-template-columns:1fr;padding:28px}
+  section{padding:60px 0}
+}
+@media (min-width:921px) and (max-width:1080px){.trust{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
 </head>
 <body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="طابعتي"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span>طابعتي</a>
+    <nav class="links" aria-label="الأقسام">
+      <a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#trust">ليش طابعتي</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a>
+    </nav>
+    <a class="btn primary sm" href="#where">لقّ أقرب طابعة</a>
+  </div>
+</header>
 
-    <header class="header">
-        <a href="#" class="logo">طابعتي</a>
-        <div>خدمة الطباعة الذاتية الأسرع</div>
-    </header>
+<main id="top">
+  <!-- البطل -->
+  <section class="hero" style="padding:0">
+    <svg class="net" id="net" aria-hidden="true"></svg>
+    <div class="wrap">
+      <div>
+        <span class="eyebrow"><i></i><span id="liveLine">طابعات خدمة ذاتية</span></span>
+        <h1>اطبع من جوالك<br><span>في ثواني.</span></h1>
+        <p class="lead">صوّر الباركود اللي على الطابعة، ارفع ملفك، ادفع، واضغط «اطبع الآن» وأنت واقف عندها. بدون تطبيق، وبدون تسجيل، وبدون طوابير.</p>
+        <div class="ctas">
+          <a class="btn primary" href="#where"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>وين الطابعات؟</a>
+          <a class="btn ghost" href="#how">كيف تشتغل</a>
+        </div>
+        <div class="stats">
+          <div><b id="statPrice">0.20</b><span>ر.س للصفحة تبدأ من</span></div>
+          <div><b id="statKiosks">—</b><span>طابعة في الخدمة</span></div>
+          <div><b>0</b><span>تطبيقات تحتاج تنزّلها</span></div>
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="paper b"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="phone">
+          <div class="bar"></div>
+          <div class="kc"><b>101</b><span>مكتبة الجامعة</span><em>متاحة</em></div>
+          <div class="file"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3BB0BB" stroke-width="2"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><b>محاضرة-الفصل-3.pdf</b>12 صفحة · وجهين</div>
+          <div class="sum"><span>المجموع</span><b>2.40 <small style="font:400 11px 'IBM Plex Sans Arabic'">ر.س</small></b></div>
+          <div class="go">أنا عند الطابعة — اطبع الآن</div>
+        </div>
+        <div class="paper a"><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </section>
 
-    <section class="hero">
-        <h1>طباعتك أسهل وأسرع</h1>
-        <p>خدمة "طابعتي" تتيح لك طباعة مستنداتك وأوراقك بكل سهولة وأمان عبر أجهزة الخدمة الذاتية المتوفرة على مدار الساعة.</p>
-        <a href="https://wa.me/966555807345" class="cta-button" target="_blank">💬 اطبع الآن عبر الواتساب</a>
-    </section>
+  <!-- كيف -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head"><span class="kick">01 — كيف تطبع</span><h2>ثلاث خطوات، وأوراقك بيدك</h2><p>كل شي من جوالك. الطابعة ما تطبع إلا لما تكون واقف عندها.</p></div>
+      <div class="steps">
+        <div class="step"><svg class="ic" aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-7"/></svg><span class="n">1</span><h3>صوّر الباركود</h3><p>بكاميرا الجوال العادية. تنفتح صفحة الطابعة مباشرة، وتشوف السعر وحالتها.</p></div>
+        <div class="step"><svg class="ic" aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span class="n">2</span><h3>ارفع ملفك وادفع</h3><p>PDF أو صورة. اختر النسخ والوجهين، وادفع بـ Apple Pay أو مدى. المبلغ قدامك قبل الدفع.</p></div>
+        <div class="step"><svg class="ic" aria-hidden="true" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg><span class="n">3</span><h3>«اطبع الآن»</h3><p>لما توصل الطابعة اضغط الزر، وتطلع أوراقك خلال ثواني. ملفك ينحذف بعدها تلقائيًا.</p></div>
+      </div>
+    </div>
+  </section>
 
-    <section class="features">
-        <h2>عن مشروع طابعتي</h2>
-        <p>
-            نحن متخصصون في توفير حلول الطباعة الذاتية المبتكرة. نهدف إلى تسهيل حياة الطلاب والموظفين من خلال أجهزة طباعة ذكية وموزعة بعناية، حيث يمكنك إرسال ملفاتك واستلامها مطبوعة في ثوانٍ معدودة وبجودة عالية.
-        </p>
-    </section>
+  <!-- وين -->
+  <section id="where">
+    <div class="wrap">
+      <div class="sec-head"><span class="kick">02 — وين الطابعات</span><h2>لقّ أقرب طابعة لك</h2><p>اختر مدينتك، أو دوّر باسم المكان. الحالة تتحدث مباشرة.</p></div>
+      <div class="finder">
+        <div class="finder-side">
+          <label class="search"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E6A73" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg><input id="q" type="search" placeholder="دوّر: جامعة، مكتبة، حي…" aria-label="بحث عن طابعة"></label>
+          <div class="chips" id="cities" role="group" aria-label="المدينة"></div>
+          <div class="list" id="list" aria-live="polite"><div class="empty">نحمّل الطابعات…</div></div>
+        </div>
+        <div class="map-box"><div id="map" role="region" aria-label="خريطة الطابعات"></div><div class="map-empty" id="mapEmpty">الخريطة تتحمل…</div></div>
+      </div>
+    </div>
+  </section>
 
-    <footer class="footer">
-        <p><strong>الاسم القانوني:</strong> مؤسسة ابراهيم محمد الحسون التجارية</p>
-        <p><strong>الرقم الوطني الموحد:</strong> 7016624285</p>
-        <p><strong>البريد الإلكتروني الرسمي:</strong> <a href="mailto:info@tabaety.com">info@tabaety.com</a></p>
-        <p>جميع الحقوق محفوظة لمشروع طابعتي &copy; 2026</p>
-    </footer>
+  <!-- الثقة -->
+  <section id="trust">
+    <div class="wrap">
+      <div class="sec-head"><span class="kick">03 — ليش طابعتي</span><h2>مصممة عشان ترتاح</h2></div>
+      <div class="trust">
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><h3>ملفك خاص</h3><p>ينحفظ مشفّر، وينحذف تلقائيًا بعد الطباعة. ما أحد يشوفه غيرك.</p></div>
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><h3>تطبع وأنت عندها</h3><p>أوراقك ما تطلع إلا لما تضغط «اطبع الآن» وأنت واقف عند الطابعة.</p></div>
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h10M4 17h7"/><path d="M17 15l2 2 4-4"/></svg><h3>السعر قبل الدفع</h3><p>تشوف عدد الصفحات والأوراق والمبلغ بالضبط قبل ما تدفع ريال.</p></div>
+        <div><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg><h3>مضمون</h3><p>صار عطل وما انطبع طلبك؟ نرجع لك المبلغ كامل.</p></div>
+      </div>
+    </div>
+  </section>
 
+  <!-- أسئلة -->
+  <section id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head"><span class="kick">04 — أسئلة</span><h2>أسئلة تتكرر</h2></div>
+      <div class="faq">
+        <details><summary>وش الملفات اللي أقدر أطبعها؟</summary><p>PDF والصور (JPG وPNG، وصور الآيفون). ملفات Word وPowerPoint: افتحها في جوالك ← «مشاركة» أو «طباعة» ← «حفظ PDF»، وبعدين ارفعها.</p></details>
+        <details><summary>ملفي في واتساب، كيف أرفعه؟</summary><p>اضغط على الملف مطوّلًا في المحادثة ← «مشاركة» ← «حفظ في الملفات». بعدها اختاره من صفحة الطباعة.</p></details>
+        <details><summary>أحتاج أحمّل تطبيق أو أسجّل؟</summary><p>لا. كل شي من متصفح الجوال، بدون تطبيق وبدون حساب.</p></details>
+        <details><summary>كم السعر؟</summary><p>السعر مكتوب على كل طابعة وفي صفحتها، ويبدأ من <span id="faqPrice">0.20</span> ر.س للصفحة أبيض وأسود. تشوف المجموع قبل الدفع.</p></details>
+        <details><summary>دفعت وما طلعت الأوراق، وش أسوي؟</summary><p>تواصل معنا في واتساب ومعك رقم الطلب اللي في الصفحة. إذا ما انطبع الطلب نرجع لك المبلغ كامل.</p></details>
+        <details><summary>دفعت وما وصلت الطابعة، يضيع طلبي؟</summary><p>لا. الطلب ينتظرك ساعة كاملة. افتح نفس الصفحة من جوالك لما توصل واضغط «اطبع الآن». وإذا ما لحقت، نرجع لك المبلغ.</p></details>
+        <details><summary>وش يصير لملفي بعد الطباعة؟</summary><p>ينحذف تلقائيًا من عندنا بعد الطباعة مباشرة، وكحد أقصى بعد 24 ساعة لو ما انطبع.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- للجهات -->
+  <section id="partner" style="padding-top:0">
+    <div class="wrap">
+      <div class="partner">
+        <div>
+          <h2>عندك مكان يحتاج طابعة؟</h2>
+          <p>جامعات، مكتبات، سكن طلاب، مستشفيات، مقرات عمل. نركّب الطابعة ونشغّلها ونعبّيها بنفسنا.</p>
+          <ul><li>بدون تكلفة تشغيل عليكم</li><li>نراقب الورق والحبر عن بُعد</li><li>صيانة ودعم سريع</li></ul>
+        </div>
+        <div class="ctas">
+          <a class="btn primary" id="partnerWa" href="#" target="_blank" rel="noopener">كلمنا في واتساب</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><span class="logo"><svg aria-hidden="true" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 14h10v7H7z"/></svg></span>طابعتي</a>
+    <div class="fl"><a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#faq">أسئلة</a><a id="footWa" href="#" target="_blank" rel="noopener">واتساب: <span class="ltr" id="waNum"></span></a></div>
+    <span>© <span id="yr">2026</span> طابعتي</span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const SB = "https://dloicztspjligjjowhps.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTAXpb4whQ6h_NZwpe0bD43Ucye9M";
+const WA = "966555807345";
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const STATUS = { ok: ["ok", "متاحة الحين"], soon: ["soon", "قريبًا"], offline: ["bad", "غير متصلة"], paused: ["warn", "صيانة"], printer_error: ["warn", "صيانة"], low_ink: ["warn", "صيانة"], no_paper: ["warn", "تنتظر ورق"], disabled: ["soon", "خارج الخدمة"] };
+const S = { all: [], city: "", q: "", sel: null, map: null, markers: {} };
+
+$("#yr").textContent = new Date().getFullYear();
+const waLink = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
+$("#partnerWa").href = waLink("السلام عليكم، عندنا مكان ونبي نركّب طابعة طابعتي");
+$("#footWa").href = waLink("السلام عليكم، عندي استفسار عن طابعتي");
+$("#waNum").textContent = "+" + WA;
+
+/* الشبكة المتحركة في الخلفية */
+(function net() {
+  const svg = $("#net"); const W = 1200, H = 640;
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("preserveAspectRatio", "xMidYMid slice");
+  let seed = 11; const rnd = () => (seed = (seed * 9301 + 49297) % 233280) / 233280;
+  const pts = Array.from({ length: 34 }, () => [rnd() * W, rnd() * H]);
+  let lines = "", dots = "";
+  pts.forEach((a, i) => pts.slice(i + 1).forEach((b) => { const d = Math.hypot(a[0] - b[0], a[1] - b[1]); if (d < 190) lines += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#3BB0BB" stroke-opacity="${(0.22 * (1 - d / 190)).toFixed(3)}"/>`; }));
+  pts.forEach((p, i) => { dots += `<circle cx="${p[0]}" cy="${p[1]}" r="${i % 5 ? 1.8 : 3.2}" fill="#3BB0BB" fill-opacity="${i % 5 ? .35 : .8}">${i % 5 ? "" : `<animate attributeName="r" values="3.2;6;3.2" dur="${3 + (i % 3)}s" repeatCount="indefinite"/>`}</circle>`; });
+  svg.innerHTML = `<defs><radialGradient id="fade" cx="20%" cy="40%" r="80%"><stop offset="0" stop-color="#0D1114" stop-opacity="0"/><stop offset="1" stop-color="#0D1114" stop-opacity=".9"/></radialGradient></defs>${lines}${dots}<rect width="${W}" height="${H}" fill="url(#fade)"/>`;
+})();
+
+/* الطابعات */
+async function loadKiosks() {
+  try {
+    const r = await fetch(`${SB}/rest/v1/rpc/web_public_kiosks`, { method: "POST", headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }, body: "{}" });
+    if (!r.ok) throw new Error(r.status);
+    S.all = await r.json();
+  } catch { S.all = null; }
+  renderAll();
+}
+function filtered() {
+  const q = S.q.trim();
+  return (S.all || []).filter((k) => (!S.city || k.city === S.city) && (!q || [k.location, k.area, k.city, k.kiosk_id, k.note].join(" ").includes(q)));
+}
+function renderAll() {
+  const all = S.all;
+  if (all === null) { $("#list").innerHTML = `<div class="empty">ما قدرنا نحمّل الطابعات. حدّث الصفحة.</div>`; return; }
+  const live = all.filter((k) => k.status === "ok").length;
+  $("#statKiosks").textContent = all.filter((k) => k.status !== "soon").length || all.length;
+  $("#liveLine").textContent = live ? `${live} طابعة متاحة الحين` : "طابعات خدمة ذاتية";
+  const minP = Math.min(...all.map((k) => +k.price_per_page).filter((n) => n > 0));
+  if (Number.isFinite(minP)) { $("#statPrice").textContent = minP.toFixed(2); $("#faqPrice").textContent = minP.toFixed(2); }
+  const cities = {}; all.forEach((k) => cities[k.city] = (cities[k.city] || 0) + 1);
+  $("#cities").innerHTML = [["", "الكل", all.length], ...Object.entries(cities).sort((a, b) => b[1] - a[1]).map(([c, n]) => [c, c, n])]
+    .map(([v, l, n]) => `<button class="chip" data-city="${esc(v)}" aria-pressed="${S.city === v}">${esc(l)}<small>${n}</small></button>`).join("");
+  document.querySelectorAll("[data-city]").forEach((b) => b.onclick = () => { S.city = b.dataset.city; renderAll(); fitMap(); });
+  renderList(); renderMarkers();
+}
+function renderList() {
+  const list = filtered();
+  if (!list.length) {
+    $("#list").innerHTML = `<div class="empty">${S.all.length ? "ما لقينا طابعة بهالبحث." : "أول طابعاتنا قريبًا. تابعنا!"}<br><a href="${waLink("السلام عليكم، أبي طابعة طابعتي في مكاني")}" target="_blank" rel="noopener">تبي طابعة في مكانك؟ كلمنا</a></div>`;
+    return;
+  }
+  $("#list").innerHTML = list.map((k) => {
+    const [cls, label] = STATUS[k.status] || ["soon", "غير متاحة"];
+    const dir = k.lat != null ? `https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}` : null;
+    return `<article class="loc${S.sel === k.kiosk_id ? " on" : ""}" data-k="${esc(k.kiosk_id)}" tabindex="0">
+      <div class="t"><span class="code">${esc(k.kiosk_id)}</span><div><b>${esc(k.location)}</b><span>${esc([k.area, k.city].filter(Boolean).join(" · "))}${k.note ? " · " + esc(k.note) : ""}</span></div><span class="pill ${cls}"><i></i>${label}</span></div>
+      <div class="t" style="font-size:13px;color:var(--ink-2)"><span><b class="mono" style="display:inline;color:var(--ink)">${(+k.price_per_page).toFixed(2)}</b> ر.س/صفحة${k.supports_duplex ? " · وجهين" : ""}${k.hours ? " · " + esc(k.hours) : ""}</span></div>
+      <div class="acts">${k.status !== "soon" ? `<a class="btn teal sm" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}${dir ? `<a class="btn light sm" href="${dir}" target="_blank" rel="noopener">الاتجاهات</a>` : ""}</div>
+    </article>`;
+  }).join("");
+  document.querySelectorAll(".loc").forEach((el) => {
+    const go = (e) => { if (e.target.closest("a")) return; select(el.dataset.k, true); };
+    el.onclick = go; el.onkeydown = (e) => { if (e.key === "Enter") go(e); };
+  });
+}
+function select(id, fromList) {
+  S.sel = id; renderList();
+  const k = (S.all || []).find((x) => x.kiosk_id === id);
+  if (S.map && k && k.lat != null) { S.map.flyTo([k.lat, k.lng], 16, { duration: .6 }); S.markers[id]?.openPopup(); }
+  if (!fromList) document.querySelector(`.loc[data-k="${CSS.escape(id)}"]`)?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
+
+/* الخريطة (Leaflet + OpenStreetMap) */
+function loadLeaflet() {
+  return new Promise((res, rej) => {
+    const l = document.createElement("link"); l.rel = "stylesheet"; l.href = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"; document.head.appendChild(l);
+    const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"; s.onload = res; s.onerror = rej; document.head.appendChild(s);
+  });
+}
+async function initMap() {
+  try { await loadLeaflet(); } catch { $("#mapEmpty").textContent = "ما قدرنا نحمّل الخريطة."; return; }
+  $("#mapEmpty").hidden = true;
+  S.map = L.map("map", { zoomControl: true, scrollWheelZoom: false, attributionControl: true }).setView([24.7136, 46.6753], 6);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+    maxZoom: 19, subdomains: "abcd", attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  }).addTo(S.map);
+  renderMarkers(); fitMap();
+}
+function renderMarkers() {
+  if (!S.map || !S.all) return;
+  Object.values(S.markers).forEach((m) => m.remove()); S.markers = {};
+  const withGeo = filtered().filter((k) => k.lat != null && k.lng != null);
+  if (!withGeo.length) { $("#mapEmpty").hidden = false; $("#mapEmpty").textContent = S.all.length ? "المواقع على الخريطة قريبًا." : "أول طابعاتنا قريبًا."; return; }
+  $("#mapEmpty").hidden = true;
+  for (const k of withGeo) {
+    const cls = k.status === "ok" ? "" : k.status === "soon" ? " soon" : k.status === "offline" ? " off" : " soon";
+    const icon = L.divIcon({ className: "", html: `<div class="pin${cls}"><span>${esc(k.kiosk_id).slice(0, 4)}</span></div>`, iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+    const [pc, pl] = STATUS[k.status] || ["soon", "غير متاحة"];
+    const m = L.marker([k.lat, k.lng], { icon, title: k.location }).addTo(S.map).bindPopup(
+      `<b>${esc(k.location)}</b><br><span class="pill ${pc}"><i></i>${pl}</span> · ${(+k.price_per_page).toFixed(2)} ر.س/ص<br>
+       <div style="display:flex;gap:6px;margin-top:8px">${k.status !== "soon" ? `<a class="btn teal sm" style="color:#fff" href="/p/?k=${encodeURIComponent(k.kiosk_id)}">اطبع هنا</a>` : ""}<a class="btn light sm" href="https://www.google.com/maps/dir/?api=1&destination=${k.lat},${k.lng}" target="_blank" rel="noopener">الاتجاهات</a></div>`);
+    m.on("click", () => select(k.kiosk_id, false));
+    S.markers[k.kiosk_id] = m;
+  }
+}
+function fitMap() {
+  if (!S.map) return;
+  renderMarkers();
+  const pts = filtered().filter((k) => k.lat != null).map((k) => [k.lat, k.lng]);
+  if (pts.length === 1) S.map.setView(pts[0], 15);
+  else if (pts.length > 1) S.map.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
+}
+
+$("#q").oninput = (e) => { S.q = e.target.value; renderList(); renderMarkers(); };
+loadKiosks().then(() => {
+  // نحمّل الخريطة لما يقترب المستخدم منها
+  const io = new IntersectionObserver((es) => { if (es.some((x) => x.isIntersecting)) { io.disconnect(); initMap(); } }, { rootMargin: "300px" });
+  io.observe($("#map"));
+});
+setInterval(() => { if (!document.hidden) loadKiosks(); }, 60000);
+</script>
 </body>
 </html>
