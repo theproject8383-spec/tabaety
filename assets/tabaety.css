@@ -1,0 +1,137 @@
+/* طابعتي — نظام التصميم v3
+   الفكرة: «الورقة هي الواجهة». المساحة الرئيسية في كل شاشة ورقة A4 بيضاء على «مكتب» رمادي بارد،
+   حولها علامات القص (crop marks) مثل المطابع. ألوان الحالة مأخوذة من لمبات الطابعات: أخضر جاهزة، كهرماني انتباه، أحمر عطل.
+   العناوين بخط كوفي هندسي (Noto Kufi Arabic) مثل لوحات الإرشاد، والنص بـ IBM Plex Sans Arabic. */
+
+:root {
+  --desk: #EDF1F2;        /* الأرضية: سطح المكتب */
+  --sheet: #FFFFFF;       /* الورقة */
+  --toner: #121619;       /* الحبر: النص الأساسي */
+  --graphite: #59646C;    /* نص ثانوي */
+  --rule: #D6DDE0;        /* الخطوط */
+  --rule-soft: #E7ECEE;
+  --brand: #0B6E78;       /* لون طابعتي */
+  --brand-deep: #08525A;
+  --brand-hi: #25B3C0;    /* نسخة مضيئة للخلفيات الداكنة */
+  --brand-wash: #DDF0F2;
+  --led-ready: #1F9D55;  --led-ready-wash: #DFF3E7;
+  --led-wait: #C47F12;   --led-wait-wash: #FBEFD9;
+  --led-fault: #C93B26;  --led-fault-wash: #FBE5E0;
+  --machine: #171C20;     /* جسم الطابعة */
+  --machine-2: #20272C;
+  --on-brand: #FFFFFF;
+  --shadow-sheet: 0 1px 2px rgba(18, 22, 25, .06), 0 12px 32px -12px rgba(18, 22, 25, .18);
+  --f-head: "Noto Kufi Arabic", "IBM Plex Sans Arabic", Tahoma, sans-serif;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --r-s: 8px; --r-m: 12px; --r-l: 18px;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --desk: #0D1113;
+  --sheet: #151B1E;
+  --toner: #E8EDEF;
+  --graphite: #97A3AA;
+  --rule: #273136;
+  --rule-soft: #1D2529;
+  --brand: #27B4C1;
+  --brand-deep: #4CC6D2;
+  --brand-hi: #27B4C1;
+  --brand-wash: #10313A;
+  --led-ready: #47C27F; --led-ready-wash: #12291D;
+  --led-wait: #E7A84A;  --led-wait-wash: #2D2412;
+  --led-fault: #EE7B64; --led-fault-wash: #34190F;
+  --machine: #0A0D0F; --machine-2: #12171A;
+  --on-brand: #04181B;
+  --shadow-sheet: 0 0 0 1px rgba(255, 255, 255, .02), 0 12px 32px -14px rgba(0, 0, 0, .6);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box }
+[hidden] { display: none !important }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100% }
+body { margin: 0; background: var(--desk); color: var(--toner); font: 400 16px/1.7 var(--f-body); font-variant-numeric: tabular-nums }
+h1, h2, h3, .head-font { font-family: var(--f-head); font-weight: 700; line-height: 1.35; letter-spacing: 0 }
+a { color: var(--brand) }
+button, input, select, textarea { font: inherit; color: inherit }
+button { cursor: pointer }
+:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 6px }
+.ltr { direction: ltr; unicode-bidi: isolate }
+.num { font-variant-numeric: tabular-nums; direction: ltr; unicode-bidi: isolate }
+.muted { color: var(--graphite) }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important } }
+
+/* الشعار: ورقة بزاوية مطوية فوق علامة تسجيل */
+.mark { width: 34px; height: 34px; flex: none; display: inline-block }
+.wordmark { display: inline-flex; align-items: center; gap: 10px; font: 800 20px/1 var(--f-head); color: inherit; text-decoration: none }
+
+/* الورقة: السطح الأساسي، بعلامات القص في الزوايا */
+.sheet { position: relative; background: var(--sheet); border-radius: 3px; box-shadow: var(--shadow-sheet) }
+.sheet.crop::before, .sheet.crop::after,
+.sheet.crop > .crop-b::before, .sheet.crop > .crop-b::after { content: ""; position: absolute; width: 14px; height: 14px; border: 0 solid var(--graphite); opacity: .55; pointer-events: none }
+.sheet.crop::before { top: -10px; right: -10px; border-bottom-width: 1px; border-left-width: 1px }
+.sheet.crop::after { top: -10px; left: -10px; border-bottom-width: 1px; border-right-width: 1px }
+.sheet.crop > .crop-b::before { bottom: -10px; right: -10px; border-top-width: 1px; border-left-width: 1px }
+.sheet.crop > .crop-b::after { bottom: -10px; left: -10px; border-top-width: 1px; border-right-width: 1px }
+
+/* الأسطح الثانوية: هادئة، بدون ظل */
+.panel { background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r-m) }
+
+/* الأزرار */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: var(--r-m);
+  border: 1px solid transparent; font: 600 15px/1 var(--f-body); text-decoration: none; white-space: nowrap; transition: background .15s, border-color .15s, transform .08s }
+.btn:active { transform: translateY(1px) }
+.btn-ink { background: var(--toner); color: var(--sheet) }
+.btn-ink:hover { background: var(--brand-deep); color: #fff }
+.btn-brand { background: var(--brand); color: var(--on-brand) }
+.btn-brand:hover { background: var(--brand-deep) }
+.btn-go { background: var(--led-ready); color: #fff }
+.btn-go:hover { filter: brightness(.92) }
+.btn-line { background: var(--sheet); color: var(--toner); border-color: var(--rule) }
+.btn-line:hover { border-color: var(--toner) }
+.btn-quiet { background: transparent; color: var(--graphite); border-color: transparent }
+.btn-quiet:hover { color: var(--toner); background: var(--rule-soft) }
+.btn-danger { background: var(--sheet); color: var(--led-fault); border-color: color-mix(in srgb, var(--led-fault) 35%, var(--rule)) }
+.btn-danger:hover { background: var(--led-fault-wash) }
+.btn-sm { min-height: 36px; padding: 0 12px; font-size: 13.5px; border-radius: var(--r-s) }
+.btn-block { width: 100% }
+.btn:disabled { opacity: .45; cursor: default; transform: none }
+
+/* لمبة الحالة: نفس لمبات الطابعات */
+.led { display: inline-flex; align-items: center; gap: 7px; font: 600 12.5px/1 var(--f-body); white-space: nowrap; padding: 5px 10px 5px 11px; border-radius: 99px }
+.led::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent) }
+.led.ready { color: var(--led-ready); background: var(--led-ready-wash) }
+.led.wait { color: var(--led-wait); background: var(--led-wait-wash) }
+.led.fault { color: var(--led-fault); background: var(--led-fault-wash) }
+.led.idle { color: var(--graphite); background: var(--rule-soft) }
+.led.info { color: var(--brand); background: var(--brand-wash) }
+.led.live::before { animation: led-blink 1.6s ease-in-out infinite }
+@keyframes led-blink { 50% { opacity: .35 } }
+
+/* الحقول */
+.field { display: flex; flex-direction: column; gap: 6px; font: 500 13.5px/1.5 var(--f-body) }
+.field small { font-weight: 400; color: var(--graphite); font-size: 12.5px }
+.input { min-height: 46px; width: 100%; border: 1px solid var(--rule); border-radius: var(--r-s); background: var(--sheet); padding: 0 12px; outline: none; transition: border-color .15s }
+.input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-wash) }
+textarea.input { padding: 10px 12px; min-height: 80px; resize: vertical }
+
+/* رسائل */
+.note { border-radius: var(--r-s); padding: 11px 14px; font-size: 14px; line-height: 1.65; border-inline-start: 3px solid }
+.note.wait { background: var(--led-wait-wash); border-color: var(--led-wait) }
+.note.fault { background: var(--led-fault-wash); border-color: var(--led-fault) }
+.note.info { background: var(--brand-wash); border-color: var(--brand) }
+.note.ready { background: var(--led-ready-wash); border-color: var(--led-ready) }
+
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 90;
+  background: var(--toner); color: var(--sheet); padding: 11px 18px; border-radius: var(--r-m); font-size: 14px; max-width: min(92vw, 460px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .25); animation: toast-in .2s ease-out }
+.toast.fault { background: var(--led-fault); color: #fff }
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, 8px) } }
+
+dialog.dlg { border: 0; padding: 22px; width: min(92vw, 420px); border-radius: var(--r-l); background: var(--sheet); color: var(--toner); box-shadow: 0 30px 80px rgba(0, 0, 0, .35) }
+dialog.dlg::backdrop { background: rgba(10, 13, 15, .55) }
+dialog.dlg h2, dialog.dlg h3 { margin: 0 0 6px; font-size: 19px }
+dialog.dlg p { margin: 0 0 16px; color: var(--graphite); line-height: 1.7 }
+dialog.dlg .acts { display: flex; flex-direction: column; gap: 8px; margin-top: 16px }
+
+.spin { width: 18px; height: 18px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: spin .8s linear infinite; display: inline-block }
+@keyframes spin { to { transform: rotate(360deg) } }
