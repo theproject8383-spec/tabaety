@@ -117,7 +117,7 @@ section{padding:84px 0;scroll-margin-top:60px}
 .loc{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;cursor:pointer;background:var(--card);transition:border-color .15s}
 .loc:hover,.loc.on{border-color:var(--accent)}
 .loc .t{display:flex;align-items:flex-start;gap:10px}
-.loc .code{font:600 15px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:8px;padding:3px 8px;direction:ltr}
+.loc .code{font:600 15px var(--mono);background:rgba(111,230,242,.14);color:#7FE9F4;border-radius:8px;padding:3px 8px;direction:ltr}
 .loc .t div{flex:1;min-width:0}
 .loc .t b{display:block;font-size:15px;line-height:1.4}
 .loc .t span{font-size:13px;color:var(--ink-2)}
@@ -125,42 +125,53 @@ section{padding:84px 0;scroll-margin-top:60px}
 .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:99px;padding:3px 10px;white-space:nowrap}
 .pill i{width:7px;height:7px;border-radius:50%;background:currentColor}
 .pill.ok{color:var(--ok);background:var(--ok-tint)} .pill.warn{color:var(--warn);background:var(--warn-tint)} .pill.bad{color:var(--bad);background:var(--bad-tint)} .pill.soon{color:var(--ink-2);background:var(--line-2)}
-.map-box{position:relative;border-radius:18px;overflow:hidden;background:#0B1114;min-height:520px;border:1px solid #1C272C}
+.map-box{position:relative;border-radius:18px;overflow:hidden;background:radial-gradient(ellipse at 50% 45%,#0A2230 0%,#050D13 55%,#02060A 100%);min-height:520px;border:1px solid #1C272C}
 .knet{position:relative;height:100%;min-height:520px;display:flex;flex-direction:column;color:#C9D6DA}
 .net-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #18242A;font-size:14px}
 .net-head b{color:#fff;font-size:16px}.net-head span{color:#7F9399;margin-inline-start:auto;font-size:13px}
 .net-back{background:transparent;border:1px solid #24343A;color:#BFD0D5;border-radius:9px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px}
 .net-back:hover{border-color:#3BB0BB;color:#fff}
 .net-svg{flex:1;width:100%;display:block;font-family:'IBM Plex Sans Arabic',sans-serif}
-.net-base{stroke:#2B3D44;stroke-width:3.2;stroke-linecap:round;fill:none}
-.net-grid{stroke:#15232A;stroke-width:1;fill:none}
-.net-link{stroke:#3BB0BB;stroke-opacity:.35;stroke-width:1.5;fill:none;stroke-dasharray:4 5}
-.net-cross{stroke:#3BB0BB;stroke-opacity:.5;stroke-width:1}
-.net-trace{stroke:#3BB0BB;stroke-opacity:0;stroke-width:1;transition:stroke-opacity .2s}
-.net-node{cursor:pointer;outline:none}
-.net-trace,.net-pulse,.net-cross,.net-label,.net-count,.net-code{pointer-events:none}
-.net-node:hover .net-trace,.net-node:focus-visible .net-trace,.net-node.on .net-trace{stroke-opacity:.45}
-.net-dot{fill:#0B1114;stroke-width:3}
-.net-node.ready .net-dot{stroke:#3BB0BB}.net-node.wait .net-dot{stroke:#E0A84A}.net-node.fault .net-dot{stroke:#EF7A63}.net-node.idle .net-dot{stroke:#6C7E84}
-.net-pulse{fill:none;stroke:#3BB0BB;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:netpulse 2.4s ease-out infinite}
-@keyframes netpulse{0%{opacity:.8;transform:scale(.6)}100%{opacity:0;transform:scale(2.2)}}
-.net-label{fill:#fff;font-size:15px;font-weight:700;text-anchor:middle}
-.net-count{fill:#8FA4AA;font-size:12px;text-anchor:middle}
-.net-chip{fill:#0F1A1E;stroke-width:2}
-.net-node.ready .net-chip{stroke:#3BB0BB}.net-node.wait .net-chip{stroke:#E0A84A}.net-node.fault .net-chip{stroke:#EF7A63}.net-node.idle .net-chip{stroke:#6C7E84}
-.net-node.on .net-chip{fill:#3BB0BB}.net-node.on .net-code{fill:#06191C}
-.net-code{fill:#fff;font-size:13px;font-weight:700;text-anchor:middle;font-family:'IBM Plex Mono',monospace}
+.n-dust{stroke:#2A6F86;stroke-opacity:.45;stroke-width:1.3;stroke-linecap:round;fill:none}
+.n-edge{stroke:#3FB6D6;stroke-opacity:.22;stroke-width:.8;fill:none}
+.n-dot{stroke:#7FE3F2;stroke-opacity:.85;stroke-width:3;stroke-linecap:round;fill:none}
+.n-oedge{stroke:#2F8FB0;stroke-opacity:.16;stroke-width:.8;fill:none}
+.n-odot{stroke:#4DB4D0;stroke-opacity:.5;stroke-width:2.6;stroke-linecap:round;fill:none}
+.n-core{fill:#DDFBFF}
+.n-star{animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.35}50%{opacity:1}}
+.n-spoke{stroke:#6FE6F2;stroke-opacity:.55;stroke-width:1;fill:none}
+.n-link{stroke:#6FE6F2;stroke-opacity:.8;stroke-width:1.4;fill:none;stroke-dasharray:3 9;animation:flow 1.4s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-24}}
+.net-node{cursor:pointer;outline:none;--c:#6FE6F2}
+.net-node.wait{--c:#F2BE5C}.net-node.fault{--c:#F58A70}.net-node.idle{--c:#7F9399}
+.net-halo,.n-halo{pointer-events:none;transition:opacity .2s}
+.net-pulse,.net-label,.net-count,.net-code,.net-ring,.net-dot,.net-chip{pointer-events:none}
+.net-hit{fill:transparent;pointer-events:all}
+.net-dot{fill:var(--c)}
+.net-ring{fill:none;stroke:var(--c);stroke-width:1.6;stroke-opacity:.9}
+.net-node:hover .net-ring,.net-node:focus-visible .net-ring,.net-node.on .net-ring{stroke:#fff;stroke-width:2.2}
+.net-node.wait .n-halo,.net-node.fault .n-halo,.net-node.idle .n-halo{opacity:.35}
+.net-pulse{fill:none;stroke:var(--c);stroke-width:2;transform-box:fill-box;transform-origin:center;animation:netpulse 2.4s ease-out infinite}
+@keyframes netpulse{0%{opacity:.8;transform:scale(.8)}100%{opacity:0;transform:scale(3)}}
+.net-label{fill:#fff;font-size:15px;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:#03080B;stroke-width:4px}
+.net-count{fill:#8FB7C2;font-size:12px;text-anchor:middle;paint-order:stroke;stroke:#03080B;stroke-width:4px}
+.net-chip{fill:rgba(6,18,24,.85);stroke:var(--c);stroke-opacity:.7;stroke-width:1}
+.net-node.on .net-chip{fill:var(--c);stroke:#fff}.net-node.on .net-code{fill:#04161A}
+.net-code{fill:#fff;font-size:12.5px;font-weight:700;text-anchor:middle;font-family:'IBM Plex Mono',monospace}
 @media (max-width:600px){.net-label{font-size:24px}.net-count{font-size:19px}}
-.net-node:focus-visible .net-chip,.net-node:focus-visible .net-dot{stroke:#fff}
+@media (prefers-reduced-motion:reduce){.n-star,.n-link,.net-pulse{animation:none}}
 .net-tip{padding:12px 18px 16px;color:#7F9399;font-size:13px;text-align:center}
 .net-empty{display:grid;place-items:center;height:100%;min-height:520px;color:#7F9399}
-.net-card{position:relative;margin:0 14px 14px;background:#fff;color:var(--ink);border-radius:14px;padding:14px;display:grid;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.net-card{position:relative;margin:0 14px 14px;background:rgba(7,22,30,.9);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#E6F4F7;border:1px solid rgba(111,230,242,.28);border-radius:14px;padding:14px;display:grid;gap:10px;box-shadow:0 0 0 1px rgba(0,0,0,.4),0 14px 40px rgba(0,0,0,.5),0 0 40px rgba(63,195,218,.12)}
 .net-card .t{display:flex;gap:10px;align-items:flex-start;padding-inline-end:26px}.net-card .t div{min-width:0}
-.net-card .t b{display:block;font-size:15px}.net-card .t div span{font-size:13px;color:var(--ink-2)}
-.net-card .code{font:600 15px var(--mono);background:var(--accent-tint);color:var(--accent);border-radius:8px;padding:3px 8px;direction:ltr}
-.net-card .m{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}.net-card .m b{color:var(--ink)}
+.net-card .t b{display:block;font-size:15px}.net-card .t div span{font-size:13px;color:#93AEB6}
+.net-card .code{font:600 15px var(--mono);background:rgba(111,230,242,.14);color:#7FE9F4;border-radius:8px;padding:3px 8px;direction:ltr}
+.net-card .m{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#93AEB6}.net-card .m b{color:#fff}
 .net-card .a{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.net-card-x{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:8px;border:0;background:var(--line-2);font-size:18px;cursor:pointer;color:var(--ink)}
+.net-card-x{position:absolute;top:8px;left:8px;width:30px;height:30px;border-radius:8px;border:0;background:rgba(255,255,255,.08);font-size:18px;cursor:pointer;color:#CFE3E8}
+.net-card .btn.light{background:transparent;color:#CFE3E8;border-color:rgba(207,227,232,.25)}.net-card .small-note{color:#7F9399}
+.net-head{background:transparent;border-bottom-color:rgba(111,230,242,.08)!important}
 .small-note{font-size:12.5px;color:var(--ink-2)}
 @media (prefers-reduced-motion:reduce){.net-pulse{animation:none;opacity:.5}}
 
@@ -445,7 +456,6 @@ const CITIES = {
 const NET = { W: 660, H: 540, step: 14, lon0: 34.3, lon1: 56.0, lat0: 16.0, lat1: 32.6 };
 const projX = (lon) => (lon - NET.lon0) / (NET.lon1 - NET.lon0) * NET.W;
 const projY = (lat) => (NET.lat1 - lat) / (NET.lat1 - NET.lat0) * NET.H;
-const snap = (v) => Math.round(v / NET.step) * NET.step;
 const KSA_PX = KSA.map(([lo, la]) => [projX(lo), projY(la)]);
 function inside(x, y, poly) {
   let c = false;
@@ -455,20 +465,62 @@ function inside(x, y, poly) {
   }
   return c;
 }
-let BASE_DOTS = null;
-function baseDots() {
-  if (BASE_DOTS) return BASE_DOTS;
-  let d = "";
-  for (let y = NET.step; y < NET.H; y += NET.step) for (let x = NET.step; x < NET.W; x += NET.step)
-    if (inside(x, y, KSA_PX)) d += `M${x} ${y}h.01`;
-  return (BASE_DOTS = d);
+// شبكة نقاط متصلة (plexus): نقاط موزعة عشوائيًا بثبات داخل حدود المملكة، وكل نقطة متصلة بأقرب جيرانها
+function rng(seed) { return () => { seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+const f1 = (n) => Math.round(n * 10) / 10;
+function knn(pts, k, maxD, only) {
+  const seen = new Set(); let d = "";
+  pts.forEach((a, i) => {
+    if (only && !only(i)) return;
+    pts.map((b, j) => [j, (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2]).filter(([j, dd]) => j !== i && dd < maxD * maxD)
+      .sort((x, y) => x[1] - y[1]).slice(0, k).forEach(([j]) => {
+        const key = i < j ? i + "-" + j : j + "-" + i; if (seen.has(key)) return; seen.add(key);
+        d += `M${f1(a[0])} ${f1(a[1])}L${f1(pts[j][0])} ${f1(pts[j][1])}`;
+      });
+  });
+  return d;
+}
+const dotPath = (pts) => pts.map(([x, y]) => `M${f1(x)} ${f1(y)}h.01`).join("");
+const NET_DEFS = `<defs>
+  <radialGradient id="nHalo"><stop offset="0" stop-color="#6FE6F2" stop-opacity=".55"/><stop offset=".35" stop-color="#3FC3DA" stop-opacity=".18"/><stop offset="1" stop-color="#3FC3DA" stop-opacity="0"/></radialGradient>
+  <radialGradient id="nVig" cx="50%" cy="50%" r="60%"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+  <mask id="nFade"><rect width="100%" height="100%" fill="url(#nVig)"/></mask>
+  <filter id="nGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>`;
+let PLEX = null;
+function plexus() {
+  if (PLEX) return PLEX;
+  const r = rng(11), inner = [], outer = [], dust = [];
+  const s = 30;
+  for (let y = s / 2; y < NET.H; y += s) for (let x = s / 2; x < NET.W; x += s) {
+    const p = [x + (r() - .5) * s * .85, y + (r() - .5) * s * .85];
+    if (inside(p[0], p[1], KSA_PX)) inner.push(p);
+  }
+  for (let i = 0; i < KSA_PX.length; i++) {               // نقاط على الحدود ترسم شكل المملكة
+    const a = KSA_PX[i], b = KSA_PX[(i + 1) % KSA_PX.length];
+    const n = Math.max(1, Math.round(Math.hypot(b[0] - a[0], b[1] - a[1]) / 22));
+    for (let t = 0; t < n; t++) inner.push([a[0] + (b[0] - a[0]) * t / n, a[1] + (b[1] - a[1]) * t / n]);
+  }
+  const so = 58;
+  for (let y = -so / 2; y < NET.H + so; y += so) for (let x = -so / 2; x < NET.W + so; x += so) {
+    const p = [x + (r() - .5) * so * .9, y + (r() - .5) * so * .9];
+    if (!inside(p[0], p[1], KSA_PX) && r() < .8) outer.push(p);
+  }
+  for (let y = 4; y < NET.H; y += 7) for (let x = 4; x < NET.W; x += 7) if (inside(x, y, KSA_PX) && r() < .55) dust.push([x + (r() - .5) * 3, y + (r() - .5) * 3]);
+  const stars = inner.filter(() => r() < .16);
+  PLEX = {
+    inner, dust: dotPath(dust), dots: dotPath(inner), odots: dotPath(outer),
+    edges: knn(inner, 4, 48), oedges: knn(outer.concat(inner.slice(-KSA_PX.length * 3)), 3, 95),
+    stars: stars.map(([x, y], i) => `<g class="n-star" style="animation-delay:${(i * 0.37) % 4}s"><circle cx="${f1(x)}" cy="${f1(y)}" r="11" fill="url(#nHalo)"/><circle cx="${f1(x)}" cy="${f1(y)}" r="1.9" class="n-core"/></g>`).join(""),
+  };
+  return PLEX;
 }
 const SC = (k) => k.status === "ok" ? "ready" : k.status === "soon" ? "idle" : k.status === "offline" ? "fault" : "wait";
 function cityPoint(name, list) {
   const c = CITIES[name];
-  if (c) return [snap(projX(c[0])), snap(projY(c[1]))];
+  if (c) return [projX(c[0]), projY(c[1])];
   const g = list.find((k) => k.lat != null);
-  return g ? [snap(projX(g.lng)), snap(projY(g.lat))] : null;
+  return g ? [projX(g.lng), projY(g.lat)] : null;
 }
 
 function renderNet() {
@@ -480,32 +532,42 @@ function renderNet() {
 }
 
 function renderCountry(box, list) {
+  const P = plexus();
   const groups = {};
   list.forEach((k) => (groups[k.city] ||= []).push(k));
   const nodes = Object.entries(groups).map(([city, ks]) => ({ city, ks, p: cityPoint(city, ks) })).filter((n) => n.p);
-  // خطوط الشبكة بين المدن اللي فيها طابعات
-  let links = "";
+  let links = "", spokes = "";
   for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
     const [a, b] = [nodes[i].p, nodes[j].p];
-    links += `<path d="M${a[0]} ${a[1]}H${b[0]}V${b[1]}" class="net-link"/>`;
+    links += `M${f1(a[0])} ${f1(a[1])}L${f1(b[0])} ${f1(b[1])}`;
+  }
+  for (const n of nodes) {           // كل مدينة متصلة بأقرب نقاط الشبكة حولها
+    P.inner.map((q) => [q, (q[0] - n.p[0]) ** 2 + (q[1] - n.p[1]) ** 2]).sort((a, b) => a[1] - b[1]).slice(0, 6)
+      .forEach(([q]) => { spokes += `M${f1(n.p[0])} ${f1(n.p[1])}L${f1(q[0])} ${f1(q[1])}`; });
   }
   const nodeSvg = nodes.map((n) => {
     const live = n.ks.filter((k) => k.status === "ok").length;
     const cls = live ? "ready" : n.ks.some((k) => k.status !== "soon") ? "wait" : "idle";
-    const [x, y] = n.p;
+    const [x, y] = n.p.map(f1);
     return `<g class="net-node ${cls}" tabindex="0" role="button" data-city="${esc(n.city)}" aria-label="${esc(n.city)}: ${n.ks.length} طابعة">
-      <path d="M${x - 22} ${y}H${x + 22}M${x} ${y - 22}V${y + 22}" class="net-cross"/>
+      <circle cx="${x}" cy="${y}" r="46" class="n-halo" fill="url(#nHalo)"/>
       ${live ? `<circle cx="${x}" cy="${y}" r="10" class="net-pulse"/>` : ""}
-      <circle cx="${x}" cy="${y}" r="7" class="net-dot"/>
-      <text x="${x}" y="${y - 16}" class="net-label">${esc(n.city)}</text>
-      <text x="${x}" y="${y + 26}" class="net-count">${n.ks.length} ${n.ks.length === 1 ? "طابعة" : "طابعات"}</text>
+      <circle cx="${x}" cy="${y}" r="10" class="net-ring"/>
+      <circle cx="${x}" cy="${y}" r="4.5" class="net-dot" filter="url(#nGlow)"/>
+      <circle cx="${x}" cy="${y}" r="26" class="net-hit"/>
+      <text x="${x}" y="${y - 19}" class="net-label">${esc(n.city)}</text>
+      <text x="${x}" y="${y + 28}" class="net-count">${n.ks.length} ${n.ks.length === 1 ? "طابعة" : "طابعات"}</text>
     </g>`;
   }).join("");
   box.innerHTML = `
     <div class="net-head"><b>المملكة</b><span>${nodes.length ? "اضغط على مدينة" : "ما فيه طابعات بهالبحث"}</span></div>
-    <svg viewBox="0 0 ${NET.W} ${NET.H}" class="net-svg" role="img" aria-label="خريطة شبكة طابعات طابعتي في المملكة">
-      <path d="${baseDots()}" class="net-base"/>
-      ${links}${nodeSvg}
+    <svg viewBox="0 0 ${NET.W} ${NET.H}" class="net-svg" role="img" aria-label="شبكة طابعات طابعتي في المملكة">${NET_DEFS}
+      <g mask="url(#nFade)"><path d="${P.oedges}" class="n-oedge"/><path d="${P.odots}" class="n-odot"/></g>
+      <path d="${P.dust}" class="n-dust"/>
+      <path d="${P.edges}" class="n-edge"/><path d="${P.dots}" class="n-dot"/>
+      ${P.stars}
+      <path d="${spokes}" class="n-spoke"/><path d="${links}" class="n-link"/>
+      ${nodeSvg}
     </svg>`;
   box.querySelectorAll(".net-node").forEach((g) => {
     const go = () => { S.view = { city: g.dataset.city }; S.sel = null; renderNet(); };
@@ -514,9 +576,9 @@ function renderCountry(box, list) {
 }
 
 function renderCity(box, city, ks) {
-  const W = 660, H = 420, step = 60, pad = 60;
+  const W = 660, H = 420, step = 70, pad = 90;
   const cols = Math.floor((W - pad * 2) / step), rows = Math.floor((H - pad * 2) / step);
-  // مكان كل طابعة: من إحداثياتها (نسبةً لبعض)، ويلتصق بأقرب تقاطع. اللي ما لها إحداثيات تاخذ تقاطعات فاضية حول الوسط
+  // مكان كل طابعة: من إحداثياتها نسبةً لبعض، واللي ما لها إحداثيات تاخذ أماكن فاضية حول الوسط
   const geo = ks.filter((k) => k.lat != null);
   const used = new Set(), pos = {};
   const key = (c, r) => `${c},${r}`;
@@ -524,40 +586,47 @@ function renderCity(box, city, ks) {
     const lats = geo.map((k) => k.lat), lngs = geo.map((k) => k.lng);
     const [a0, a1, o0, o1] = [Math.min(...lats), Math.max(...lats), Math.min(...lngs), Math.max(...lngs)];
     for (const k of geo) {
-      let c = o1 > o0 ? Math.round((k.lng - o0) / (o1 - o0) * (cols - 2)) + 1 : Math.floor(cols / 2);
-      let r = a1 > a0 ? Math.round((a1 - k.lat) / (a1 - a0) * (rows - 2)) + 1 : Math.floor(rows / 2);
+      let c = o1 > o0 ? Math.round((k.lng - o0) / (o1 - o0) * cols) : Math.floor(cols / 2);
+      let r = a1 > a0 ? Math.round((a1 - k.lat) / (a1 - a0) * rows) : Math.floor(rows / 2);
       while (used.has(key(c, r))) c = (c + 1) % (cols + 1);
       used.add(key(c, r)); pos[k.kiosk_id] = [c, r];
     }
   }
-  const ring = [];
-  const cc = Math.floor(cols / 2), cr = Math.floor(rows / 2);
+  const ring = [], cc = Math.floor(cols / 2), cr = Math.floor(rows / 2);
   for (let d = 0; d <= Math.max(cols, rows); d++) for (let r = cr - d; r <= cr + d; r++) for (let c = cc - d; c <= cc + d; c++)
     if (r >= 0 && c >= 0 && r <= rows && c <= cols && Math.max(Math.abs(r - cr), Math.abs(c - cc)) === d) ring.push([c, r]);
   for (const k of ks.filter((k) => k.lat == null)) {
-    const spot = ring.find(([c, r]) => !used.has(key(c, r)));
+    const spot = ring.find(([c, r]) => !used.has(key(c, r))) || [cc, cr];
     used.add(key(...spot)); pos[k.kiosk_id] = spot;
   }
-  const X = (c) => pad + c * step, Y = (r) => pad + r * step;
-  let grid = "";
-  for (let c = 0; c <= cols; c++) grid += `M${X(c)} ${Y(0)}V${Y(rows)}`;
-  for (let r = 0; r <= rows; r++) grid += `M${X(0)} ${Y(r)}H${X(cols)}`;
-  let dots = "";
-  for (let c = 0; c <= cols; c++) for (let r = 0; r <= rows; r++) dots += `M${X(c)} ${Y(r)}h.01`;
-  const nodes = ks.map((k) => {
-    const [c, r] = pos[k.kiosk_id], x = X(c), y = Y(r), cls = SC(k), on = S.sel === k.kiosk_id;
+  let seed = 0; for (const ch of city) seed = (seed * 31 + ch.charCodeAt(0)) | 0;
+  const r = rng(seed), kp = ks.map((k) => [pad + pos[k.kiosk_id][0] * step, pad + pos[k.kiosk_id][1] * step]);
+  const mesh = [], s = 40;
+  for (let y = -s / 2; y < H + s; y += s) for (let x = -s / 2; x < W + s; x += s) {
+    const p = [x + (r() - .5) * s * .9, y + (r() - .5) * s * .9];
+    if (kp.every((q) => (q[0] - p[0]) ** 2 + (q[1] - p[1]) ** 2 > 30 * 30)) mesh.push(p);
+  }
+  const all = kp.concat(mesh), nk = kp.length;
+  const edges = knn(all, 4, 70), kedges = knn(all, 5, 110, (i) => i < nk);
+  const stars = mesh.filter(() => r() < .14).map(([x, y], i) => `<g class="n-star" style="animation-delay:${(i * 0.41) % 4}s"><circle cx="${f1(x)}" cy="${f1(y)}" r="10" fill="url(#nHalo)"/><circle cx="${f1(x)}" cy="${f1(y)}" r="1.8" class="n-core"/></g>`).join("");
+  const nodes = ks.map((k, i) => {
+    const [x, y] = kp[i], cls = SC(k), on = S.sel === k.kiosk_id, w = Math.max(40, String(k.kiosk_id).length * 9 + 18);
     return `<g class="net-node ${cls}${on ? " on" : ""}" tabindex="0" role="button" data-k="${esc(k.kiosk_id)}" aria-label="طابعة ${esc(k.kiosk_id)}، ${esc(k.location)}">
-      <path d="M${X(0)} ${y}H${X(cols)}M${x} ${Y(0)}V${Y(rows)}" class="net-trace"/>
-      ${k.status === "ok" ? `<circle cx="${x}" cy="${y}" r="13" class="net-pulse"/>` : ""}
-      <rect x="${x - 20}" y="${y - 13}" width="40" height="26" rx="6" class="net-chip"/>
-      <text x="${x}" y="${y + 5}" class="net-code">${esc(k.kiosk_id)}</text>
+      <circle cx="${x}" cy="${y}" r="52" class="n-halo" fill="url(#nHalo)"/>
+      ${k.status === "ok" ? `<circle cx="${x}" cy="${y}" r="11" class="net-pulse"/>` : ""}
+      <circle cx="${x}" cy="${y}" r="11" class="net-ring"/>
+      <circle cx="${x}" cy="${y}" r="5" class="net-dot" filter="url(#nGlow)"/>
+      <rect x="${x - w / 2}" y="${y + 18}" width="${w}" height="22" rx="11" class="net-chip"/>
+      <text x="${x}" y="${y + 33.5}" class="net-code">${esc(k.kiosk_id)}</text>
+      <circle cx="${x}" cy="${y + 10}" r="30" class="net-hit"/>
     </g>`;
   }).join("");
   const sel = ks.find((k) => k.kiosk_id === S.sel);
   box.innerHTML = `
-    <div class="net-head"><button class="net-back" id="netBack">${"→"} المملكة</button><b>${esc(city)}</b><span>${ks.length} ${ks.length === 1 ? "طابعة" : "طابعات"}</span></div>
-    <svg viewBox="0 0 ${W} ${H}" class="net-svg" role="img" aria-label="طابعات ${esc(city)}">
-      <path d="${grid}" class="net-grid"/><path d="${dots}" class="net-base"/>${nodes}
+    <div class="net-head"><button class="net-back" id="netBack">→ المملكة</button><b>${esc(city)}</b><span>${ks.length} ${ks.length === 1 ? "طابعة" : "طابعات"}</span></div>
+    <svg viewBox="0 0 ${W} ${H}" class="net-svg" role="img" aria-label="طابعات ${esc(city)}">${NET_DEFS}
+      <g mask="url(#nFade)"><path d="${edges}" class="n-edge"/><path d="${dotPath(mesh)}" class="n-dot"/>${stars}</g>
+      <path d="${kedges}" class="n-spoke"/>${nodes}
     </svg>
     ${sel ? kioskCard(sel) : `<div class="net-tip">اضغط على أي طابعة تشوف تفاصيلها وموقعها بالضبط</div>`}`;
   $("#netBack").onclick = () => { S.view = null; S.sel = null; renderNet(); renderList(); };
