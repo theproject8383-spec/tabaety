@@ -42,6 +42,10 @@ header.top .wrap{display:flex;align-items:center;gap:18px;height:64px}
 nav.links{display:flex;gap:4px;margin-inline-start:auto}
 nav.links a{color:var(--night-ink-2);text-decoration:none;font-size:14px;font-weight:500;padding:8px 12px;border-radius:9px}
 nav.links a:hover{color:#fff;background:rgba(255,255,255,.06)}
+.menu-btn{display:none;width:42px;height:42px;border-radius:11px;border:1px solid var(--night-line);background:transparent;color:#fff;place-items:center;cursor:pointer}
+.mnav{display:flex;flex-direction:column;padding:6px 16px 14px;border-top:1px solid var(--night-line)}
+.mnav a{color:var(--night-ink);text-decoration:none;padding:13px 4px;border-bottom:1px solid var(--night-line);font-weight:500}
+.mnav a:last-child{border-bottom:0;color:var(--glow)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:12px;font-weight:700;text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
 .btn.primary{background:var(--glow);color:#06191C}
 .btn.primary:hover{background:#5BC6D0}
@@ -87,7 +91,7 @@ nav.links a:hover{color:#fff;background:rgba(255,255,255,.06)}
 .paper.b{right:-1%;top:10%;transform:rotate(7deg);width:24%}
 
 /* الأقسام */
-section{padding:84px 0}
+section{padding:84px 0;scroll-margin-top:60px}
 .sec-head{max-width:640px;margin-bottom:36px}
 .sec-head .kick{font:600 13px var(--mono);color:var(--accent);letter-spacing:.5px}
 .sec-head h2{font-size:clamp(26px,3.4vw,38px);line-height:1.3;margin:8px 0 10px}
@@ -164,15 +168,23 @@ footer a:hover{color:var(--glow)}
 
 @media (max-width:920px){
   nav.links{display:none}
+  header.top .wrap{gap:10px;height:60px}
+  header.top .btn.primary.sm{margin-inline-start:auto}
+  .menu-btn{display:grid}
+  .hero .ctas .btn{flex:1}
+  .stats{gap:18px} .stats div b{font-size:22px}
+  .sec-head{margin-bottom:24px}
+  .loc .acts .btn{flex:1}
   .hero .wrap{grid-template-columns:1fr;padding-top:44px;padding-bottom:56px}
   .hero-visual{max-width:300px}
   .steps,.trust{grid-template-columns:1fr}
   .finder{grid-template-columns:1fr}
-  .map-box{min-height:380px;order:-1}
+  .map-box{min-height:320px}
   .list{max-height:none}
   .partner{grid-template-columns:1fr;padding:28px}
   section{padding:60px 0}
 }
+@media (min-width:921px){.mnav{display:none!important}}
 @media (min-width:921px) and (max-width:1080px){.trust{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
@@ -184,7 +196,11 @@ footer a:hover{color:var(--glow)}
       <a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#trust">ليش طابعتي</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a>
     </nav>
     <a class="btn primary sm" href="#where">لقّ أقرب طابعة</a>
+    <button class="menu-btn" id="menuBtn" aria-label="القائمة" aria-expanded="false" aria-controls="mnav"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
   </div>
+  <nav class="mnav" id="mnav" hidden aria-label="الأقسام">
+    <a href="#how">كيف تطبع</a><a href="#where">وين الطابعات</a><a href="#trust">ليش طابعتي</a><a href="#faq">أسئلة</a><a href="#partner">للجهات</a><a id="mnavWa" href="#" target="_blank" rel="noopener">تواصل في واتساب</a>
+  </nav>
 </header>
 
 <main id="top">
@@ -316,6 +332,11 @@ const waLink = (t) => `https://wa.me/${WA}?text=${encodeURIComponent(t)}`;
 $("#partnerWa").href = waLink("السلام عليكم، عندنا مكان ونبي نركّب طابعة طابعتي");
 $("#footWa").href = waLink("السلام عليكم، عندي استفسار عن طابعتي");
 $("#waNum").textContent = "+" + WA;
+$("#mnavWa").href = waLink("السلام عليكم، عندي استفسار عن طابعتي");
+const mb = $("#menuBtn"), mn = $("#mnav");
+mb.onclick = () => { const open = mn.hidden; mn.hidden = !open; mb.setAttribute("aria-expanded", String(open)); };
+mn.addEventListener("click", (e) => { if (e.target.closest("a")) { mn.hidden = true; mb.setAttribute("aria-expanded", "false"); } });
+addEventListener("resize", () => { if (innerWidth > 920) mn.hidden = true; });
 
 /* الشبكة المتحركة في الخلفية */
 (function net() {
