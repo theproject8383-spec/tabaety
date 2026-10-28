@@ -647,6 +647,7 @@ const KSUB = {
         <dt>وضع البرنامج</dt><dd>${k.agent_dry_run ? pill(["info", "وضع التجربة (ما يطبع فعليًا)"]) : pill(["ok", "طباعة فعلية"])} ${k.agent_paused ? pill(["warn", "متوقف"]) : ""}</dd>
         <dt>الحساسات</dt><dd>${snmp ? (ps.reachable ? "من الطابعة مباشرة (SNMP)" : pill(["bad", "الطابعة ما ترد على الشبكة"])) : "من Windows فقط (حط IP الطابعة في البرنامج للحساسات الكاملة)"}</dd>
       </dl>
+      ${!k.is_enabled && k.error_message ? `<div class="alert bad" style="margin-top:12px"><b>🛑 ${esc(k.error_message)}</b><br><span class="small">افحص الطابعة (الكيبل، الورق، طابور الطباعة في الكمبيوتر)، وبعدين اضغط «فعّل استقبال الطلبات» و«شغّل البرنامج».</span></div>` : ""}
       ${errs.length ? `<div class="grid" style="gap:6px;margin-top:12px">${errs.map((e) => `<div class="alert bad">${esc(e)}</div>`).join("")}</div>` : ""}
       ${!snmp && ps.reason ? `<div class="alert warn" style="margin-top:12px">${esc(ps.reason)}</div>` : ""}
     </div>
@@ -663,6 +664,7 @@ const KSUB = {
         ${k.agent_paused ? `<button class="btn" data-cmd="resume">شغّل البرنامج</button>` : `<button class="btn" data-cmd="pause">أوقف البرنامج مؤقتًا</button>`}
         ${k.is_enabled ? `<button class="btn danger" id="disableK">أوقف استقبال الطلبات</button>` : `<button class="btn primary" id="enableK">فعّل استقبال الطلبات</button>`}
       </div>
+      <div class="toolbar" style="margin-top:10px"><button class="btn danger" data-cmd="cancel_all">🛑 طوارئ: امسح طابور الطباعة وأوقف الجهاز</button></div>
       <p class="small muted" style="margin:10px 0 0">الأوامر توصل للجهاز مع النبض الجاي (خلال 20 ثانية تقريبًا).</p>
       ${cmdList(k.kiosk_id)}
     </div>`;
@@ -727,7 +729,7 @@ const KSUB = {
 function cmdList(kid) {
   const list = S.commands.filter((c) => c.kiosk_id === kid).slice(0, 6);
   if (!list.length) return "";
-  const N = { test_print: "صفحة اختبار", refresh_status: "تحديث الحساسات", pause: "إيقاف مؤقت", resume: "تشغيل" };
+  const N = { test_print: "صفحة اختبار", refresh_status: "تحديث الحساسات", pause: "إيقاف مؤقت", resume: "تشغيل", cancel_all: "طوارئ: مسح الطابور" };
   return `<div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>الأمر</th><th>الحالة</th><th>النتيجة</th><th>الوقت</th></tr></thead><tbody>
     ${list.map((c) => `<tr><td>${N[c.command] || c.command}</td><td>${pill(c.status === "done" ? ["ok", "تم"] : c.status === "failed" ? ["bad", "فشل"] : ["warn", "بانتظار الجهاز"])}</td><td class="small">${esc(c.result || "—")}</td><td class="small muted">${fmtTime(c.created_at)}</td></tr>`).join("")}</tbody></table></div>`;
 }
