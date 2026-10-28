@@ -579,6 +579,17 @@ PAGES.settings = () => {
         <div><button class="btn primary">حفظ</button></div>
       </form>
     </div>
+    <div class="card"><h2>تنبيهاتك على الواتساب</h2>
+      <form class="form" style="grid-template-columns:1fr" id="ownerForm">
+        <label>رقم جوالك (يوصله التنبيهات ورسائل «كلّم موظف») <small>بالصيغة الدولية بدون + (مثل 9665xxxxxxxx). لازم يكون غير رقم البوت.</small><input class="f ltr" id="ow" value="${esc(s.owner_whatsapp || "")}" inputmode="numeric" pattern="9665[0-9]{8}" placeholder="9665xxxxxxxx"></label>
+        <div><button class="btn primary">حفظ</button></div>
+      </form>
+      <ul class="small muted" style="margin:10px 0 0;padding-inline-start:18px;line-height:1.9">
+        <li>يوصلك: طابعة طافية، الورق قليل، إيقاف أمان، طلب يحتاج استرجاع، وعميل يطلب موظف.</li>
+        <li>ترد على العميل من جوالك: <b>رد 9665xxxxxxxx نص الرسالة</b> — وتنهي المحادثة: <b>تم 9665xxxxxxxx</b> — وحالة الطابعات: <b>حالة</b>.</li>
+        <li>واتساب يسمح للبوت يرسل لك بس إذا راسلته خلال آخر 24 ساعة. أرسل له «حالة» كل يوم (أو نعتمد قالب رسائل من ميتا لاحقًا).</li>
+      </ul>
+    </div>
     <div class="card"><h2>روابط</h2>
       <dl class="kv"><dt>صفحة العميل</dt><dd><a class="ltr" href="${CONFIG.customerUrl}" target="_blank" rel="noopener">${CONFIG.customerUrl}</a></dd>
       <dt>الموقع</dt><dd><a class="ltr" href="https://www.tabaety.com" target="_blank" rel="noopener">tabaety.com</a></dd></dl>
@@ -595,6 +606,13 @@ PAGES_AFTER.settings = () => {
     if (v === "off" && !(await ask({ title: "إيقاف الدفع؟", body: "<p>ما أحد بيقدر يطبع لين ترجعه.</p>", ok: "إيقاف", danger: true }))) return render();
     act(() => S.db.rpc("admin_set_setting", { p_key: "payment_mode", p_value: v }), "تم الحفظ");
   });
+  $("#ownerForm").onsubmit = async (e) => {
+    e.preventDefault();
+    const v = $("#ow").value.trim().replace(/^\+/, "");
+    if (v && !/^9665\d{8}$/.test(v)) return toast("الرقم لازم يكون مثل 9665xxxxxxxx", true);
+    if (v && v === String(S.settings.support_whatsapp || "")) return toast("هذا رقم البوت نفسه. حط رقم جوالك الشخصي.", true);
+    await act(() => S.db.rpc("admin_set_setting", { p_key: "owner_whatsapp", p_value: v }), "تم الحفظ");
+  };
   $("#setForm").onsubmit = async (e) => {
     e.preventDefault();
     await act(async () => {
