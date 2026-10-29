@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex">
+<title>تنسيق الملفات — طابعتي</title>
+<meta name="description" content="اختر القالب، عبّ بياناتك، والصق نصك. يطلع لك ملف منسّق وجاهز للطباعة.">
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+@font-face{font-family:'TPlex';src:url(/assets/fonts/plex-400.woff) format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'TPlex';src:url(/assets/fonts/plex-700.woff) format('woff');font-weight:700;font-display:swap}
+:root{
+  --ink:#14181B; --ink-2:#5E6A73; --line:#DCE2E5; --line-2:#EBEFF1; --ground:#F4F6F6; --card:#FFFFFF;
+  --accent:#0A6B74; --accent-ink:#084F56; --accent-tint:#E1F0F1; --warn-tint:#FBF0DC; --bad:#B83A26;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:'TPlex','Segoe UI',Tahoma,sans-serif;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 20px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:#0A6B74;color:#fff;display:grid;place-items:center}
+.brand b{font-size:17px;display:block;line-height:1.2}.brand small{font-size:12px;color:var(--ink-2)}
+.beta{font-size:12px;font-weight:700;color:#6B4508;background:var(--warn-tint);border-radius:99px;padding:4px 10px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:20px;display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:24px;align-items:start}
+.form{display:flex;flex-direction:column;gap:14px;min-width:0}
+h1{margin:0;font-size:24px;line-height:1.35}
+.lead{margin:4px 0 0;color:var(--ink-2);font-size:14.5px;line-height:1.7}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h2{margin:0 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.card h2 .n{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;display:grid;place-items:center}
+.tpls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl{border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--card);text-align:start;display:flex;flex-direction:column;gap:2px}
+.tpl b{font-size:14.5px}.tpl span{font-size:12px;color:var(--ink-2);line-height:1.5}
+.tpl[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-tint)}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld.wide{grid-column:1/-1}
+.fld label{font-size:12.5px;color:var(--ink-2);font-weight:600}
+.fld input,.sec input,.sec textarea,select{width:100%;border:1px solid var(--line);border-radius:10px;padding:9px 11px;background:#FBFCFC;font-size:15px}
+.fld input:focus,.sec input:focus,.sec textarea:focus{border-color:var(--accent);background:#fff;outline:none;box-shadow:0 0 0 3px var(--accent-tint)}
+.secs{display:flex;flex-direction:column;gap:10px}
+.sec{border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#fff}
+.sec-top{display:flex;gap:6px;align-items:center}
+.sec-top input{font-weight:700}
+.sec-tools{display:flex;gap:4px}
+.sec-tools button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink-2);font-size:15px;display:grid;place-items:center;padding:0}
+.sec-tools button:hover{border-color:var(--accent);color:var(--accent)}
+.sec textarea{min-height:120px;resize:vertical;line-height:1.75;font-size:14.5px}
+.add{border:1.5px dashed var(--line);border-radius:12px;background:transparent;padding:10px;font-weight:600;color:var(--accent)}
+.hint{font-size:12.5px;color:var(--ink-2);line-height:1.8;margin:0 0 10px}
+.hint code{background:var(--line-2);border-radius:5px;padding:0 5px;font-family:inherit;font-weight:700;color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:14px;align-items:center;font-size:14px}
+.opts label{display:flex;gap:6px;align-items:center}
+.opts select{width:auto;padding:6px 10px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.teal{background:var(--accent);color:#fff}.btn.teal:hover{background:var(--accent-ink)}
+.btn.light{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--accent);padding:8px 10px;font-size:13.5px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+
+.preview{position:sticky;top:78px;min-width:0}
+.pv-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.pv-head b{font-size:15px}.pv-head span{font-size:13px;color:var(--ink-2)}
+.pages{height:calc(100dvh - 210px);overflow:auto;background:#E3E8E9;border-radius:14px;padding:18px;display:flex;flex-direction:column;align-items:center;gap:16px;border:1px solid var(--line)}
+.pages canvas{width:100%;max-width:520px;height:auto;aspect-ratio:595.28/841.89;background:#fff;box-shadow:0 2px 10px rgba(20,24,27,.12);border-radius:2px;display:block}
+.pv-note{font-size:12.5px;color:var(--ink-2);margin:10px 2px 0;line-height:1.7}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.loading{padding:60px 0;color:var(--ink-2);font-size:14px}
+
+.mbar{display:none}
+@media (max-width:900px){
+  .wrap{grid-template-columns:1fr;padding:14px 14px 100px}
+  .preview{position:static}
+  .pages{height:auto;max-height:none;padding:12px}
+  .actions{display:none}
+  .mbar{display:flex;position:fixed;inset:auto 0 0 0;background:#fff;border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom));gap:8px;z-index:10}
+  .mbar .btn{flex:1;padding:12px 10px}
+  .fields{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="طابعتي — الصفحة الرئيسية">
+    <span class="logo"><svg aria-hidden="true" width="23" height="23" viewBox="0 0 100 100" fill="currentColor"><path d="M30 6H70V20H30Z" fill-opacity=".45"/><path d="M22 20H78A18 18 0 0 1 96 38V48A18 18 0 0 1 78 66H22A18 18 0 0 1 4 48V38A18 18 0 0 1 22 20ZM30 52H70A2 2 0 0 1 72 54V58A2 2 0 0 1 70 60H30A2 2 0 0 1 28 58V54A2 2 0 0 1 30 52Z" fill-rule="evenodd"/><path d="M34 56H66V88L58 96H34Z"/></svg></span>
+    <span><b>طابعتي</b><small>تنسيق الملفات</small></span>
+  </a>
+  <span class="beta">نسخة تجريبية</span>
+</header>
+
+<div class="wrap">
+  <section class="form" aria-label="تعبئة الملف">
+    <div>
+      <h1>نسّق ملفك في دقايق</h1>
+      <p class="lead">اختر القالب، عبّ بياناتك، والصق نصك في مكانه. نرتّب لك الغلاف والعناوين والهوامش وأرقام الصفحات، والملف يطلع جاهز للطباعة.</p>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">1</span>القالب</h2>
+      <div class="tpls" id="tpls"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">2</span>البيانات</h2>
+      <div class="fields" id="fields"></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">3</span>المحتوى</h2>
+      <p class="hint" id="hint"></p>
+      <div class="secs" id="secs"></div>
+      <div class="row" style="margin-top:10px">
+        <button class="add" id="addSec" type="button" style="flex:1">+ أضف قسم</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">4</span>الشكل</h2>
+      <div class="opts" id="opts"></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn ghost" id="sample" type="button">عبّ بمثال للتجربة</button>
+        <button class="btn ghost" id="reset" type="button" style="color:var(--bad)">ابدأ من جديد</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="preview" id="preview" aria-label="معاينة الملف">
+    <div class="pv-head"><b>المعاينة</b><span id="pcount"></span></div>
+    <div class="pages" id="pages"><div class="loading">جاري تجهيز المعاينة…</div></div>
+    <p class="pv-note">العلامة المائية تظهر في المعاينة فقط، والملف النهائي يطلع بدونها.</p>
+    <div class="actions">
+      <button class="btn teal" id="dl" type="button">تحميل الملف PDF</button>
+      <button class="btn light" type="button" disabled title="قريبًا">إرسال للطابعة مباشرة · قريبًا</button>
+    </div>
+  </section>
+</div>
+
+<div class="mbar">
+  <a class="btn light" href="#preview" id="mPrev">المعاينة</a>
+  <button class="btn teal" id="mDl" type="button">تحميل PDF</button>
+</div>
+
+<script>
+"use strict";
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* ================= القوالب ================= */
+const TPL = {
+  research: {
+    name: "بحث", desc: "غلاف رسمي، فهرس، ومراجع", rtl: true,
+    fields: [["uni", "الجامعة", "جامعة الملك سعود"], ["college", "الكلية / القسم", "كلية علوم الحاسب والمعلومات"], ["title", "عنوان البحث", "أثر الذكاء الاصطناعي على التعليم", 1],
+      ["course", "المقرر", "مهارات البحث 101"], ["name", "اسم الطالب/ـة", ""], ["sid", "الرقم الجامعي", ""], ["teacher", "أستاذ المقرر", "د. "], ["term", "الفصل الدراسي", "الفصل الأول 1448هـ"]],
+    secs: ["المقدمة", "المبحث الأول", "المبحث الثاني", "الخاتمة", "المراجع"],
+  },
+  report: {
+    name: "تقرير", desc: "غلاف بسيط وعناوين واضحة", rtl: true,
+    fields: [["uni", "الجهة / الجامعة", ""], ["title", "عنوان التقرير", "", 1], ["course", "المقرر", ""], ["name", "إعداد", ""], ["sid", "الرقم الجامعي", ""], ["teacher", "مقدَّم إلى", "د. "], ["term", "التاريخ", ""]],
+    secs: ["المقدمة", "محتوى التقرير", "النتائج والتوصيات", "الخاتمة"],
+  },
+  homework: {
+    name: "واجب", desc: "ترويسة بالبيانات بدون غلاف", rtl: true,
+    fields: [["course", "المقرر", ""], ["title", "عنوان الواجب", "الواجب الأول", 1], ["name", "اسم الطالب/ـة", ""], ["sid", "الرقم الجامعي", ""], ["teacher", "أستاذ المقرر", "د. "], ["term", "تاريخ التسليم", ""]],
+    secs: ["السؤال الأول", "السؤال الثاني"],
+  },
+  cv: {
+    name: "سيرة ذاتية", desc: "بالإنجليزي، صفحة وحدة مرتبة", rtl: false,
+    fields: [["name", "الاسم بالإنجليزي", "", 1], ["headline", "المسمى / التخصص", "Computer Science Student"], ["email", "الإيميل", ""], ["phone", "الجوال", "+966 5"], ["city", "المدينة", "Riyadh, Saudi Arabia"], ["link", "LinkedIn أو موقع", ""]],
+    secs: ["Summary", "Education", "Experience", "Skills", "Projects", "Certifications"],
+  },
+};
+const HINT = {
+  rtl: "الصق كل جزء في قسمه. اكتب كل فقرة في سطر. السطر اللي يبدأ بـ <code>-</code> يصير نقطة، واللي يبدأ بـ <code>##</code> يصير عنوانًا فرعيًا. اترك عنوان القسم فاضي إذا ما تبيه.",
+  cv: "Write in English. Start a line with <code>-</code> for a bullet. A line like <code>Software Intern, STC | Jun 2025 – Aug 2025</code> puts the date on the right.",
+};
+const SAMPLE = {
+  research: {
+    f: { name: "سارة عبدالله القحطاني", sid: "443106521", teacher: "د. خالد العتيبي" },
+    s: [
+      "يشهد التعليم اليوم تحولًا واسعًا بفضل تقنيات الذكاء الاصطناعي، التي أصبحت حاضرة في الفصول الدراسية ومنصات التعلم الإلكتروني. ويهدف هذا البحث إلى استعراض أبرز تطبيقات الذكاء الاصطناعي في التعليم، وبيان أثرها على الطالب والمعلم، مع مناقشة التحديات المرتبطة بها.\nوتنبع أهمية الموضوع من الحاجة إلى فهم هذه التقنيات قبل تبنيها، حتى يكون استخدامها مدروسًا ويخدم أهداف العملية التعليمية.",
+      "## مفهوم الذكاء الاصطناعي\nالذكاء الاصطناعي فرع من علوم الحاسب يهتم ببناء أنظمة قادرة على أداء مهام تتطلب عادةً ذكاءً بشريًا، مثل الفهم والتعلم واتخاذ القرار.\n## تطبيقاته في التعليم\n- أنظمة التعلم التكيفي التي تراعي مستوى كل طالب.\n- التصحيح الآلي للاختبارات الموضوعية.\n- المساعدات الذكية التي تجيب عن أسئلة الطلاب في أي وقت.",
+      "رغم المزايا الكبيرة، تواجه هذه التقنيات تحديات مهمة، أبرزها حماية خصوصية بيانات الطلاب، وضمان عدالة الخوارزميات، والحد من الاعتماد المفرط عليها على حساب مهارات التفكير.\n1. وضع سياسات واضحة لاستخدام البيانات.\n2. تدريب المعلمين على توظيف الأدوات بشكل صحيح.\n3. تقييم الأثر بشكل دوري.",
+      "خلص البحث إلى أن الذكاء الاصطناعي أداة فعالة لتحسين جودة التعليم إذا استُخدم بوعي، وأن نجاحه يعتمد على تكامله مع دور المعلم لا على استبداله.",
+      "الشهري، محمد. (2023). التقنيات الحديثة في التعليم. الرياض: دار الكتاب الجامعي.\nالعمري، نورة. (2024). الذكاء الاصطناعي والتعلم الإلكتروني. مجلة العلوم التربوية، 12(3)، 45–67.\nHolmes, W. (2019). Artificial Intelligence in Education. Boston: CCR.",
+    ],
+  },
+  report: { f: { title: "زيارة ميدانية لمركز البيانات", name: "فهد ناصر الدوسري", sid: "442118930", uni: "جامعة الإمام عبدالرحمن بن فيصل", course: "شبكات الحاسب" },
+    s: ["قمنا بزيارة ميدانية لمركز البيانات في الجامعة بهدف التعرف على مكوناته وطريقة إدارته.", "## البنية التحتية\nيتكون المركز من صفوف خوادم مبردة بنظام الممرات الباردة والساخنة.\n- مصدر طاقة احتياطي يعمل تلقائيًا.\n- نظام إطفاء بالغاز لا يضر الأجهزة.", "- رفع كفاءة التبريد بنسبة ملحوظة.\n- توثيق إجراءات الطوارئ بشكل أوضح.", "كانت الزيارة مفيدة وربطت ما درسناه بالواقع العملي."] },
+  homework: { f: { course: "تحليل الخوارزميات", name: "ريم سعد", sid: "444200117", teacher: "د. أحمد الزهراني", term: "1448/3/12هـ" },
+    s: ["س: ما الفرق بين التعقيد الزمني O(n) و O(n²)؟\nالجواب: في O(n) يزيد الوقت بشكل خطي مع حجم المدخلات، بينما في O(n²) يتضاعف الوقت تقريبًا أربع مرات عند مضاعفة حجم المدخلات.", "س: اذكر مثالين على خوارزميات ترتيب.\n- الترتيب بالدمج Merge Sort.\n- الترتيب السريع Quick Sort."] },
+  cv: { f: { name: "Abdullah Al-Harbi", email: "abdullah@example.com", phone: "+966 55 000 0000", link: "linkedin.com/in/abdullah" },
+    s: ["Computer science student with hands-on experience in web development and data analysis. Looking for a summer internship in software engineering.",
+      "B.Sc. Computer Science, King Saud University | 2022 – 2026\n- GPA 4.6 / 5\n- Dean's list, 3 semesters",
+      "Software Engineering Intern, STC | Jun 2025 – Aug 2025\n- Built internal dashboards used by 40+ engineers.\n- Reduced report generation time by 60% with automated SQL pipelines.",
+      "Python, JavaScript, SQL, React, Git, Data Analysis, Arabic (native), English (fluent)",
+      "Campus Print Kiosk | 2025\n- Web app for self-service printing with QR codes and online payment.",
+      "Google Data Analytics Certificate | 2024"] },
+};
+
+/* ================= الحالة ================= */
+const KEY = "tabaety_fmt_v1";
+let D;
+function fresh(tpl) {
+  const T = TPL[tpl], f = {};
+  T.fields.forEach(([k, , def]) => { f[k] = def || ""; });
+  return { tpl, f, secs: T.secs.map((h) => ({ h, t: "" })), opt: { size: 14, toc: tpl === "research", num: false } };
+}
+try { D = JSON.parse(localStorage.getItem(KEY)); } catch { D = null; }
+if (!D || !TPL[D.tpl]) D = fresh("research");
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(D)); } catch { /* المتصفح ما يسمح، عادي */ } };
+
+/* ================= واجهة التعبئة ================= */
+function renderTpls() {
+  $("#tpls").innerHTML = Object.entries(TPL).map(([k, t]) => `<button type="button" class="tpl" data-t="${k}" aria-pressed="${D.tpl === k}"><b>${t.name}</b><span>${t.desc}</span></button>`).join("");
+  document.querySelectorAll(".tpl").forEach((b) => b.onclick = () => {
+    if (b.dataset.t === D.tpl) return;
+    const old = D; D = fresh(b.dataset.t);
+    ["name", "sid", "teacher", "course", "uni", "term"].forEach((k) => { if (k in D.f && old.f[k] && TPL[old.tpl].rtl === TPL[D.tpl].rtl) D.f[k] = old.f[k]; });
+    renderForm(); update(true);
+  });
+}
+function renderForm() {
+  const T = TPL[D.tpl];
+  renderTpls();
+  $("#fields").innerHTML = T.fields.map(([k, label, , wide]) => `<div class="fld${wide ? " wide" : ""}"><label for="f_${k}">${label}</label><input id="f_${k}" data-f="${k}" value="${esc(D.f[k])}" dir="${T.rtl && !["email", "phone", "link"].includes(k) ? "auto" : "ltr"}" autocomplete="off"></div>`).join("");
+  document.querySelectorAll("[data-f]").forEach((i) => i.oninput = () => { D.f[i.dataset.f] = i.value; update(); });
+  $("#hint").innerHTML = T.rtl ? HINT.rtl : HINT.cv;
+  renderSecs();
+  const sizes = T.rtl ? [12, 14, 16] : [10, 11];
+  if (!sizes.includes(+D.opt.size)) D.opt.size = T.rtl ? 14 : 10;
+  $("#opts").innerHTML = `<label>حجم الخط <select id="o_size">${sizes.map((s) => `<option ${+D.opt.size === s ? "selected" : ""}>${s}</option>`).join("")}</select></label>` +
+    (D.tpl === "research" || D.tpl === "report" ? `<label><input type="checkbox" id="o_toc" ${D.opt.toc ? "checked" : ""}> فهرس المحتويات</label>` : "") +
+    (T.rtl ? `<label><input type="checkbox" id="o_num" ${D.opt.num ? "checked" : ""}> ترقيم العناوين</label>` : "");
+  $("#o_size").onchange = (e) => { D.opt.size = +e.target.value; update(true); };
+  if ($("#o_toc")) $("#o_toc").onchange = (e) => { D.opt.toc = e.target.checked; update(true); };
+  if ($("#o_num")) $("#o_num").onchange = (e) => { D.opt.num = e.target.checked; update(true); };
+}
+function renderSecs() {
+  const T = TPL[D.tpl], dir = T.rtl ? "auto" : "ltr";
+  $("#secs").innerHTML = D.secs.map((s, i) => `<div class="sec">
+    <div class="sec-top"><input data-h="${i}" value="${esc(s.h)}" placeholder="${T.rtl ? "عنوان القسم (اختياري)" : "Section title"}" dir="${dir}" aria-label="عنوان القسم ${i + 1}">
+      <div class="sec-tools"><button type="button" data-up="${i}" aria-label="لفوق" ${i ? "" : "disabled"}>↑</button><button type="button" data-dn="${i}" aria-label="لتحت" ${i < D.secs.length - 1 ? "" : "disabled"}>↓</button><button type="button" data-rm="${i}" aria-label="احذف القسم">✕</button></div></div>
+    <textarea data-t="${i}" dir="${dir}" placeholder="${T.rtl ? "الصق نص هذا القسم هنا…" : "Paste this section here…"}" aria-label="نص القسم ${i + 1}">${esc(s.t)}</textarea></div>`).join("");
+  document.querySelectorAll("[data-h]").forEach((el) => el.oninput = () => { D.secs[+el.dataset.h].h = el.value; update(); });
+  document.querySelectorAll("textarea[data-t]").forEach((el) => el.oninput = () => { D.secs[+el.dataset.t].t = el.value; update(); });
+  const mv = (i, j) => { [D.secs[i], D.secs[j]] = [D.secs[j], D.secs[i]]; renderSecs(); update(true); };
+  document.querySelectorAll("[data-up]").forEach((b) => b.onclick = () => mv(+b.dataset.up, +b.dataset.up - 1));
+  document.querySelectorAll("[data-dn]").forEach((b) => b.onclick = () => mv(+b.dataset.dn, +b.dataset.dn + 1));
+  document.querySelectorAll("[data-rm]").forEach((b) => b.onclick = () => {
+    const i = +b.dataset.rm;
+    if (D.secs[i].t.trim() && !confirm("تحذف هذا القسم ونصه؟")) return;
+    D.secs.splice(i, 1); renderSecs(); update(true);
+  });
+}
+$("#addSec").onclick = () => { D.secs.push({ h: "", t: "" }); renderSecs(); update(true); document.querySelector(`[data-h="${D.secs.length - 1}"]`)?.focus(); };
+$("#sample").onclick = () => {
+  const S = SAMPLE[D.tpl]; Object.assign(D.f, S.f);
+  D.secs = TPL[D.tpl].secs.map((h, i) => ({ h, t: S.s[i] || "" }));
+  renderForm(); update(true);
+};
+$("#reset").onclick = () => { if (confirm("تمسح كل اللي كتبته في هذا القالب؟")) { D = fresh(D.tpl); renderForm(); update(true); } };
+
+/* ================= محرك التنسيق =================
+   نرتّب الصفحة بوحدة النقطة (A4 = 595×842)، ونرسمها على canvas، فالمتصفح يتكفّل بتشكيل الحروف العربية. */
+const PW = 595.28, PH = 841.89;
+const FAM = { naskh: "TNaskh, TPlex", plex: "TPlex" };
+const font = (fam, size, w = 400) => `${w} ${size}px ${FAM[fam]}`;
+const mc = document.createElement("canvas").getContext("2d");
+const MEM = new Map();
+function mw(f, s) { const k = f + "\u0001" + s; let v = MEM.get(k); if (v == null) { mc.font = f; v = mc.measureText(s).width; MEM.set(k, v); } return v; }
+const LATIN = /[A-Za-z]/;
+const LATIN_FIRST = /^[^A-Za-z\u0600-\u06FF]*[A-Za-z]/;
+const toWestern = (s) => s;
+
+function wrap(text, f, maxW) {
+  const words = text.split(/\s+/).filter(Boolean), lines = []; let cur = "";
+  for (const w of words) {
+    const t = cur ? cur + " " + w : w;
+    if (!cur || mw(f, t) <= maxW) cur = t; else { lines.push(cur); cur = w; }
+  }
+  if (cur) lines.push(cur);
+  return lines;
+}
+
+class Writer {
+  constructor(rtl, M) { this.rtl = rtl; this.M = M; this.pages = []; this.newPage(); }
+  newPage(opts = {}) { this.p = { ops: [], cover: !!opts.cover }; this.pages.push(this.p); this.y = this.M.t; }
+  get x0() { return this.M.l; } get x1() { return PW - this.M.r; } get cw() { return PW - this.M.l - this.M.r; }
+  room(h) { if (this.y + h > PH - this.M.b) this.newPage(); }
+  // سطر يبدأ بالإنجليزي (مثل مرجع أجنبي) نرسمه من اليسار لليمين عشان النقطة والأقواس تجي بمكانها
+  text(s, x, y, f, o = {}) { this.p.ops.push({ k: "t", s, x, y, f, a: o.a || (this.rtl ? "right" : "left"), c: o.c || "#16191B", rtl: o.rtl ?? (this.rtl && !LATIN_FIRST.test(s)) }); }
+  line(x1, y1, x2, y2, w = .6, c = "#16191B") { this.p.ops.push({ k: "l", x1, y1, x2, y2, w, c }); }
+  rect(x, y, w, h, lw = .6, c = "#16191B") { this.p.ops.push({ k: "r", x, y, w, h, lw, c }); }
+  // فقرة كاملة: التفاف، ومحاذاة من الطرفين للعربي، وتعليم نقطة أو رقم
+  para(str, st) {
+    const f = font(st.fam, st.size, st.w || 400), lh = st.size * st.lh, ind = st.indent || 0, maxW = this.cw - ind;
+    const lines = wrap(str, f, maxW);
+    this.y += st.before || 0;
+    if (st.keep) this.room(lh * st.keep);
+    lines.forEach((ln, i) => {
+      this.room(lh);
+      const base = this.y + lh / 2 + st.size * .36, last = i === lines.length - 1;
+      if (i === 0 && st.label) {
+        const lx = this.rtl ? this.x1 - (st.labelAt || 0) : this.x0 + (st.labelAt || 0);
+        this.text(st.label, lx, base, font(st.fam, st.size, st.labelW || st.w || 400), { c: st.c });
+      }
+      if (st.align === "center") this.text(ln, (this.x0 + this.x1) / 2, base, f, { a: "center", c: st.c });
+      else if (st.align === "justify" && !last && this.rtl && !LATIN.test(ln)) {
+        // نوزّع المسافات بين الكلمات عشان السطر يملا العرض (بس للأسطر العربية الخالصة)
+        const ws = ln.split(" "), sw = mw(f, " "), tot = ws.reduce((a, w) => a + mw(f, w), 0);
+        const gap = ws.length > 1 ? (maxW - tot) / (ws.length - 1) : 0;
+        if (ws.length > 1 && gap < sw * 4) {
+          let x = this.x1 - ind;
+          ws.forEach((w) => { this.text(w, x, base, f, { c: st.c }); x -= mw(f, w) + gap; });
+        } else this.text(ln, this.x1 - ind, base, f, { c: st.c });
+      } else this.text(ln, this.rtl ? this.x1 - ind : this.x0 + ind, base, f, { c: st.c });
+      this.y += lh;
+    });
+    this.y += st.after || 0;
+    return lines.length;
+  }
+}
+
+// يحوّل نص القسم إلى كتل: فقرات، عناوين فرعية، نقاط، ترقيم
+function blocks(t) {
+  const out = [];
+  for (let raw of String(t || "").replace(/\r/g, "").split("\n")) {
+    let s = raw.trim(); if (!s) continue;
+    let m;
+    if ((m = s.match(/^#{1,4}\s*(.+)$/))) { out.push({ k: "sub", s: m[1].replace(/\*\*/g, "").trim() }); continue; }
+    if ((m = s.match(/^\*\*(.+?)\*\*\s*[:：]?$/))) { out.push({ k: "sub", s: m[1].trim() }); continue; }
+    s = s.replace(/\*\*(.+?)\*\*/g, "$1");
+    if ((m = s.match(/^[-•*▪●–]\s+(.+)$/))) { out.push({ k: "li", s: m[1] }); continue; }
+    if ((m = s.match(/^([0-9٠-٩]{1,3})\s*[.)\-]\s+(.+)$/))) { out.push({ k: "ol", n: m[1], s: m[2] }); continue; }
+    out.push({ k: "p", s });
+  }
+  return out;
+}
+const isRefs = (h) => /المراجع|المصادر|references|bibliography/i.test(h || "");
+const ORD = ["أولًا", "ثانيًا", "ثالثًا", "رابعًا", "خامسًا", "سادسًا", "سابعًا", "ثامنًا", "تاسعًا", "عاشرًا"];
+
+/* ----- القوالب العربية: بحث، تقرير، واجب ----- */
+function buildArabic(pageOf) {
+  const tpl = D.tpl, f = D.f, size = +D.opt.size || 14;
+  const head = tpl === "research" ? "naskh" : "plex";
+  const W = new Writer(true, { t: 78, b: 78, l: 68, r: 68 });
+  const sec = []; // لصفحات الفهرس
+  const P = (s, x = {}) => W.para(s, { fam: "naskh", size, lh: 1.85, align: "justify", after: size * .45, ...x });
+  const val = (k, ph) => (f[k] || "").trim() || ph;
+
+  if (tpl === "research" || tpl === "report") {
+    W.p.cover = true;
+    const cx = PW / 2;
+    if (tpl === "research") {
+      W.rect(28, 28, PW - 56, PH - 56, 1.6); W.rect(33, 33, PW - 66, PH - 66, .5);
+      let y = 78;
+      ["المملكة العربية السعودية", "وزارة التعليم", val("uni", ""), val("college", "")].filter(Boolean).forEach((s, i) => { W.text(s, PW - 70, y, font("naskh", i < 2 ? 12.5 : 13.5, 700)); y += 22; });
+      W.y = 300;
+      W.para("بحث بعنوان", { fam: "naskh", size: 15, lh: 1.6, align: "center", c: "#4A5359", after: 8 });
+      W.para(val("title", "عنوان البحث"), { fam: "naskh", size: 25, w: 700, lh: 1.55, align: "center", after: 10 });
+      if (f.course) W.para(`مقرر: ${f.course}`, { fam: "naskh", size: 14, lh: 1.6, align: "center", c: "#4A5359" });
+      W.line(cx - 60, W.y + 18, cx + 60, W.y + 18, 1);
+    } else {
+      W.line(68, 70, PW - 68, 70, 3); W.line(68, 76, PW - 68, 76, .6);
+      if (f.uni) W.text(f.uni, PW - 68, 104, font("plex", 13, 700));
+      W.y = 280;
+      W.para("تقرير عن", { fam: "plex", size: 14, lh: 1.6, align: "center", c: "#4A5359", after: 6 });
+      W.para(val("title", "عنوان التقرير"), { fam: "plex", size: 26, w: 700, lh: 1.5, align: "center", after: 10 });
+      if (f.course) W.para(f.course, { fam: "plex", size: 14, lh: 1.6, align: "center", c: "#4A5359" });
+    }
+    // جدول البيانات في وسط الصفحة
+    const rows = [[tpl === "research" ? "إعداد الطالب/ـة" : "إعداد", val("name", "اسمك")], ["الرقم الجامعي", f.sid], [tpl === "research" ? "إشراف" : "مقدَّم إلى", (f.teacher || "").replace(/^د\.\s*$/, "")]].filter((r) => (r[1] || "").trim());
+    const fm = font(head, 14, 700), fv = font(head, 14);
+    const lw = Math.max(...rows.map((r) => mw(fm, r[0] + ":"))), vw = Math.max(120, ...rows.map((r) => mw(fv, r[1])));
+    const bw = lw + 18 + vw, bx1 = PW / 2 + bw / 2;
+    let y = 560;
+    rows.forEach(([l, v]) => { W.text(l + ":", bx1, y, fm); W.text(v, bx1 - lw - 18, y, fv); y += 30; });
+    if (f.term) W.text(f.term, PW / 2, PH - 92, font(head, 13), { a: "center", c: "#4A5359" });
+    // الفهرس
+    if (D.opt.toc) {
+      W.newPage();
+      W.para(tpl === "research" ? "فهرس المحتويات" : "المحتويات", { fam: head, size: 20, w: 700, lh: 1.5, align: "center", after: 18 });
+      const fe = font("naskh", size), lh = size * 2.1;
+      D.secs.forEach((s, i) => {
+        if (!s.h.trim()) return;
+        W.room(lh);
+        const base = W.y + lh / 2 + size * .36, t = secTitle(s.h, i), n = String(pageOf[i] ?? "");
+        W.text(t, W.x1, base, fe);
+        W.text(n, W.x0, base, fe, { a: "left", rtl: false });
+        const a = W.x0 + mw(fe, n) + 8, b = W.x1 - mw(fe, t) - 8;
+        if (b > a) W.p.ops.push({ k: "d", x1: a, x2: b, y: base - 2 });
+        W.y += lh;
+      });
+    }
+    W.newPage();
+  } else {
+    // واجب: ترويسة في أعلى الصفحة الأولى
+    const fb = font("plex", 11.5, 700), fr = font("plex", 11.5), top = 64, h = 64;
+    W.rect(W.x0, top, W.cw, h, .8);
+    W.line(PW / 2, top + 8, PW / 2, top + h - 8, .5, "#9AA3A8");
+    const cell = (l, v, x, y) => { W.text(l, x, y, fb); W.text(v || "—", x - mw(fb, l) - 6, y, fr); };
+    cell("الاسم:", f.name, W.x1 - 12, top + 25); cell("الرقم الجامعي:", f.sid, W.x1 - 12, top + 48);
+    cell("المقرر:", f.course, PW / 2 - 12, top + 25); cell("الأستاذ:", (f.teacher || "").replace(/^د\.\s*$/, ""), PW / 2 - 12, top + 48);
+    W.y = top + h + 22;
+    W.para(val("title", "عنوان الواجب"), { fam: "plex", size: 19, w: 700, lh: 1.5, align: "center", after: 2 });
+    if (f.term) W.para(`تاريخ التسليم: ${f.term}`, { fam: "plex", size: 11, lh: 1.5, align: "center", c: "#5E6A73", after: 6 });
+    W.line(W.x0, W.y + 4, W.x1, W.y + 4, .6, "#9AA3A8"); W.y += 18;
+  }
+
+  function secTitle(h, i) {
+    if (!D.opt.num || isRefs(h)) return h.trim();
+    const k = D.secs.slice(0, i + 1).filter((s) => s.h.trim() && !isRefs(s.h)).length - 1;
+    return `${ORD[k] || k + 1}: ${h.trim()}`;
+  }
+
+  D.secs.forEach((s, i) => {
+    const bl = blocks(s.t), refs = isRefs(s.h);
+    if (s.h.trim()) {
+      if (tpl !== "homework" && i > 0 && W.y > W.M.t + 40) W.y += size * .8;
+      W.room(size * 6);
+      sec[i] = W.pages.length;
+      W.para(secTitle(s.h, i), { fam: head, size: size + (tpl === "homework" ? 2 : 5), w: 700, lh: 1.6, after: tpl === "research" ? 2 : 6 });
+      if (tpl === "research") { W.line(W.x1 - 46, W.y + 1, W.x1, W.y + 1, 1.6); W.y += 12; }
+    } else sec[i] = W.pages.length;
+    let n = 0;
+    bl.forEach((b) => {
+      if (refs && (b.k === "p" || b.k === "li" || b.k === "ol")) { n++; P(b.s, { size: size - 1, lh: 1.7, indent: 26, label: `${n}.`, labelAt: 0, align: "start", after: 6 }); return; }
+      if (b.k === "sub") return P(b.s, { fam: head, size: size + 1.5, w: 700, lh: 1.6, before: 4, after: 2, align: "start", keep: 3 });
+      if (b.k === "li") return P(b.s, { indent: 22, label: "•", labelAt: 6, after: size * .2 });
+      if (b.k === "ol") return P(b.s, { indent: 24, label: `${b.n}.`, labelAt: 2, after: size * .2 });
+      if (/^(س\s*[0-9٠-٩]*\s*[:：]|السؤال\b|سؤال\b)/.test(b.s)) return P(b.s, { w: 700, align: "start", before: 4, after: 4 });
+      if (/^(الجواب|الإجابة|ج)\s*[:：]/.test(b.s)) return P(b.s, { after: size * .45 });
+      P(b.s);
+    });
+  });
+
+  // الترويسة والتذييل وأرقام الصفحات (الغلاف بدون رقم)
+  const body = W.pages.filter((p) => !p.cover);
+  body.forEach((p, i) => {
+    const n = String(i + 1);
+    if (tpl === "research") {
+      p.ops.push({ k: "t", s: n, x: PW / 2, y: PH - 40, f: font("naskh", 11), a: "center", c: "#4A5359", rtl: false });
+      const t = (f.title || "").trim(); if (t) {
+        p.ops.push({ k: "t", s: t.length > 60 ? t.slice(0, 58) + "…" : t, x: PW - 68, y: 46, f: font("naskh", 9.5), a: "right", c: "#6B7479", rtl: true });
+        p.ops.push({ k: "l", x1: 68, y1: 54, x2: PW - 68, y2: 54, w: .5, c: "#9AA3A8" });
+      }
+    } else if (tpl === "report") {
+      p.ops.push({ k: "l", x1: 68, y1: PH - 56, x2: PW - 68, y2: PH - 56, w: .5, c: "#9AA3A8" });
+      p.ops.push({ k: "t", s: `${n} / ${body.length}`, x: 68, y: PH - 40, f: font("plex", 9.5), a: "left", c: "#6B7479", rtl: false });
+      if (f.title) p.ops.push({ k: "t", s: f.title, x: PW - 68, y: PH - 40, f: font("plex", 9.5), a: "right", c: "#6B7479", rtl: true });
+    } else if (body.length > 1) p.ops.push({ k: "t", s: `${n}`, x: PW / 2, y: PH - 40, f: font("plex", 10), a: "center", c: "#6B7479", rtl: false });
+  });
+  // رقم الصفحة اللي يبدأ فيها كل قسم (للفهرس)
+  const map = {}; const firstBody = W.pages.findIndex((p) => !p.cover);
+  sec.forEach((pg, i) => { if (pg) map[i] = pg - firstBody; });
+  return { pages: W.pages, map };
+}
+
+/* ----- السيرة الذاتية بالإنجليزي ----- */
+function buildCV() {
+  const f = D.f, size = +D.opt.size || 10;
+  const W = new Writer(false, { t: 48, b: 48, l: 52, r: 52 });
+  const ink = "#16191B", soft = "#5E6A73";
+  W.para((f.name || "Your Name").trim(), { fam: "plex", size: 24, w: 700, lh: 1.25, after: 0 });
+  if (f.headline) W.para(f.headline, { fam: "plex", size: size + 2, lh: 1.5, c: soft, after: 2 });
+  const contact = [f.email, f.phone, f.city, f.link].map((x) => (x || "").trim()).filter(Boolean).join("   ·   ");
+  if (contact) W.para(contact, { fam: "plex", size: size - .5, lh: 1.5, c: soft, after: 4 });
+  W.line(W.x0, W.y + 4, W.x1, W.y + 4, 1.2, ink); W.y += 14;
+  D.secs.forEach((s) => {
+    const bl = blocks(s.t); if (!s.h.trim() && !bl.length) return;
+    if (s.h.trim()) {
+      W.room(size * 6);
+      W.para(s.h.trim().toUpperCase(), { fam: "plex", size: size + 1, w: 700, lh: 1.5, before: 6, after: 1, c: ink });
+      W.line(W.x0, W.y + 1, W.x1, W.y + 1, .5, "#9AA3A8"); W.y += 6;
+    }
+    bl.forEach((b) => {
+      if (b.k === "li" || b.k === "ol") return W.para(b.s, { fam: "plex", size, lh: 1.45, indent: 12, label: b.k === "li" ? "•" : b.n + ".", labelAt: 2, after: 1.5 });
+      const m = b.s.match(/^(.+?)\s+\|\s+(.+)$/);
+      if (m || b.k === "sub") {
+        const fb = font("plex", size + .5, 700), fd = font("plex", size - .5), lh = size * 1.6;
+        W.room(lh * 2); const base = W.y + lh / 2 + size * .36;
+        const date = m ? m[2] : "";
+        const maxL = W.cw - mw(fd, date) - 14;
+        let t = m ? m[1] : b.s; while (mw(fb, t) > maxL && t.length > 4) t = t.slice(0, -2) + "…";
+        W.text(t, W.x0, base, fb); if (date) W.text(date, W.x1, base, fd, { a: "right", c: soft });
+        W.y += lh + 1; return;
+      }
+      W.para(b.s, { fam: "plex", size, lh: 1.45, after: 3 });
+    });
+  });
+  if (W.pages.length > 1) W.pages.forEach((p, i) => p.ops.push({ k: "t", s: `${i + 1} / ${W.pages.length}`, x: PW / 2, y: PH - 26, f: font("plex", 8.5), a: "center", c: soft, rtl: false }));
+  return { pages: W.pages };
+}
+
+function build() {
+  if (D.tpl === "cv") return buildCV().pages;
+  const a = buildArabic({});            // التمريرة الأولى: نعرف كل قسم في أي صفحة
+  return D.opt.toc && D.tpl !== "homework" ? buildArabic(a.map).pages : a.pages;
+}
+
+/* ================= الرسم ================= */
+function draw(ctx, page, sc, mark) {
+  ctx.setTransform(sc, 0, 0, sc, 0, 0);
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, PW, PH);
+  ctx.textBaseline = "alphabetic";
+  for (const o of page.ops) {
+    if (o.k === "t") { ctx.font = o.f; ctx.fillStyle = o.c; ctx.direction = o.rtl ? "rtl" : "ltr"; ctx.textAlign = o.a; ctx.fillText(o.s, o.x, o.y); }
+    else if (o.k === "l") { ctx.strokeStyle = o.c; ctx.lineWidth = o.w; ctx.beginPath(); ctx.moveTo(o.x1, o.y1); ctx.lineTo(o.x2, o.y2); ctx.stroke(); }
+    else if (o.k === "r") { ctx.strokeStyle = o.c; ctx.lineWidth = o.lw; ctx.strokeRect(o.x, o.y, o.w, o.h); }
+    else if (o.k === "d") { ctx.fillStyle = "#9AA3A8"; for (let x = o.x2; x > o.x1; x -= 4.5) { ctx.beginPath(); ctx.arc(x, o.y, .7, 0, 7); ctx.fill(); } }
+  }
+  if (mark) {
+    ctx.save(); ctx.translate(PW / 2, PH / 2); ctx.rotate(-Math.PI / 6);
+    ctx.font = font("plex", 30, 700); ctx.fillStyle = "rgba(10,107,116,.10)"; ctx.textAlign = "center"; ctx.direction = "rtl";
+    for (let y = -560; y <= 560; y += 120) for (let x = -520 + (y / 120 % 2 ? 150 : 0); x <= 520; x += 300) ctx.fillText("معاينة · طابعتي", x, y);
+    ctx.restore();
+  }
+}
+
+let PAGES = [], T = 0;
+function update(now) {
+  save(); clearTimeout(T);
+  T = setTimeout(renderPreview, now ? 0 : 350);
+}
+function renderPreview() {
+  PAGES = build();
+  const box = $("#pages"), dpr = Math.min(2, window.devicePixelRatio || 1);
+  const cssW = Math.min(520, box.clientWidth - 36) || 360, sc = cssW / PW * dpr;
+  while (box.children.length > PAGES.length) box.lastChild.remove();
+  [...box.querySelectorAll(".loading")].forEach((x) => x.remove());
+  PAGES.forEach((p, i) => {
+    let c = box.children[i];
+    if (!c) { c = document.createElement("canvas"); c.setAttribute("role", "img"); box.appendChild(c); }
+    c.setAttribute("aria-label", `الصفحة ${i + 1}`);
+    c.width = Math.round(PW * sc); c.height = Math.round(PH * sc);
+    draw(c.getContext("2d"), p, sc, true);
+  });
+  const n = PAGES.length, t = n === 1 ? "صفحة وحدة" : n === 2 ? "صفحتين" : `${n} ${n <= 10 ? "صفحات" : "صفحة"}`;
+  $("#pcount").textContent = t; $("#mPrev").textContent = `المعاينة · ${t}`;
+}
+window.addEventListener("resize", () => { clearTimeout(T); T = setTimeout(renderPreview, 200); });
+
+/* ================= ملف PDF (صور الصفحات بدقة طباعة، بدون مكتبات) ================= */
+async function makePDF() {
+  const pages = build(), sc = 200 / 72, enc = new TextEncoder(), parts = [], offs = []; let len = 0;
+  const push = (x) => { const b = typeof x === "string" ? enc.encode(x) : x; parts.push(b); len += b.length; };
+  const c = document.createElement("canvas"); c.width = Math.round(PW * sc); c.height = Math.round(PH * sc);
+  const ctx = c.getContext("2d");
+  push(new Uint8Array([37, 80, 68, 70, 45, 49, 46, 52, 10, 37, 226, 227, 207, 211, 10]));   // %PDF-1.4
+  const obj = (n, body) => { offs[n] = len; push(`${n} 0 obj\n`); body.forEach(push); push("\nendobj\n"); };
+  const N = pages.length;
+  obj(1, ["<< /Type /Catalog /Pages 2 0 R >>"]);
+  obj(2, [`<< /Type /Pages /Count ${N} /Kids [${pages.map((_, i) => `${3 + 3 * i} 0 R`).join(" ")}] >>`]);
+  for (let i = 0; i < N; i++) {
+    draw(ctx, pages[i], sc, false);
+    const jpg = new Uint8Array(await (await new Promise((r) => c.toBlob(r, "image/jpeg", .9))).arrayBuffer());
+    const pg = 3 + 3 * i, ct = pg + 1, im = pg + 2, cs = `q ${PW} 0 0 ${PH} 0 0 cm /Im0 Do Q`;
+    obj(pg, [`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im0 ${im} 0 R >> >> /Contents ${ct} 0 R >>`]);
+    obj(ct, [`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`]);
+    obj(im, [`<< /Type /XObject /Subtype /Image /Width ${c.width} /Height ${c.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpg.length} >>\nstream\n`, jpg, "\nendstream"]);
+  }
+  const xref = len, total = 3 + 3 * N;
+  let x = `xref\n0 ${total}\n0000000000 65535 f \n`;
+  for (let n = 1; n < total; n++) x += String(offs[n]).padStart(10, "0") + " 00000 n \n";
+  push(x + `trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  return new Blob(parts, { type: "application/pdf" });
+}
+async function download(btn) {
+  const old = btn.textContent; btn.disabled = true; btn.textContent = "جاري تجهيز الملف…";
+  try {
+    const blob = await makePDF(), a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${(D.f.title || D.f.name || "ملف").trim().replace(/[\\/:*?"<>|]+/g, " ").slice(0, 60) || "ملف"}.pdf`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+  } catch (e) { alert("صار خطأ وقت تجهيز الملف، جرّب مرة ثانية."); console.error(e); }
+  btn.disabled = false; btn.textContent = old;
+}
+$("#dl").onclick = (e) => download(e.currentTarget);
+$("#mDl").onclick = (e) => download(e.currentTarget);
+window.tabaetyFmt = { makePDF, build };   // للاختبار
+
+/* ================= البداية: نحمّل الخطوط ثم نرسم ================= */
+(async () => {
+  renderForm();
+  const list = [["TNaskh", "naskh-400", 400], ["TNaskh", "naskh-700", 700], ["TPlex", "plex-400", 400], ["TPlex", "plex-700", 700]];
+  try {
+    await Promise.all(list.map(async ([fam, file, w]) => { const ff = new FontFace(fam, `url(/assets/fonts/${file}.woff)`, { weight: String(w) }); await ff.load(); document.fonts.add(ff); }));
+  } catch (e) { console.warn("font", e); }
+  MEM.clear(); renderPreview();
+})();
+</script>
+</body>
+</html>
