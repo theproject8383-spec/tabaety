@@ -82,6 +82,9 @@ p.sub{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
 .stepper button{width:44px;height:44px;border-radius:9px;border:0;background:var(--card);font-size:20px;color:var(--ink)}
 .stepper button:disabled{opacity:.4}
 .stepper output{min-width:34px;text-align:center;font:600 18px var(--mono)}
+.range-in{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px 'IBM Plex Mono',monospace;padding:0 14px;text-align:center}
+.range-in:focus{outline:none;border:2px solid var(--accent)}
+.range-help{font-size:12.5px;color:var(--ink-2)}.range-help.bad{color:var(--bad, #C0392B)}
 .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .seg button{min-height:48px;border-radius:12px;font-size:14px;font-weight:600;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px}
 .seg button[aria-pressed="true"]{border:2px solid var(--accent);background:var(--accent-tint);color:var(--accent)}
@@ -208,6 +211,7 @@ const ERR = {
   kiosk_not_found: "ما لقينا هذي الطابعة. تأكد من الكود المكتوب عليها.",
   supplies: "الورق أو الحبر ما يكفي لطلبك الحين. جرّب عدد نسخ أقل.",
   bad_copies: "عدد النسخ غير مسموح.",
+  bad_range: "نطاق الصفحات غير صحيح. اكتبه مثل: 1-3، 5",
   no_duplex: "هذي الطابعة ما تطبع على الوجهين.",
   mock_disabled: "الدفع غير متاح حاليًا.",
   bad_state: "صار تغيير على الطلب. حدّث الصفحة.",
@@ -217,7 +221,21 @@ const ERR = {
 };
 
 const S = { kioskId: null, kiosk: null, settings: {}, order: null, token: null, view: null,
-  screen: "boot", copies: 1, duplex: false, method: "apple", upload: null, busy: false, rating: 0, poll: null };
+  screen: "boot", copies: 1, duplex: false, method: "apple", upload: null, busy: false, rating: 0, poll: null,
+  rangeMode: "all", range: "" };
+
+// «1-3، 5» ← عدد الصفحات (نفس قواعد السيرفر)، أو null لو غير صحيح
+function parseRange(txt, max) {
+  const s = String(txt || "").replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[،]/g, ",").replace(/[–—]/g, "-").replace(/\s/g, "").replace(/^,+|,+$/g, "");
+  if (!/^\d{1,4}(-\d{1,4})?(,\d{1,4}(-\d{1,4})?)*$/.test(s)) return null;
+  const set = new Set();
+  for (const part of s.split(",")) {
+    const [a, b = a] = part.split("-").map(Number);
+    if (a < 1 || b > max || a > b) return null;
+    for (let i = a; i <= b; i++) set.add(i);
+  }
+  return set.size;
+}
 
 // ---------- الاتصال ----------
 async function api(method, path, body, extra = {}) {
@@ -268,7 +286,7 @@ function saveOrder() {
 }
 function clearOrder() {
   try { localStorage.removeItem(storeKey()); } catch { /* */ }
-  S.order = null; S.token = null; S.view = null;
+  S.order = null; S.token = null; S.view = null; S.rangeMode = "all"; S.range = "";
   history.replaceState(null, "", `?k=${encodeURIComponent(S.kioskId)}`);
 }
 function loadSavedOrder() {
@@ -421,17 +439,31 @@ const SCREENS = {
   options: {
     html: () => {
       const v = S.view, k = S.kiosk;
-      const printed = v.pages * S.copies;
-      const sheets = (S.duplex ? Math.ceil(v.pages / 2) : v.pages) * S.copies;
+      const src = v.source_pages || v.pages;
+      if (v.page_range && !S.range) { S.rangeMode = "custom"; S.range = v.page_range; }
+      const custom = S.rangeMode === "custom" && src > 1;
+      const sel = custom ? parseRange(S.range, src) : src;
+      const pages = sel || 0;
+      const printed = pages * S.copies;
+      const sheets = (S.duplex ? Math.ceil(pages / 2) : pages) * S.copies;
       let total = printed * Number(k.price_per_page);
       if (total < Number(k.min_order_amount || 0)) total = Number(k.min_order_amount);
       const isImg = /^(jpe?g|png|heic|heif|webp|gif)$/i.test((v.file_name || "").split(".").pop());
       return `
       <div class="card file">
         <div class="thumb${isImg ? " img" : ""}">${isImg ? "IMG" : "PDF"}</div>
-        <div style="min-width:0;flex:1"><b>${esc(v.file_name)}</b><span>${v.pages} صفحة · جاهز وآمن</span></div>
+        <div style="min-width:0;flex:1"><b>${esc(v.file_name)}</b><span>${src} صفحة · جاهز وآمن</span></div>
       </div>
       <section class="card" style="display:flex;flex-direction:column;gap:16px">
+        ${src > 1 ? `<div style="display:flex;flex-direction:column;gap:8px">
+          <b style="font-size:15px">الصفحات</b>
+          <div class="seg" role="group" aria-label="الصفحات">
+            <button id="rAll" aria-pressed="${!custom}">كل الملف (${src})</button>
+            <button id="rCustom" aria-pressed="${custom}">صفحات محددة</button>
+          </div>
+          ${custom ? `<input class="range-in" id="rangeIn" inputmode="text" dir="ltr" autocomplete="off" placeholder="1-3, 5" value="${esc(S.range)}" aria-label="الصفحات المطلوبة">
+          <span class="range-help${S.range && !sel ? " bad" : ""}">${S.range && !sel ? `غير صحيح. الملف فيه ${src} صفحة، واكتبها مثل 1-3، 5` : sel ? `بنطبع ${sel} صفحة من ${src}` : `مثل 1-3، 5 (من 1 إلى ${src})`}</span>` : ""}
+        </div>` : ""}
         <div class="row">
           <div><b style="font-size:15px;display:block">عدد النسخ</b><span style="font-size:12px;color:var(--ink-2)">من كل صفحة</span></div>
           <div class="stepper">
@@ -444,7 +476,7 @@ const SCREENS = {
           <b style="font-size:15px">الطباعة على</b>
           <div class="seg" role="group" aria-label="الطباعة على">
             <button id="single" aria-pressed="${!S.duplex}">وجه واحد</button>
-            <button id="double" aria-pressed="${S.duplex}" ${k.supports_duplex && v.pages > 1 ? "" : "disabled"}>الوجهين — يوفر ورق</button>
+            <button id="double" aria-pressed="${S.duplex}" ${k.supports_duplex && (pages > 1 || (!custom && src > 1)) ? "" : "disabled"}>الوجهين — يوفر ورق</button>
           </div>
         </div>
         <div class="row" style="font-size:13px;color:var(--ink-2);border-top:1px solid var(--line-2);padding-top:12px">
@@ -452,7 +484,7 @@ const SCREENS = {
         </div>
       </section>
       <section class="card sum">
-        <div class="row"><span>${v.pages} صفحة × ${S.copies} نسخة</span><span class="mono">${printed} صفحة</span></div>
+        <div class="row"><span>${pages} صفحة × ${S.copies} نسخة</span><span class="mono">${printed} صفحة</span></div>
         <div class="row"><span>الأوراق اللي بتطلع</span><span class="mono">${sheets} ورقة</span></div>
         <div class="row total"><b>المجموع</b><b class="mono">${money(total)} <span style="font:500 13px 'IBM Plex Sans Arabic',sans-serif">ر.س</span></b></div>
       </section>
@@ -464,9 +496,18 @@ const SCREENS = {
       $("#inc").onclick = () => { S.copies = Math.min(S.kiosk.max_copies, S.copies + 1); rer(); };
       $("#dec").onclick = () => { S.copies = Math.max(1, S.copies - 1); rer(); };
       $("#single").onclick = () => { S.duplex = false; rer(); };
+      if ($("#rAll")) {
+        $("#rAll").onclick = () => { S.rangeMode = "all"; rer(); };
+        $("#rCustom").onclick = () => { S.rangeMode = "custom"; rer(); setTimeout(() => $("#rangeIn")?.focus(), 0); };
+      }
+      const ri = $("#rangeIn");
+      if (ri) {
+        // نحدّث السعر بعد ما يوقف كتابة، بدون ما نسرق المؤشر منه
+        let t; ri.oninput = () => { S.range = ri.value; clearTimeout(t); t = setTimeout(() => { const pos = ri.selectionStart; rer(); const n = $("#rangeIn"); if (n) { n.focus(); n.setSelectionRange(pos, pos); } }, 450); };
+      }
       $("#double").onclick = () => { S.duplex = true; rer(); };
       setBack(async () => { if (await confirmDlg("تبي تغيّر الملف؟", "بنلغي هذا الملف وتختار ملف ثاني.", "إيه، أختار ملف ثاني")) { clearOrder(); show("start"); } });
-      setCta(`<button class="btn" id="toPay">متابعة للدفع</button>`);
+      setCta(`<button class="btn" id="toPay">متابعة</button>`);
       $("#toPay").onclick = doQuote;
     },
   },
@@ -483,7 +524,7 @@ const SCREENS = {
       </div>
       ${mock ? `<div class="notice warn">وضع تجريبي: ما فيه خصم فعلي، والطلب يتعامل كأنه مدفوع.</div>` : ""}
       <div class="card sum">
-        <div class="row"><span style="unicode-bidi:plaintext;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.file_name)}</span><span class="mono" style="white-space:nowrap">${v.pages} ص × ${v.copies}</span></div>
+        <div class="row"><span style="unicode-bidi:plaintext;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.file_name)}</span><span class="mono" style="white-space:nowrap">${v.pages} ص${v.page_range ? ` (${esc(v.page_range)})` : ""} × ${v.copies}</span></div>
         <div class="row"><span>${v.duplex ? "على الوجهين" : "وجه واحد"} · ${v.sheets} ورقة</span><span></span></div>
         <div class="row total"><b>المجموع</b><b class="mono">${money(v.total)} <span style="font:500 13px 'IBM Plex Sans Arabic',sans-serif">ر.س</span></b></div>
       </div>
@@ -494,7 +535,7 @@ const SCREENS = {
       setSteps(2);
       document.querySelectorAll(".method").forEach((b) => b.onclick = () => { S.method = b.dataset.m; show("pay"); });
       setBack(() => { show("options"); });
-      setCta(`<button class="btn" id="payBtn">ادفع ${money(S.view.total)} ر.س</button>`);
+      setCta(`<button class="btn" id="payBtn">تأكيد الدفع · ${money(S.view.total)} ر.س</button>`);
       $("#payBtn").onclick = doPay;
       tickCountdown("#qLeft", S.view.quote_expires_at, () => { toast("انتهت مهلة السعر، نحدّثه لك."); show("options"); });
     },
@@ -690,13 +731,17 @@ async function onFile(file) {
 }
 
 async function doQuote() {
-  if (S.busy) return; S.busy = true;
+  if (S.busy) return;
+  const src = S.view.source_pages || S.view.pages;
+  const custom = S.rangeMode === "custom" && src > 1;
+  if (custom && !parseRange(S.range, src)) { const eb = $("#optErr"); eb.textContent = ERR.bad_range; eb.hidden = false; return; }
+  S.busy = true;
   const b = $("#toPay"); b.disabled = true; b.innerHTML = '<span class="spin"></span>';
   try {
-    const r = await api("POST", `/orders/${S.order}/quote`, { copies: S.copies, duplex: S.duplex });
+    const r = await api("POST", `/orders/${S.order}/quote`, { copies: S.copies, duplex: S.duplex, pages: custom ? S.range : "" });
     S.view = r.order; S.busy = false; show("pay");
   } catch (e) {
-    S.busy = false; b.disabled = false; b.textContent = "متابعة للدفع";
+    S.busy = false; b.disabled = false; b.textContent = "متابعة";
     const eb = $("#optErr"); eb.textContent = errText(e); eb.hidden = false;
     if (e.code === "bad_state") refreshOrder();
   }
@@ -704,12 +749,12 @@ async function doQuote() {
 
 async function doPay() {
   if (S.busy) return; S.busy = true;
-  const b = $("#payBtn"); b.disabled = true; b.innerHTML = '<span class="spin"></span> جاري الدفع';
+  const b = $("#payBtn"); b.disabled = true; b.innerHTML = '<span class="spin"></span> جاري تأكيد الدفع';
   try {
     S.view = await api("POST", `/orders/${S.order}/pay`, { method: S.method });
     S.busy = false; routeByView();
   } catch (e) {
-    S.busy = false; b.disabled = false; b.textContent = `ادفع ${money(S.view.total)} ر.س`;
+    S.busy = false; b.disabled = false; b.textContent = `تأكيد الدفع · ${money(S.view.total)} ر.س`;
     const eb = $("#payErr"); eb.textContent = e.code === "bad_state" ? "انتهت مهلة السعر. نحدّثه لك…" : errText(e); eb.hidden = false;
     if (e.code === "bad_state") setTimeout(refreshOrder, 1200);
   }
