@@ -157,34 +157,55 @@ section{padding:84px 0;scroll-margin-top:60px}
 .net-node.wait{--c:#F0BC5E}.net-node.fault{--c:#F28B72}.net-node.idle{--c:#8A9DA3}
 .n-halo{pointer-events:none;transition:opacity .2s}
 .net-node.wait .n-halo,.net-node.fault .n-halo,.net-node.idle .n-halo{opacity:.3}
-.net-pulse,.net-label,.net-count,.net-ring,.net-dot,.k-name,.k-code{pointer-events:none}
+.net-pulse,.net-label,.net-count,.net-ring,.net-dot{pointer-events:none}
 .net-hit{fill:transparent;pointer-events:all}
 .net-dot{fill:var(--c)}
 .net-ring{fill:#08171C;fill-opacity:.6;stroke:var(--c);stroke-width:1.6;transition:stroke-width .2s}
 .net-node:hover .net-ring,.net-node:focus-visible .net-ring{stroke-width:2.6}
 .net-node.on .net-ring{stroke:#fff;stroke-width:2.4}
-.net-node:focus-visible .net-label,.net-node:focus-visible .k-name{text-decoration:underline}
+.net-node:focus-visible .net-label{text-decoration:underline}
 .net-pulse{fill:none;stroke:var(--c);stroke-width:1.5;transform-box:fill-box;transform-origin:center;animation:netpulse 3.2s ease-out infinite}
 @keyframes netpulse{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(2.8)}}
 .net-label{fill:#F3FAFB;font-size:13.5px;font-weight:700;text-anchor:middle;paint-order:stroke;stroke:#08151A;stroke-width:4px;stroke-linejoin:round}
 .net-count{fill:#9DBBC3;font-size:11px;text-anchor:middle;paint-order:stroke;stroke:#08151A;stroke-width:4px;stroke-linejoin:round}
-.c-ring{fill:none;stroke:#1C3640;stroke-width:1}
-.c-ring.last{stroke:#24454F;stroke-dasharray:3 4}
-.c-axis{stroke:#16303A;stroke-width:1}
-.c-km{fill:#56767F;font-size:10.5px;font-family:'IBM Plex Sans Arabic',sans-serif}
-.c-north{fill:#56767F}
-.c-center{fill:#56767F}
-.c-centerlabel{fill:#4E6E77;font-size:10.5px;text-anchor:middle}
-.c-tray{stroke:#24414A;stroke-dasharray:3 4}
-.c-traylabel{fill:#56767F;font-size:10.5px;text-anchor:start}
-.c-grow{transform-origin:330px 276px;animation:cgrow .7s cubic-bezier(.2,.7,.2,1) .3s backwards}
-@keyframes cgrow{from{opacity:0;transform:scale(.6)}}
-.k-node.pop{animation:kpop .45s cubic-bezier(.2,.8,.3,1.3) backwards;animation-delay:var(--d)}
-@keyframes kpop{from{opacity:0}}
-.k-node.pop .net-ring,.k-node.pop .net-dot{transform-box:fill-box;transform-origin:center;animation:kscale .45s cubic-bezier(.2,.8,.3,1.4) backwards;animation-delay:var(--d)}
-@keyframes kscale{from{transform:scale(0)}}
-.k-name{fill:#F3FAFB;font-size:13px;font-weight:700;paint-order:stroke;stroke:#08151A;stroke-width:4px;stroke-linejoin:round}
-.k-code{fill:#8FB0B8;font-size:11px;paint-order:stroke;stroke:#08151A;stroke-width:4px;stroke-linejoin:round}
+/* عرض المدينة: خريطة شوارع حقيقية */
+.tmap{direction:ltr;overflow:hidden;background:#E9ECEA;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.tmap.drag{cursor:grabbing}
+.tm-layer{position:absolute;inset:0;filter:saturate(.55) brightness(.97) contrast(.96)}
+.tm-tile{position:absolute;left:0;top:0;width:256px;height:256px;transform-origin:0 0;opacity:0;transition:opacity .25s;pointer-events:none;max-width:none}
+.tm-tile.ok{opacity:1}
+.tm-tint{position:absolute;inset:0;background:radial-gradient(130% 100% at 50% 45%,rgba(11,40,48,0) 60%,rgba(11,40,48,.28));box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);pointer-events:none}
+.tm-pins{position:absolute;inset:0;pointer-events:none}
+.tm-pin{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;outline:none;--c:#5FD8E6;direction:rtl;z-index:2}
+.tm-pin.wait{--c:#F0BC5E}.tm-pin.fault{--c:#F28B72}.tm-pin.idle{--c:#8A9DA3}
+.tm-pin.on{z-index:5}
+.tm-b{position:absolute;bottom:9px;left:0;transform:translateX(-50%);display:flex;align-items:center;gap:7px;white-space:nowrap;background:#0C1D23;border:1.5px solid var(--c);color:#EAF6F8;border-radius:10px;padding:4px 10px 4px 9px;font:600 13px/1.35 'IBM Plex Sans Arabic',sans-serif;box-shadow:0 6px 18px rgba(0,0,0,.5);transition:background .15s,transform .15s}
+.tm-b::after{content:"";position:absolute;left:50%;bottom:-6px;width:9px;height:9px;background:inherit;border:inherit;border-width:0 1.5px 1.5px 0;transform:translateX(-50%) rotate(45deg)}
+.tm-b i{width:8px;height:8px;border-radius:50%;background:var(--c);flex:none}
+.tm-b .c{font:600 12.5px var(--mono);color:#9FDDE5;direction:ltr}
+.tm-b .n{max-width:150px;overflow:hidden;text-overflow:ellipsis}
+.tm-pin.compact .tm-b .n{display:none}
+.tm-cl .tm-b{border-style:dashed}.tm-b .z{font-weight:700;color:var(--c);margin-inline-start:-2px}.tm-pin.on.tm-cl .tm-b .z{color:#06151A}
+.tm-pin:hover .tm-b,.tm-pin:focus-visible .tm-b{background:#143039}
+.tm-pin.on .tm-b{background:var(--c);color:#06151A;transform:translateX(-50%) scale(1.06)}
+.tm-pin.on .tm-b .c{color:#06151A}.tm-pin.on .tm-b i{background:#06151A}
+.tm-pin.on .tm-b .n{max-width:230px}
+.tm-pin.pop .tm-b{animation:tmpop .4s cubic-bezier(.2,.8,.3,1.3) backwards;animation-delay:var(--d)}
+@keyframes tmpop{from{opacity:0;transform:translate(-50%,10px) scale(.7)}}
+.tm-dot{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 0 3px rgba(6,21,26,.85)}
+.tm-ctl{position:absolute;top:12px;left:12px;display:grid;gap:6px;z-index:6}
+.tm-ctl button{width:36px;height:36px;border-radius:10px;border:1px solid #24414A;background:rgba(10,26,31,.92);color:#D6EBEF;font:500 19px/1 'IBM Plex Sans Arabic',sans-serif;cursor:pointer;display:grid;place-items:center;padding:0}
+.tm-ctl button:hover,.tm-ctl button:focus-visible{border-color:#3BB0BB;color:#fff}
+.tm-ctl button svg{width:17px;height:17px}
+.tm-attr{position:absolute;bottom:0;left:0;z-index:6;font-size:10.5px;padding:2px 7px;background:rgba(8,20,24,.75);color:#8AA3AA;border-top-right-radius:6px}
+.tm-attr a{color:#A9C3C9}
+.tm-tray{position:absolute;right:10px;bottom:22px;left:10px;z-index:6;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:flex-start;direction:rtl;pointer-events:none}
+.tm-tray>span{font-size:11.5px;color:#9AB3BA;background:rgba(8,20,24,.8);border-radius:7px;padding:3px 8px}
+.tm-tray .tm-pin{position:static;pointer-events:auto}
+.tm-tray .tm-b{position:static;transform:none}.tm-tray .tm-b::after{display:none}
+.tm-tray .tm-pin.on .tm-b{transform:none}.tm-tray .tm-dot{display:none}
+.tm-hint{position:absolute;inset:0;z-index:7;display:grid;place-items:center;background:rgba(5,14,17,.55);color:#fff;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none;direction:rtl}
+.tm-hint.show{opacity:1}
 .net-legend{position:absolute;bottom:12px;inset-inline-start:14px;display:flex;gap:12px;font-size:11.5px;color:#7F959B;pointer-events:none;transition:opacity .3s}
 .net-legend span::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-inline-end:5px;background:#5FD8E6;vertical-align:1px}
 .net-legend .wait::before{background:#F0BC5E}.net-legend .idle::before{background:#8A9DA3}
@@ -197,10 +218,9 @@ section{padding:84px 0;scroll-margin-top:60px}
 @media (max-width:600px){
   .net-label{font-size:21px;stroke-width:5px}.net-count{font-size:16px}
   .m-rlabel{font-size:14px}.m-place,.m-sea{font-size:14px}.m-reflabel{font-size:15px}
-  .k-name{font-size:19px}.k-code{font-size:15px}.c-km,.c-centerlabel,.c-traylabel{font-size:15px}
   .net-legend{font-size:11px;gap:9px;bottom:9px}
 }
-@media (prefers-reduced-motion:reduce){.net-pulse,.c-grow,.k-node.pop,.k-node.pop *,.net-card{animation:none}.net-svg{transition:none}}
+@media (prefers-reduced-motion:reduce){.net-pulse,.tm-pin.pop .tm-b,.net-card{animation:none}.net-svg,.tm-tile{transition:none}}
 .net-card .t{display:flex;gap:10px;align-items:flex-start;padding-inline-end:26px}.net-card .t div{min-width:0}
 .net-card .t b{display:block;font-size:15px}.net-card .t div span{font-size:13px;color:#93AEB6}
 .net-card .code{font:600 15px var(--mono);background:rgba(111,230,242,.14);color:#7FE9F4;border-radius:8px;padding:3px 8px;direction:ltr}
@@ -495,7 +515,7 @@ const PJ = (lo, la) => [(lo - M.LON0) * M.COS * M.K + M.PAD, (M.LAT1 - la) * M.K
 const r1 = (n) => Math.round(n * 10) / 10;
 const SC = (k) => k.status === "ok" ? "ready" : (k.status === "soon" || k.status === "disabled") ? "idle" : k.status === "offline" ? "fault" : "wait";
 const plural = (n) => n === 1 ? "طابعة وحدة" : n === 2 ? "طابعتين" : `${n} ${n <= 10 ? "طابعات" : "طابعة"}`;
-const MV = { built: false, city: null, vb: [0, 0, MW, MH], raf: 0 };
+const MV = { built: false, city: null, groups: {}, lead: {}, members: [], vb: [0, 0, MW, MH], raf: 0 };
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 function cityLL(name, ks) {
@@ -536,12 +556,13 @@ function buildMap(box) {
         </g>
         <g id="mRef"></g><g id="mLinks"></g><g id="mCities"></g>
       </svg>
-      <svg class="net-svg s-city" id="sCity" viewBox="0 0 ${MW} ${MH}" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="net-svg s-city tmap" id="sCity" aria-label="خريطة الطابعات في المدينة"><div class="tm-layer" id="tmLayer"></div><div class="tm-tint"></div><div class="tm-pins" id="tmPins"></div><div class="tm-ctl"><button type="button" id="tmIn" aria-label="تكبير">+</button><button type="button" id="tmOut" aria-label="تصغير">−</button><button type="button" id="tmFit" aria-label="عرض كل الطابعات"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 7V3h4M13 3h4v4M17 13v4h-4M7 17H3v-4"/><circle cx="10" cy="10" r="2.2"/></svg></button></div><div class="tm-tray" id="tmTray"></div><div class="tm-hint" id="tmHint">للتكبير: Ctrl مع عجلة الماوس، أو الأزرار</div><div class="tm-attr">© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div></div>
       <div class="net-legend" aria-hidden="true"><span class="ready">متاحة</span><span class="wait">مشغولة/صيانة</span><span class="idle">قريبًا/متوقفة</span></div>
     </div>
     <div id="netCard"></div>`;
   $("#netBack").onclick = () => { S.view = null; S.sel = null; if (S.city) { S.city = ""; renderAll(); } else { renderList(); renderNet(); } };
   MV.built = true;
+  tmInit();
 }
 
 function renderNet() {
@@ -550,11 +571,12 @@ function renderNet() {
   if (!S.all) return;
   if (!MV.built) buildMap(box);
   const list = filtered();
-  const city = S.view?.city || null;
-  drawCountry(list, city);
+  drawCountry(list, S.view?.city || null);
+  const city = S.view?.city ? (MV.lead[S.view.city] || S.view.city) : null;   // المدن المتجاورة (مثل الرياض والخرج) تنفتح مع بعض
+  MV.members = city ? (MV.groups[city] || [city]) : [];
   const changed = city !== MV.city;
   MV.city = city;
-  if (city) drawCity(city, list.filter((k) => k.city === city), changed);
+  if (city) drawCity(city, list.filter((k) => MV.members.includes(k.city)), changed);
   $("#netBack").hidden = !city;
   $("#netStage").classList.toggle("in-city", !!city);
   if (changed) zoom(city ? cityBox(city, list) : [0, 0, MW, MH]);
@@ -583,7 +605,16 @@ function zoom(to) {
 function drawCountry(list, city) {
   const groups = {};
   list.forEach((k) => (groups[k.city] ||= []).push(k));
-  const nodes = Object.entries(groups).map(([c, ks]) => ({ c, ks, ll: cityLL(c, ks) })).filter((n) => n.ll).map((n) => ({ ...n, p: PJ(...n.ll) }));
+  const raw = Object.entries(groups).map(([c, ks]) => ({ c, ks, ll: cityLL(c, ks) })).filter((n) => n.ll).map((n) => ({ ...n, p: PJ(...n.ll) }))
+    .sort((a, b) => b.ks.length - a.ks.length);
+  // المدن القريبة من بعض على خريطة المملكة تصير نقطة وحدة عشان ما تتراكب
+  const nodes = []; MV.groups = {}; MV.lead = {};
+  for (const n of raw) {
+    const g = nodes.find((m) => Math.hypot(m.p[0] - n.p[0], m.p[1] - n.p[1]) < 30);
+    if (g) { g.ks = g.ks.concat(n.ks); g.cities.push(n.c); } else nodes.push({ ...n, cities: [n.c] });
+  }
+  nodes.forEach((n) => { MV.groups[n.c] = n.cities; n.cities.forEach((c) => { MV.lead[c] = n.c; }); n.name = n.cities.length === 1 ? n.c : n.cities.length === 2 ? `${n.cities[0]} و${n.cities[1]}` : `${n.c} وما حولها`; });
+  const cityLead = city ? (MV.lead[city] || city) : null;
   // المدن المرجعية (للتوضيح فقط)
   $("#mRef").innerHTML = REF.filter((c) => !nodes.some((n) => Math.hypot(n.p[0] - PJ(...CITIES[c])[0], n.p[1] - PJ(...CITIES[c])[1]) < 42))
     .map((c) => { const [x, y] = PJ(...CITIES[c]); return `<circle class="m-refdot" cx="${r1(x)}" cy="${r1(y)}" r="2"/><text class="m-reflabel" x="${r1(x)}" y="${r1(y - 6)}">${c}</text>`; }).join("");
@@ -604,11 +635,11 @@ function drawCountry(list, city) {
     const live = n.ks.filter((k) => k.status === "ok").length;
     const cls = live ? "ready" : n.ks.some((k) => !["soon", "disabled"].includes(k.status)) ? "wait" : "idle";
     const [x, y] = n.p.map(r1);
-    return `<g class="net-node ${cls}${city === n.c ? " on" : ""}" tabindex="0" role="button" data-city="${esc(n.c)}" aria-label="${esc(n.c)}: ${plural(n.ks.length)}" transform="translate(${x} ${y})">
+    return `<g class="net-node ${cls}${cityLead === n.c ? " on" : ""}" tabindex="0" role="button" data-city="${esc(n.c)}" aria-label="${esc(n.name)}: ${plural(n.ks.length)}" transform="translate(${x} ${y})">
       <circle r="30" class="n-halo" fill="url(#mHalo)"/>
       ${live ? `<circle r="7" class="net-pulse"/>` : ""}
       <circle r="7" class="net-ring"/><circle r="3.4" class="net-dot"/>
-      <text y="-14" class="net-label">${esc(n.c)}</text>
+      <text y="-14" class="net-label">${esc(n.name)}</text>
       <text y="21" class="net-count">${plural(n.ks.length)}</text>
       <circle r="20" class="net-hit"/>
     </g>`;
@@ -623,97 +654,207 @@ function drawCountry(list, city) {
   }
 }
 
-// مسافة تقريبية بالكيلو بين نقطتين
-const kmXY = (lng, lat, c) => [(lng - c[0]) * 111.32 * Math.cos(c[1] * Math.PI / 180), (lat - c[1]) * 110.57];
-function drawCity(city, ks, fresh) {
-  const svg = $("#sCity"), cx = MW / 2, cy = MH / 2 - 6, R = Math.min(MW, MH) / 2 - 58;
-  const geo = ks.filter((k) => k.lat != null), nog = ks.filter((k) => k.lat == null);
-  const c = cityLL(city, ks) || [46.68, 24.71];
-  const off = geo.map((k) => kmXY(+k.lng, +k.lat, c));
-  const maxKm = Math.max(0.6, ...off.map(([x, y]) => Math.hypot(x, y)));
-  const step = [0.25, 0.5, 1, 2, 5, 10, 20, 50, 100].find((s) => s * 4 * 0.88 >= maxKm) || 100;
-  const sc = R / (step * 4);
-  const pts = off.map(([x, y]) => [cx + x * sc, cy - y * sc]);
-  for (let it = 0; it < 30; it++) for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) {   // نبعد النقاط المتلاصقة
-    const dx = pts[j][0] - pts[i][0], dy = pts[j][1] - pts[i][1], d = Math.hypot(dx, dy) || .01;
-    if (d < 34) { const m = (34 - d) / 2, ux = dx / d, uy = dy / d; pts[i][0] -= ux * m; pts[i][1] -= uy * m; pts[j][0] += ux * m; pts[j][1] += uy * m; }
-  }
-  const kmTxt = (v) => v < 1 ? `${Math.round(v * 1000)} م` : `${v} كم`;
-  let rings = "";
-  for (let i = 1; i <= 4; i++) {
-    const rr = R * i / 4;
-    rings += `<circle class="c-ring${i === 4 ? " last" : ""}" cx="${cx}" cy="${cy}" r="${r1(rr)}"/>${geo.length ? "" : "<!--"}<text class="c-km" x="${r1(cx + rr * .7071 + 4)}" y="${r1(cy - rr * .7071 - 4)}">${kmTxt(+(step * i).toFixed(2))}</text>${geo.length ? "" : "-->"}`;
-  }
-  // أماكن الأسماء: نجرب يمين/يسار/تحت/فوق ونختار اللي ما يغطي اسم أو نقطة ثانية
-  const placed = [], dotsAll = [];
-  const ov = (a, b) => Math.max(0, Math.min(a[0] + a[2], b[0] + b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[1] + a[3], b[1] + b[3]) - Math.max(a[1], b[1]));
-  const label = (k, x, y) => {
-    const name = k.location.length > 26 ? k.location.slice(0, 25) + "…" : k.location;
-    const sub = `${k.kiosk_id}${k.area ? " · " + k.area : ""}`;
-    const F = ($("#netStage")?.clientWidth || 700) < 520 ? 1.46 : 1;
-    const w = (Math.max(name.length * 7.3, sub.length * 6.1) + 6) * F, h = 34 * F;
-    const out = x > cx;
-    const C = [
-      { b: [x - 16 - w, y - 15 * F, w, h], a: "start", tx: x - 16, n: y - F, c: y + 15 * F },
-      { b: [x + 16, y - 15 * F, w, h], a: "end", tx: x + 16, n: y - F, c: y + 15 * F },
-      { b: [x - w / 2, y + 15, w, h], a: "middle", tx: x, n: y + 15 + 14 * F, c: y + 15 + 30 * F },
-      { b: [x - w / 2, y - 17 - h, w, h], a: "middle", tx: x, n: y - 17 - h + 14 * F, c: y - 17 - h + 30 * F },
-    ];
-    if (out) [C[0], C[1]] = [C[1], C[0]];
-    let best = C[0], bs = Infinity;
-    for (const o of C) {
-      let sc = 0;
-      for (const b of placed) sc += ov(o.b, b) * 3;
-      for (const d of dotsAll) sc += ov(o.b, [d[0] - 12, d[1] - 12, 24, 24]) * 2;
-      if (o.b[0] < 6 || o.b[0] + o.b[2] > MW - 6 || o.b[1] < 6 || o.b[1] + o.b[3] > MH - 6) sc += 5000;
-      if (sc < bs) { bs = sc; best = o; } if (!sc) break;
-    }
-    placed.push(best.b);
-    return `<text x="${r1(best.tx)}" y="${r1(best.n)}" class="k-name" text-anchor="${best.a}">${esc(name)}</text><text x="${r1(best.tx)}" y="${r1(best.c)}" class="k-code" text-anchor="${best.a}">${esc(sub)}</text>`;
-  };
-  const node = (k, x, y, i) => {
-    const on = S.sel === k.kiosk_id;
-    return `<g class="net-node k-node ${SC(k)}${on ? " on" : ""}${fresh ? " pop" : ""}" style="--d:${(i * 70) + 250}ms" tabindex="0" role="button" data-k="${esc(k.kiosk_id)}" aria-label="طابعة ${esc(k.kiosk_id)}، ${esc(k.location)}">
-      <g transform="translate(${r1(x)} ${r1(y)})"><circle r="34" class="n-halo" fill="url(#cHalo)"/>
-      ${k.status === "ok" ? `<circle r="8" class="net-pulse"/>` : ""}
-      <circle r="8.5" class="net-ring"/><circle r="4" class="net-dot"/><circle r="22" class="net-hit"/></g>
-      ${label(k, x, y)}
-    </g>`;
-  };
-  let tray = "";
-  const ty = geo.length ? MH - 44 : cy, gap = Math.min(170, (MW - 80) / Math.max(1, nog.length)), x0 = MW / 2 + gap * (nog.length - 1) / 2;
-  pts.forEach((p) => dotsAll.push(p)); nog.forEach((_, i) => dotsAll.push([x0 - i * gap, ty]));
-  if (nog.length) {
-    tray = !geo.length ? `<text class="c-traylabel" x="${cx}" y="${cy + 70}" text-anchor="middle" style="text-anchor:middle">المواقع الدقيقة تُضاف قريبًا · اضغط على الطابعة لتفاصيلها</text>` + nog.map((k, i) => node(k, x0 - i * gap, ty, i)).join("") : `<line class="c-tray" x1="40" y1="${ty - 26}" x2="${MW - 40}" y2="${ty - 26}"/><text class="c-traylabel" x="${MW - 40}" y="${ty - 32}">بدون موقع دقيق على الخريطة</text>` +
-      nog.map((k, i) => node(k, x0 - i * gap, ty, geo.length + i)).join("");
-  }
-  svg.innerHTML = `
-    <defs>
-      <pattern id="cDots" width="14" height="14" patternUnits="userSpaceOnUse"><circle cx="7" cy="7" r=".8" fill="#2A4D57"/></pattern>
-      <radialGradient id="cFade"><stop offset=".55" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
-      <mask id="cMask"><rect width="${MW}" height="${MH}" fill="url(#cFade)"/></mask>
-      <radialGradient id="cHalo"><stop offset="0" stop-color="#5FD8E6" stop-opacity=".38"/><stop offset=".5" stop-color="#3BB0BB" stop-opacity=".1"/><stop offset="1" stop-color="#3BB0BB" stop-opacity="0"/></radialGradient>
-    </defs>
-    <rect width="${MW}" height="${MH}" fill="url(#cDots)" mask="url(#cMask)"/>
-    <g class="${fresh ? "c-grow" : ""}">
-      <path class="c-axis" d="M${cx - R - 14} ${cy}H${cx + R + 14}M${cx} ${cy - R - 14}V${cy + R + 14}"/>
-      ${rings}
-      <path class="c-north" d="M${cx} ${cy - R - 30}l5 9h-10z"/><text class="c-km" x="${cx}" y="${cy - R - 34}" text-anchor="middle">ش</text>
-      ${CITIES[city] && geo.length ? `<circle class="c-center" cx="${cx}" cy="${cy}" r="2.5"/><text class="c-centerlabel" x="${cx}" y="${cy + 16}">وسط ${esc(city)}</text>` : ""}
-    </g>
-    ${geo.map((k, i) => node(k, pts[i][0], pts[i][1], i)).join("")}
-    ${tray}`;
-  svg.querySelectorAll(".net-node[data-k]").forEach((g) => {
-    const go = () => select(g.dataset.k, false);
-    g.onclick = go; g.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+/* ===== عرض المدينة: خريطة شوارع حقيقية من OpenStreetMap، مرسومة بدون أي مكتبة خارجية =====
+   المركز محفوظ كإحداثيات «العالم» عند التكبير 0 (0..256)، والتكبير TM.Z رقم متصل عشان الحركة تكون ناعمة. */
+const TILE_URL = (z, x, y) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+const TS = 256, ZMIN = 5, ZMAX = 18;
+const wx = (lng) => (+lng + 180) / 360 * TS;
+const wy = (lat) => { const s = Math.sin(lat * Math.PI / 180); return (0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI)) * TS; };
+const clampZ = (z) => Math.max(ZMIN, Math.min(ZMAX, z));
+const TM = { el: null, layer: null, x: wx(46.68), y: wy(24.71), Z: 12, tiles: new Map(), cl: new Map(), pins: [], ks: [], city: "", raf: 0, q: 0, w: {} };
+
+function tmInit() {
+  const el = TM.el = $("#sCity"); TM.layer = $("#tmLayer");
+  const P = new Map(); let g = null, moved = 0, hintT = 0;
+  const mid = (p) => [p.reduce((a, q) => a + q[0], 0) / p.length, p.reduce((a, q) => a + q[1], 0) / p.length];
+  const dist = (p) => p.length > 1 ? Math.hypot(p[0][0] - p[1][0], p[0][1] - p[1][1]) || 1 : 1;
+  const begin = () => { const p = [...P.values()]; g = { m: mid(p), d: dist(p), x: TM.x, y: TM.y, Z: TM.Z, n: p.length }; };
+  el.addEventListener("pointerdown", (e) => {
+    if (e.button > 0 || e.target.closest(".tm-pin,.tm-ctl,.tm-attr")) return;
+    el.setPointerCapture(e.pointerId); P.set(e.pointerId, [e.clientX, e.clientY]);
+    cancelAnimationFrame(TM.raf); TM.raf = 0; moved = 0; begin();
   });
-  const reg = (() => { const p = PJ(...c); return regionAt(...p)?.dataset.r; })();
-  $("#netTitle").textContent = city;
+  el.addEventListener("pointermove", (e) => {
+    if (!P.has(e.pointerId)) return;
+    P.set(e.pointerId, [e.clientX, e.clientY]);
+    const p = [...P.values()]; if (p.length !== g.n) begin();
+    const m = mid(p), r = el.getBoundingClientRect(), W = r.width, H = r.height;
+    moved += 1; el.classList.add("drag");
+    const Z = p.length > 1 ? clampZ(g.Z + Math.log2(dist(p) / g.d)) : g.Z;
+    const wpx = g.x + (g.m[0] - r.left - W / 2) / 2 ** g.Z, wpy = g.y + (g.m[1] - r.top - H / 2) / 2 ** g.Z;
+    TM.x = wpx - (m[0] - r.left - W / 2) / 2 ** Z; TM.y = wpy - (m[1] - r.top - H / 2) / 2 ** Z; TM.Z = Z;
+    tmQueue();
+  });
+  const up = (e) => {
+    if (!P.has(e.pointerId)) return;
+    const last = P.get(e.pointerId); P.delete(e.pointerId);
+    if (P.size) { begin(); return; }
+    el.classList.remove("drag");
+    if (Math.abs(TM.Z - Math.round(TM.Z)) > .01) { const r = el.getBoundingClientRect(); tmZoomAt(Math.round(TM.Z), last[0] - r.left - r.width / 2, last[1] - r.top - r.height / 2); }
+  };
+  el.addEventListener("pointerup", up); el.addEventListener("pointercancel", up);
+  let wheelT = 0;
+  el.addEventListener("wheel", (e) => {
+    if (!(e.ctrlKey || e.metaKey)) {   // ما نخطف تمرير الصفحة؛ التكبير بـ Ctrl أو باللمس أو بالأزرار
+      $("#tmHint").classList.add("show"); clearTimeout(hintT); hintT = setTimeout(() => $("#tmHint").classList.remove("show"), 1100); return;
+    }
+    e.preventDefault(); cancelAnimationFrame(TM.raf); TM.raf = 0;
+    const r = el.getBoundingClientRect(), sx = e.clientX - r.left - r.width / 2, sy = e.clientY - r.top - r.height / 2;
+    const Z = clampZ(TM.Z - Math.max(-1, Math.min(1, e.deltaY / 120))), wpx = TM.x + sx / 2 ** TM.Z, wpy = TM.y + sy / 2 ** TM.Z;
+    TM.x = wpx - sx / 2 ** Z; TM.y = wpy - sy / 2 ** Z; TM.Z = Z; tmQueue();
+    clearTimeout(wheelT); wheelT = setTimeout(() => tmZoomAt(Math.round(TM.Z), sx, sy), 220);
+  }, { passive: false });
+  el.addEventListener("dblclick", (e) => {
+    if (e.target.closest(".tm-pin,.tm-ctl")) return;
+    const r = el.getBoundingClientRect(); tmZoomAt(Math.round(TM.Z) + 1, e.clientX - r.left - r.width / 2, e.clientY - r.top - r.height / 2);
+  });
+  $("#tmIn").onclick = () => tmZoomAt(Math.round(TM.Z) + 1, 0, 0);
+  $("#tmOut").onclick = () => tmZoomAt(Math.round(TM.Z) - 1, 0, 0);
+  $("#tmFit").onclick = () => tmFit(true);
+  if (window.ResizeObserver) new ResizeObserver(() => tmQueue()).observe(el);
+}
+
+const tmQueue = () => { if (!TM.q) TM.q = requestAnimationFrame(() => { TM.q = 0; tmRender(); }); };
+
+function tmFly(x, y, Z, dur = 480) {
+  cancelAnimationFrame(TM.raf);
+  const f = { x: TM.x, y: TM.y, Z: TM.Z }, t0 = performance.now(); if (REDUCED) dur = 0;
+  const step = (now) => {
+    const t = dur ? Math.min(1, (now - t0) / dur) : 1, e = 1 - Math.pow(1 - t, 3);
+    TM.x = f.x + (x - f.x) * e; TM.y = f.y + (y - f.y) * e; TM.Z = f.Z + (Z - f.Z) * e; tmRender();
+    TM.raf = t < 1 ? requestAnimationFrame(step) : 0;
+  };
+  TM.raf = requestAnimationFrame(step);
+}
+// تكبير حول نقطة على الشاشة (sx, sy من وسط الخريطة)
+function tmZoomAt(Z, sx, sy) {
+  Z = clampZ(Z); const wpx = TM.x + sx / 2 ** TM.Z, wpy = TM.y + sy / 2 ** TM.Z;
+  tmFly(wpx - sx / 2 ** Z, wpy - sy / 2 ** Z, Z, 320);
+}
+
+// نختار تكبير يبيّن كل طابعات المدينة مع مساحة للأسماء
+function tmView() {
+  const el = TM.el, W = el.clientWidth || 600, H = el.clientHeight || 500;
+  const geo = TM.ks.filter((k) => k.lat != null);
+  if (!geo.length) { const c = cityLL(TM.city, TM.ks) || [46.68, 24.71]; return [wx(c[0]), wy(c[1]), 12]; }
+  return tmBounds(geo.map((k) => [wx(k.lng), wy(k.lat)]), geo.length > 1 ? 16 : 15);
+}
+function tmBounds(pts, zMax) {
+  const el = TM.el, W = el.clientWidth || 600, H = el.clientHeight || 500;
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const fit = Math.log2(Math.min(Math.max(80, W - 230, W * .55) / Math.max(x1 - x0, 1e-9), Math.max(80, H - 150) / Math.max(y1 - y0, 1e-9)));
+  const Z = clampZ(Math.min(zMax, Math.floor(fit)));
+  return [(x0 + x1) / 2, (y0 + y1) / 2 - 18 / 2 ** Z, Z];   // نرفع شوي عشان البطاقات فوق النقاط
+}
+function tmFit(anim) { const [x, y, Z] = tmView(); if (anim) tmFly(x, y, Z); else { cancelAnimationFrame(TM.raf); TM.raf = 0; TM.x = x; TM.y = y; TM.Z = Z; tmRender(); } }
+
+function tmRender() {
+  const el = TM.el; if (!el) return;
+  const W = el.clientWidth, H = el.clientHeight; if (!W || !H) return;
+  const Z = TM.Z, tz = Math.round(Z), n = 2 ** tz, sc = 2 ** (Z - tz), cx = TM.x * n, cy = TM.y * n;
+  const x0 = Math.floor((cx - W / 2 / sc) / TS), x1 = Math.floor((cx + W / 2 / sc) / TS);
+  const y0 = Math.max(0, Math.floor((cy - H / 2 / sc) / TS)), y1 = Math.min(n - 1, Math.floor((cy + H / 2 / sc) / TS));
+  const want = new Set(); let pending = 0;
+  for (let x = x0; x <= x1; x++) for (let y = y0; y <= y1; y++) {
+    const key = `${tz}/${x}/${y}`; want.add(key);
+    let t = TM.tiles.get(key);
+    if (!t) {
+      const im = new Image(); im.className = "tm-tile"; im.alt = ""; im.draggable = false; im.decoding = "async";
+      im.onload = () => { im.classList.add("ok"); tmQueue(); }; im.onerror = () => { im.dataset.err = "1"; };
+      im.src = TILE_URL(tz, ((x % n) + n) % n, y); TM.layer.appendChild(im);
+      TM.tiles.set(key, t = { im, z: tz, x, y });
+    }
+    if (!t.im.classList.contains("ok") && !t.im.dataset.err) pending++;
+  }
+  for (const [key, t] of TM.tiles) {
+    const s2 = 2 ** (Z - t.z), m = 2 ** t.z, sz = TS * s2;
+    const px = (t.x * TS - TM.x * m) * s2 + W / 2, py = (t.y * TS - TM.y * m) * s2 + H / 2;
+    const vis = px < W && py < H && px + sz > 0 && py + sz > 0;
+    if (!want.has(key) && (!vis || !pending || Math.abs(t.z - tz) > 2 || !t.im.classList.contains("ok"))) { t.im.remove(); TM.tiles.delete(key); continue; }
+    t.im.style.transform = `translate(${px.toFixed(1)}px,${py.toFixed(1)}px) scale(${((sz + .6) / TS).toFixed(5)})`;
+    t.im.style.zIndex = t.z === tz ? 10 : 5 - Math.abs(t.z - tz);
+  }
+  // الطابعات: المتقاربة جدًا نجمعها في علامة وحدة (تضغطها تقرّب)، وإذا تزاحمت الأسماء نختصرها للرقم
+  const placed = [], f = 2 ** Z, groups = [];
+  const order = TM.pins.slice().sort((a, b) => (b.on - a.on) || (b.ok - a.ok));
+  for (const p of order) {
+    p.X = (p.x - TM.x) * f + W / 2; p.Y = (p.y - TM.y) * f + H / 2;
+    const g = groups.find((c) => Math.hypot(c.X - p.X, c.Y - p.Y) < 46);
+    if (g) g.m.push(p); else groups.push({ X: p.X, Y: p.Y, m: [p] });
+  }
+  const live = new Set();
+  for (const g of groups.filter((c) => c.m.length > 1)) {
+    const key = g.m.map((p) => p.id).sort().join("|"); live.add(key);
+    let el = TM.cl.get(key);
+    if (!el) {
+      const st = g.m.some((p) => p.ok) ? "ready" : "wait";
+      el = document.createElement("div"); el.className = `tm-pin tm-cl ${st}`; el.tabIndex = 0; el.setAttribute("role", "button");
+      el.setAttribute("aria-label", `${plural(g.m.length)} متقاربة، اضغط للتقريب`);
+      el.innerHTML = `<div class="tm-b"><i></i><span class="n">${plural(g.m.length)}</span><span class="z">+</span></div><span class="tm-dot"></span>`;
+      const go = () => {   // نقرّب على المجموعة بقدر ما تنفصل، بدون مبالغة
+        let dmin = Infinity; g.m.forEach((a, i) => g.m.slice(i + 1).forEach((b) => { dmin = Math.min(dmin, Math.hypot(a.x - b.x, a.y - b.y)); }));
+        const [x, y, z] = tmBounds(g.m.map((p) => [p.x, p.y]), ZMAX), zSep = Math.ceil(Math.log2(90 / Math.max(dmin, 1e-9)));
+        tmFly(x, y, clampZ(Math.max(Math.round(TM.Z) + 1, Math.min(z, zSep))));
+      };
+      el.onclick = go; el.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+      $("#tmPins").appendChild(el); TM.cl.set(key, el);
+    }
+    const X = g.m.reduce((a, p) => a + p.X, 0) / g.m.length, Y = g.m.reduce((a, p) => a + p.Y, 0) / g.m.length;
+    el.classList.toggle("on", g.m.some((p) => p.on));
+    el.style.transform = `translate(${X.toFixed(1)}px,${Y.toFixed(1)}px)`;
+    g.m.forEach((p) => { p.el.style.visibility = "hidden"; p.hid = 1; });
+    placed.push([X - 50, Y - 40, 100, 32]);
+  }
+  for (const [key, el] of TM.cl) if (!live.has(key)) { el.remove(); TM.cl.delete(key); }
+  for (const p of order) {
+    if (p.hid) { p.hid = 0; continue; }
+    const X = p.X, Y = p.Y;
+    p.el.style.transform = `translate(${X.toFixed(1)}px,${Y.toFixed(1)}px)`;
+    p.el.style.visibility = X < -160 || X > W + 160 || Y < -60 || Y > H + 60 ? "hidden" : "";
+    const box = (w) => [X - w / 2 - 3, Y - 40, w + 6, 32];
+    const hit = (b) => placed.some((q) => b[0] < q[0] + q[2] && q[0] < b[0] + b[2] && b[1] < q[1] + q[3] && q[1] < b[1] + b[3]);
+    let b = box(p.wf), compact = false;
+    if (!p.on && hit(b)) { compact = true; b = box(p.wc); }
+    p.el.classList.toggle("compact", compact);
+    placed.push(b);
+  }
+}
+
+function drawCity(city, ks, fresh) {
+  TM.ks = ks; TM.city = city;
+  const geo = ks.filter((k) => k.lat != null), nog = ks.filter((k) => k.lat == null);
+  const pin = (k, i) => `<div class="tm-pin ${SC(k)}${S.sel === k.kiosk_id ? " on" : ""}${fresh ? " pop" : ""}" style="--d:${i * 80 + 380}ms" tabindex="0" role="button" data-k="${esc(k.kiosk_id)}" aria-label="طابعة ${esc(k.kiosk_id)}، ${esc(k.location)}"><div class="tm-b"><i></i><span class="c">${esc(k.kiosk_id)}</span><span class="n">${esc(k.location)}</span></div><span class="tm-dot"></span></div>`;
+  $("#tmPins").innerHTML = geo.map(pin).join(""); TM.cl.clear();
+  $("#tmTray").innerHTML = nog.length ? `<span>${geo.length ? "بدون موقع دقيق على الخريطة" : "المواقع الدقيقة تُضاف قريبًا"}</span>` + nog.map((k, i) => pin(k, geo.length + i)).join("") : "";
+  TM.pins = [...$("#tmPins").children].map((el) => {
+    const k = geo.find((x) => x.kiosk_id === el.dataset.k);
+    el.classList.add("compact"); const wc = el.firstElementChild.offsetWidth; el.classList.remove("compact");
+    return { el, id: k.kiosk_id, x: wx(k.lng), y: wy(k.lat), on: S.sel === k.kiosk_id, ok: k.status === "ok", wf: el.firstElementChild.offsetWidth, wc };
+  });
+  // طابعات في نفس المبنى بالضبط: نفرّقها أمتار قليلة عشان تنفصل لما تقرّب
+  TM.pins.forEach((p, i) => {
+    const same = TM.pins.slice(0, i).filter((q) => Math.hypot(q.x - p.x, q.y - p.y) < 2e-6).length;
+    if (same) { const a = same * 2.4, r = 3.5e-6 * Math.sqrt(same); p.x += Math.cos(a) * r; p.y += Math.sin(a) * r; }
+  });
+  TM.el.querySelectorAll(".tm-pin").forEach((p) => {
+    const go = () => select(p.dataset.k, false);
+    p.onclick = go; p.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
+  });
+  if (fresh) tmFit(false);
+  else {
+    const s = TM.pins.find((p) => p.on), W = TM.el.clientWidth, H = TM.el.clientHeight;
+    if (s) { const f = 2 ** TM.Z, X = (s.x - TM.x) * f + W / 2, Y = (s.y - TM.y) * f + H / 2; if (X < 60 || X > W - 60 || Y < 60 || Y > H - 30) tmFly(s.x, s.y - 18 / f, TM.Z); }
+    tmRender();
+  }
+  const reg = (() => { const c = cityLL(city, ks); return c ? regionAt(...PJ(...c))?.dataset.r : null; })();
+  const mem = MV.members.length > 1 ? MV.members : [city];
+  $("#netTitle").textContent = mem.length === 1 ? city : mem.length === 2 ? `${mem[0]} و${mem[1]}` : `${city} وما حولها`;
   $("#netSub").textContent = `${plural(ks.length)}${reg && reg !== city ? " · منطقة " + reg : ""}`;
 }
 
 function drawCard(list) {
-  const k = S.view?.city && list.find((x) => x.kiosk_id === S.sel && x.city === S.view.city);
+  const k = S.view?.city && list.find((x) => x.kiosk_id === S.sel && MV.members.includes(x.city));
   const box = $("#netCard");
   box.innerHTML = k ? kioskCard(k) : S.view?.city ? `<div class="net-tip">اضغط على أي طابعة تشوف تفاصيلها وموقعها بالضبط</div>` : "";
   box.querySelector(".net-card-x")?.addEventListener("click", () => { S.sel = null; renderList(); renderNet(); });
