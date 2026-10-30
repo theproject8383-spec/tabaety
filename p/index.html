@@ -55,6 +55,8 @@ main{flex:1;padding:14px 16px 20px;display:flex;flex-direction:column;gap:14px}
 h1{margin:0;font-size:23px;line-height:1.35}
 p.sub{margin:0;font-size:14px;color:var(--ink-2);line-height:1.6}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.fmt-link{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.fmt-link b{font-size:14.5px}.fmt-link span{grid-row:2;font-size:12.5px;color:var(--ink-2);line-height:1.6}.fmt-link i{grid-row:1/3;grid-column:2;font-style:normal;color:var(--accent);font-size:18px}
 .notice{border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.6}
 .notice.warn{background:var(--warn-tint);color:#6B4508} .notice.bad{background:var(--bad-tint);color:#7A2414} .notice.info{background:var(--accent-tint);color:var(--accent-ink)}
 
@@ -421,6 +423,7 @@ const SCREENS = {
       </div>
       <div id="upErr" class="notice bad" role="alert" hidden></div>
       <p class="help" style="text-align:right">ملفك في واتساب؟ اضغط عليه مطوّلًا ← «مشاركة» ← «حفظ في الملفات»، وبعدين اختره من هنا.</p>
+      <a class="fmt-link" href="/f/?k=${encodeURIComponent(S.kioskId)}"><b>ما عندك ملف جاهز؟</b><span>نسّق بحثك أو خطابك أو سيرتك الذاتية هنا واطبعه على طول</span><i>←</i></a>
       <div class="trust">
         <div>${ICON.lock}<b>ملفك خاص</b>ينحذف بعد الطباعة</div>
         <div>${ICON.pin}<b>تطبع وأنت عندها</b>ما ينطبع قبل ما توصل</div>
@@ -774,6 +777,22 @@ async function doRelease() {
   }
 }
 
+// ---------- استلام الملف من صفحة التنسيق ----------
+function takeHandoff() {
+  return new Promise((res) => {
+    try {
+      const r = indexedDB.open("tabaety", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("handoff");
+      r.onerror = () => res(null);
+      r.onsuccess = () => {
+        const tx = r.result.transaction("handoff", "readwrite"), st = tx.objectStore("handoff"), g = st.get("file");
+        g.onsuccess = () => { const v = g.result; st.delete("file"); res(v && v.blob && Date.now() - (v.at || 0) < 30 * 60000 ? v : null); };
+        g.onerror = () => res(null);
+      };
+    } catch { res(null); }
+  });
+}
+
 // ---------- البداية ----------
 (async function boot() {
   const q = new URLSearchParams(location.search);
@@ -787,7 +806,20 @@ async function doRelease() {
     S.fatal = e.code === "kiosk_not_found" ? ERR.kiosk_not_found : errText(e);
     return show("fatal");
   }
+  // ملف جاي من صفحة التنسيق (/f/)
+  const hand = q.get("from") === "f" ? await takeHandoff() : null;
+  if (hand) history.replaceState(null, "", `?k=${encodeURIComponent(S.kioskId)}`);
   const saved = loadSavedOrder();
+  if (hand) {
+    if (saved) {
+      S.order = saved.id; S.token = saved.token;
+      try { const v = await api("GET", `/orders/${saved.id}`); if (["new", "uploaded", "quoted", "expired"].includes(v.stage)) clearOrder(); else { S.view = v; return routeByView(); } }
+      catch { clearOrder(); }
+      S.order = null; S.token = null;
+    }
+    show("start");
+    return onFile(new File([hand.blob], hand.name || "ملف.pdf", { type: "application/pdf" }));
+  }
   if (saved) {
     S.order = saved.id; S.token = saved.token;
     try { S.view = await api("GET", `/orders/${S.order}`); saveOrder(); return routeByView(); }
