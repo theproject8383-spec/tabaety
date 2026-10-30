@@ -474,6 +474,273 @@ function buildPoster(D) {
   return W;
 }
 
+
+/* ================= أدوات مشتركة للقوالب الجديدة ================= */
+const lines = (t) => String(t || "").replace(/\r/g, "").split("\n").map((s) => s.trim()).filter(Boolean);
+// كم سطر يحتاج النص في عرض معيّن
+function countLines(text, fam, size, bold, width) {
+  const f = fontOf(fam, size, bold), sp = mw(f, " ");
+  let n = 1, w = 0;
+  tokens(text).forEach((t) => { const tw = mw(t.b || bold ? fontOf(fam, size, true) : f, t.s); if (w && w + sp + tw > width) { n++; w = tw; } else w += (w ? sp : 0) + tw; });
+  return n;
+}
+// نص داخل مربع: نصغّر الخط لين يدخل، ونوسّطه عموديًا
+function boxText(W, text, x0, x1, top, h, st) {
+  let size = st.size; const lh = st.lh || 1.45;
+  while (size > (st.min || 8) && countLines(text, st.fam, size, st.bold, x1 - x0) * size * lh > h) size -= .5;
+  const n = countLines(text, st.fam, size, st.bold, x1 - x0);
+  const M = { ...W.M }; W.M.l = x0; W.M.r = W.pw - x1; W.M.b = 0;
+  W.y = top + Math.max(0, (h - n * size * lh) / 2);
+  W.para(text, { ...st, size, lh, align: st.align || "center", keepLines: 0 });
+  W.M = M;
+}
+const cutLine = (W, x1, y1, x2, y2) => W.line(x1, y1, x2, y2, .6, "#9A9A9A", [4, 3]);
+
+/* ================= شهادة شكر وتقدير (صفحة لكل اسم) ================= */
+function buildCertificate(D) {
+  const W = new Writer({ rtl: true, land: true, margins: { t: 50, b: 50, l: 60, r: 60 } });
+  const th = D.theme, fam = th === "calm" ? "plex" : D.font, hf = th === "modern" ? "plex" : fam;
+  const names = lines(v(D, "names")).slice(0, 300);
+  const list = names.length ? names : ["الاسم"];
+  const pw = W.pw, ph = W.ph, cx = pw / 2;
+  list.forEach((name, i) => {
+    if (i) W.newPage();
+    if (th === "classic") {
+      W.rect(18, 18, pw - 36, ph - 36, 3); W.rect(26, 26, pw - 52, ph - 52, .7);
+      [[18, 18], [pw - 18, 18], [18, ph - 18], [pw - 18, ph - 18]].forEach(([x, y]) => { W.fill(x - 9, y - 9, 18, 18, INK); W.fill(x - 4, y - 4, 8, 8, "#fff"); });
+    } else if (th === "modern") {
+      W.fill(0, 0, 22, ph, INK); W.fill(pw - 22, 0, 22, ph, INK);
+      W.fill(22, 0, 8, ph, "#DADADA"); W.fill(pw - 30, 0, 8, ph, "#DADADA");
+    } else W.rect(30, 30, pw - 60, ph - 60, .6, "#BDBDBD", 4);
+    let y = 78;
+    if (D.logo) { W.image(D.logo, cx - 40, 50, 80, 80); y = 150; }
+    if (v(D, "org")) { W.text(v(D, "org"), cx, y, fontOf(hf, 15, true), { a: "center", c: "#333" }); }
+    W.y = y + (D.logo ? 22 : 40);
+    W.para(v(D, "title") || "شهادة شكر وتقدير", { fam: hf, size: th === "calm" ? 40 : 46, bold: true, lh: 1.3, align: "center", after: 6 });
+    W.line(cx - 56, W.y + 4, cx + 56, W.y + 4, th === "calm" ? .8 : 2); W.y += 34;
+    const intro = v(D, "intro") || (v(D, "org") ? `يسرّ ${v(D, "org")} أن تتقدم بخالص الشكر والتقدير إلى` : "نتقدم بخالص الشكر والتقدير إلى");
+    W.para(intro, { fam, size: 18, lh: 1.6, align: "center", c: "#333", after: 14 });
+    W.para(name, { fam: hf, size: 36, bold: true, lh: 1.4, align: "center", after: 14 });
+    if (v(D, "reason")) W.para(v(D, "reason"), { fam, size: 17, lh: 1.75, align: "center", c: "#333" });
+    // التوقيعات
+    const sig = [[v(D, "s1"), v(D, "s1t")], [v(D, "s2"), v(D, "s2t")]].filter((s) => s[0] || s[1]);
+    const sy = ph - 112;
+    sig.forEach(([n, t], k) => {
+      const x = sig.length === 1 ? cx : k === 0 ? pw - 190 : 190;
+      if (t) W.text(t, x, sy, fontOf(fam, 13, true), { a: "center" });
+      if (n) W.text(n, x, sy + 22, fontOf(fam, 13, false), { a: "center", c: "#333" });
+      W.line(x - 70, sy + 48, x + 70, sy + 48, .6, RULE, [2, 3]);
+    });
+    if (v(D, "date")) W.text(v(D, "date"), cx, ph - 60, fontOf(fam, 12, false), { a: "center", c: SOFT });
+  });
+  return W;
+}
+
+/* ================= ورقة عمل / اختبار ================= */
+function buildWorksheet(D) {
+  const W = new Writer({ rtl: true, margins: { t: 46, b: 64, l: 50, r: 50 } });
+  const S = styles(D, { qa: false, align: "start" }), th = D.theme, size = +D.size, hf = th === "classic" ? D.font : "plex";
+  // الرأس: الجهة يمين، الشعار يسار، والعنوان بالنص
+  let y = 62;
+  [v(D, "org"), v(D, "subject") ? `المادة: ${v(D, "subject")}` : "", v(D, "grade") ? `الصف: ${v(D, "grade")}` : ""].filter(Boolean).forEach((s, i) => { W.text(s, W.x1, y, fontOf(hf, i ? 11.5 : 12.5, !i), { c: i ? "#333" : INK }); y += 18; });
+  let ly = 62;
+  [v(D, "date") ? `التاريخ: ${v(D, "date")}` : "", v(D, "duration") ? `الزمن: ${v(D, "duration")}` : "", v(D, "teacher") ? `المعلم/ة: ${v(D, "teacher")}` : ""].filter(Boolean).forEach((s) => { W.text(s, W.x0, ly, fontOf(hf, 11.5, false), { a: "left", d: "rtl", c: "#333" }); ly += 18; });
+  if (D.logo) W.image(D.logo, PW / 2 - 28, 36, 56, 56);
+  W.y = Math.max(y, ly, D.logo ? 100 : 0) + 4;
+  W.para(v(D, "title") || "ورقة عمل", { fam: hf, size: 19, bold: true, lh: 1.4, align: "center", after: 6 });
+  // خانة الطالب
+  const top = W.y, hBox = 34, total = v(D, "total");
+  if (th === "modern") W.fill(W.x0, top, W.cw, hBox, "#F1F1F1", 6); else W.rect(W.x0, top, W.cw, hBox, .8, th === "calm" ? "#BDBDBD" : INK, 4);
+  const fb = fontOf(hf, 12, true), base = top + 22;
+  W.text("اسم الطالب/ـة:", W.x1 - 12, base, fb);
+  W.line(W.x1 - 12 - mw(fb, "اسم الطالب/ـة:") - 6, base + 3, W.x0 + (total ? 170 : 110), base + 3, .6, "#9A9A9A", [2, 3]);
+  if (total) {
+    W.text("الدرجة:", W.x0 + 150, base, fb);
+    W.rect(W.x0 + 46, top + 7, 50, 20, .7, INK, 3); W.text(`/ ${total}`, W.x0 + 40, base, fontOf(hf, 12, false), { a: "right", d: "rtl" });
+  } else { W.text("الفصل:", W.x0 + 100, base, fb); W.line(W.x0 + 100 - mw(fb, "الفصل:") - 6, base + 3, W.x0 + 12, base + 3, .6, "#9A9A9A", [2, 3]); }
+  W.y = top + hBox + 14;
+  if (v(D, "instructions")) { W.para(v(D, "instructions"), { ...S.body, size: size - 1, c: "#333", align: "start", bg: "#F4F4F4", indent: 8, indentEnd: 8, after: 10 }); }
+  // الأسئلة
+  const OPT = /^(\(?[أبجدهو]\)|[أبجدهو][.)\-])\s*/;
+  D._secs.forEach((s) => {
+    const bl = blocks(s.t, { clean: D.opts.clean });
+    if (s.h.trim()) {
+      W.y += size * .5;
+      if (th === "modern") W.para(s.h, { fam: "plex", size: size + 1.5, bold: true, lh: 1.6, align: "start", indent: 10, bg: "#EDEDED", after: 6, keepAfter: size * 4 });
+      else { W.para(s.h, { fam: hf, size: size + 1.5, bold: true, lh: 1.55, align: "start", after: 3, keepAfter: size * 4 }); if (th === "classic") { W.line(W.sx(0), W.y, W.sx(60), W.y, 1.2); W.y += 6; } }
+    }
+    for (let i = 0; i < bl.length; i++) {
+      const b = bl[i];
+      // سطور فاضية للإجابة: [سطور 3] أو ____
+      const m = b.k === "p" && b.s.match(/^\[(?:سطور|سطر|lines?)\s*([0-9٠-٩]*)\]$|^(?:_{3,}|\.{4,})$/);
+      if (m) {
+        const n = Math.min(20, +((m[1] || "").replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d))) || 1), gap = size * 2.1;
+        for (let k = 0; k < n; k++) { W.room(gap); W.y += gap; W.line(W.x0 + 4, W.y - 6, W.x1 - 22, W.y - 6, .5, "#9A9A9A", [1.5, 2.5]); }
+        W.y += 6; continue;
+      }
+      // خيارات (أ) (ب) (ج) (د): نجمعها في سطر واحد لو تكفي
+      if (b.k === "ol" && /^[أبجدهو]/.test(b.n)) {
+        const opts = []; let j = i;
+        while (j < bl.length && bl[j].k === "ol" && /^[أبجدهو]/.test(bl[j].n)) { opts.push(bl[j]); j++; }
+        i = j - 1;
+        const f = fontOf(S.body.fam, size, false), fb2 = fontOf(S.body.fam, size, true);
+        const ws = opts.map((o) => mw(fb2, o.n + ")") + 8 + mw(f, o.s) + 24);
+        const avail = W.cw - 26, perRow = ws.reduce((a, b2) => a + b2, 0) <= avail ? opts.length : Math.max(1, opts.length >= 4 && Math.max(...ws) * 2 <= avail ? 2 : 1);
+        const colW = avail / perRow, lh = size * 2;
+        for (let r = 0; r < opts.length; r += perRow) {
+          W.room(lh); const by = W.y + lh / 2 + size * .36;
+          opts.slice(r, r + perRow).forEach((o, k) => {
+            const x = W.x1 - 26 - k * colW;
+            W.rect(x - 11, by - size * .62, size * .72, size * .72, .7, INK, size * .36);
+            W.text(`${o.n.replace(/[.)\-(]/g, "")})`, x - 16, by, fb2);
+            W.text(o.s, x - 22 - mw(fb2, o.n.replace(/[.)\-(]/g, "") + ")"), by, f);
+          });
+          W.y += lh;
+        }
+        W.y += 4; continue;
+      }
+      if (b.k === "ol") { W.para(b.s, { ...S.body, align: "start", indent: 26, label: `${b.n}`, labelAt: 2, labelBold: true, before: size * .35, after: 2, keepAfter: size * 2 }); continue; }
+      flow(W, [b], S);
+    }
+  });
+  if (v(D, "end") !== "-") { W.y += 14; W.para(v(D, "end") || "انتهت الأسئلة، مع تمنياتي لك بالتوفيق", { fam: hf, size: size - 1, lh: 1.6, align: "center", c: SOFT }); }
+  decorate(W, D, { header: false, footTitle: false, single: true });
+  return W;
+}
+
+/* ================= بطاقات مراجعة (فلاش كاردز) ================= */
+function buildFlashcards(D) {
+  const W = new Writer({ rtl: true, margins: { t: 30, b: 30, l: 30, r: 30 } });
+  const cards = lines(v(D, "cards")).map((l) => {
+    const m = l.match(/^(.+?)\s*(?:\||؛|=|:)\s+(.+)$/) || l.match(/^(.+?)\s*[:：]\s*(.+)$/);
+    return m ? [m[1].replace(/^(س|سؤال)\s*[:：]\s*/, ""), m[2].replace(/^(ج|جواب)\s*[:：]\s*/, "")] : [l, ""];
+  });
+  const list = cards.length ? cards : [["السؤال", "الجواب"]];
+  const cols = 2, rows = 4, per = cols * rows, cw = W.cw / cols, ch = (W.ph - 60) / rows, duplex = D.opts.duplex !== false;
+  const th = D.theme, fam = D.font, title = v(D, "title");
+  const grid = (items, mode) => {
+    for (let r = 0; r <= rows; r++) cutLine(W, 30, 30 + r * ch, W.pw - 30, 30 + r * ch);
+    for (let c = 0; c <= cols; c++) cutLine(W, 30 + c * cw, 30, 30 + c * cw, W.ph - 30);
+    const back = mode === "back";
+    items.forEach((it, k) => {
+      // الظهر معكوس أفقيًا عشان يطابق الوجه لما ينطبع على الوجهين
+      const r = Math.floor(k / cols), c = back ? k % cols : cols - 1 - (k % cols);
+      const x0 = 30 + c * cw, top = 30 + r * ch, qf = th === "classic" ? fam : "plex";
+      if (!back && th === "modern") W.fill(x0 + 10, top + 10, 4, ch - 20, INK);
+      if (!back && title) W.text(title, x0 + cw - 14, top + 20, fontOf("plex", 8.5, false), { c: "#8A8A8A" });
+      W.text(String(it.n), x0 + 14, top + 20, fontOf("plex", 8.5, false), { a: "left", d: "ltr", c: "#8A8A8A" });
+      const H = ch - 46;
+      if (mode === "both") {
+        boxText(W, it.q, x0 + 24, x0 + cw - 24, top + 26, H * .5, { fam: qf, size: 15, bold: true, lh: 1.45, min: 8, c: INK });
+        W.line(x0 + cw * .3, top + 30 + H * .5, x0 + cw * .7, top + 30 + H * .5, .5, "#C9C9C9");
+        boxText(W, it.a, x0 + 24, x0 + cw - 24, top + 34 + H * .5, H * .5 - 8, { fam, size: 12.5, lh: 1.45, min: 7.5, c: "#333" });
+      } else boxText(W, back ? it.a : it.q, x0 + 24, x0 + cw - 24, top + 26, H, { fam: back ? fam : qf, size: back ? 14 : 17, bold: !back, lh: 1.5, min: 8, c: INK });
+    });
+  };
+  const items = list.map(([q, a], i) => ({ q, a, n: i + 1 }));
+  for (let p = 0; p < items.length; p += per) {
+    if (p) W.newPage();
+    const chunk = items.slice(p, p + per);
+    if (duplex) { grid(chunk, "front"); W.newPage(); grid(chunk, "back"); }
+    else grid(chunk, "both");
+  }
+  return W;
+}
+
+/* ================= جداول جاهزة: أسبوعي، مهام، كشف ================= */
+const DAYS = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+function buildPlanner(D) {
+  const kind = v(D, "kind") || "week", th = D.theme, fam = th === "classic" ? D.font : "plex";
+  const land = kind === "week";
+  const W = new Writer({ rtl: true, land, margins: { t: 44, b: 44, l: 44, r: 44 } });
+  const head = (title, sub) => {
+    W.para(title, { fam, size: 22, bold: true, lh: 1.35, align: th === "modern" ? "start" : "center", after: 0, ...(th === "modern" ? { indent: 13, bar: true, barW: 5, barGap: 13 } : {}) });
+    if (sub) W.para(sub, { fam, size: 11.5, lh: 1.6, align: th === "modern" ? "start" : "center", c: SOFT, ...(th === "modern" ? { indent: 13 } : {}) });
+    W.y += 12;
+  };
+  const headBg = th === "calm" ? "#F4F4F4" : th === "modern" ? "#222" : "#E6E6E6", headC = th === "modern" ? "#fff" : INK, border = th === "calm" ? "#C9C9C9" : "#8C8C8C";
+  const table = (cols, widths, rows, rowH, opts = {}) => {
+    const x1 = W.x1; let y = W.y;
+    const hh = 28; let x = x1;
+    cols.forEach((c, i) => { W.fill(x - widths[i], y, widths[i], hh, headBg); W.rect(x - widths[i], y, widths[i], hh, .6, border); if (c) boxText(W, c, x - widths[i] + 4, x - 4, y, hh, { fam, size: 11.5, bold: true, lh: 1.3, min: 7, c: headC }); x -= widths[i]; });
+    y += hh;
+    rows.forEach((r, ri) => {
+      if (y + rowH > W.ph - W.M.b) { W.newPage(); y = W.M.t; x = x1; cols.forEach((c, i) => { W.fill(x - widths[i], y, widths[i], hh, headBg); W.rect(x - widths[i], y, widths[i], hh, .6, border); if (c) boxText(W, c, x - widths[i] + 4, x - 4, y, hh, { fam, size: 11.5, bold: true, lh: 1.3, min: 7, c: headC }); x -= widths[i]; }); y += hh; }
+      x = x1;
+      if (opts.zebra && ri % 2) W.fill(W.x0, y, W.cw, rowH, "#F6F6F6");
+      r.forEach((c, i) => { W.rect(x - widths[i], y, widths[i], rowH, .6, border); if (c) boxText(W, String(c), x - widths[i] + 5, x - 5, y, rowH, { fam, size: i === 0 && opts.firstBold ? 11.5 : 11, bold: i === 0 && opts.firstBold, lh: 1.3, min: 7, c: i === 0 && opts.firstBold ? INK : "#333", align: opts.align?.[i] || "center" }); x -= widths[i]; });
+      y += rowH;
+    });
+    W.y = y;
+  };
+  if (kind === "week") {
+    head(v(D, "title") || "الجدول الأسبوعي", v(D, "sub"));
+    const days = DAYS.slice(0, D.opts.weekend ? 7 : 5), n = Math.max(1, Math.min(12, +v(D, "periods") || 7));
+    const labels = lines(v(D, "times")); const first = 70, w = (W.cw - first) / n;
+    const cols = ["", ...Array.from({ length: n }, (_, i) => labels[i] || `${i + 1}`)];
+    const rowH = Math.min(66, (W.ph - W.y - W.M.b - 30) / days.length);
+    table(cols, [first, ...Array(n).fill(w)], days.map((d) => [d, ...Array(n).fill("")]), rowH, { firstBold: true });
+  } else if (kind === "todo") {
+    head(v(D, "title") || "قائمة المهام", v(D, "sub"));
+    const items = lines(v(D, "items")), n = Math.max(items.length, Math.min(40, +v(D, "periods") || 18)), lh = 30;
+    for (let i = 0; i < n; i++) {
+      W.room(lh); const by = W.y + lh / 2 + 4;
+      W.rect(W.x1 - 14, by - 11, 13, 13, .9, INK, 2.5);
+      if (items[i]) W.text(items[i], W.x1 - 26, by, fontOf(fam, 13, false));
+      W.line(W.x0, W.y + lh - 2, W.x1 - 26, W.y + lh - 2, .5, "#C9C9C9");
+      W.y += lh;
+    }
+  } else {
+    head(v(D, "title") || "كشف", v(D, "sub"));
+    const extra = (v(D, "columns") || "الحضور، ملاحظات").split(/[,،]/).map((s) => s.trim()).filter(Boolean).slice(0, 10);
+    const names = lines(v(D, "items")), n = Math.max(names.length, Math.min(60, +v(D, "periods") || 20));
+    const numW = 34, nameW = Math.min(200, W.cw * .38), ew = (W.cw - numW - nameW) / Math.max(1, extra.length);
+    table(["م", "الاسم", ...extra], [numW, nameW, ...Array(extra.length).fill(ew)], Array.from({ length: n }, (_, i) => [i + 1, names[i] || "", ...Array(extra.length).fill("")]), 26, { zebra: th !== "classic", align: ["center", "start"] });
+  }
+  decorate(W, D, { header: false, footTitle: false, single: true });
+  return W;
+}
+
+/* ================= لوحة باركود (رابط، واي فاي، أو أي نص) ================= */
+function wifiText(D) { const e = (s) => s.replace(/([\;,:"])/g, "\\$1"); return `WIFI:T:${v(D, "pass") ? "WPA" : "nopass"};S:${e(v(D, "ssid"))};P:${e(v(D, "pass"))};;`; }
+function buildQR(D) {
+  const W = new Writer({ rtl: true, margins: { t: 50, b: 50, l: 50, r: 50 } });
+  const th = D.theme, fam = th === "classic" ? D.font : "plex", kind = v(D, "kind") || "link";
+  const data = kind === "wifi" ? (v(D, "ssid") ? wifiText(D) : "") : v(D, "link");
+  const title = v(D, "title") || (kind === "wifi" ? "اتصل بالواي فاي" : "امسح الباركود");
+  const four = D.opts.four;
+  const cell = (x, y, w, h, s) => {
+    if (th === "classic") { W.rect(x + 8 * s, y + 8 * s, w - 16 * s, h - 16 * s, 2 * s); W.rect(x + 14 * s, y + 14 * s, w - 28 * s, h - 28 * s, .6 * s); }
+    else if (th === "modern") { W.fill(x + 8 * s, y + 8 * s, w - 16 * s, 64 * s, INK); }
+    else W.rect(x + 10 * s, y + 10 * s, w - 20 * s, h - 20 * s, .6, "#C9C9C9", 10 * s);
+    const cx = x + w / 2; let yy = y + 64 * s;
+    if (D.logo && !four) { W.image(D.logo, cx - 30, y + 84 * s - 40, 60, 60); }
+    if (v(D, "org")) { W.text(v(D, "org"), cx, y + (th === "modern" ? 46 : 60) * s, fontOf(fam, 14 * s, true), { a: "center", c: th === "modern" ? "#fff" : "#333" }); }
+    W.M.l = x + 30 * s; W.M.r = W.pw - (x + w - 30 * s); W.M.b = 0;
+    W.y = y + (D.logo && !four ? 150 : 104) * s;
+    W.para(title, { fam, size: 34 * s, bold: true, lh: 1.3, align: "center", after: 2 });
+    if (v(D, "sub")) W.para(v(D, "sub"), { fam, size: 15 * s, lh: 1.55, align: "center", c: "#333" });
+    const qs = Math.min(w - 120 * s, h - (W.y - y) - 150 * s), qx = cx - qs / 2, qy = W.y + 16 * s;
+    if (!TF.qr(W, data || "https://tabaety.com", qx, qy, qs)) W.rect(qx, qy, qs, qs, 1, "#C9C9C9");
+    if (!data) W.text("اكتب الرابط عشان يطلع الباركود", cx, qy + qs / 2, fontOf("plex", 12 * s, false), { a: "center", c: SOFT });
+    yy = qy + qs + 26 * s;
+    if (kind === "wifi") {
+      [["الشبكة", v(D, "ssid")], ["كلمة المرور", v(D, "pass")]].filter((r) => r[1]).forEach(([l, val]) => {
+        W.text(`${l}: `, cx + 4, yy, fontOf(fam, 13 * s, false), { a: "left", d: "rtl", c: SOFT });
+        W.text(val, cx - 4, yy, fontOf("plex", 14 * s, true), { a: "right", d: "ltr" });
+        yy += 22 * s;
+      });
+    } else if (data && D.opts.showLink !== false) W.text(data.replace(/^https?:\/\//, "").slice(0, 60), cx, yy, fontOf("plex", 12 * s, false), { a: "center", d: "ltr", c: "#333" });
+    if (v(D, "foot")) W.text(v(D, "foot"), cx, y + h - 30 * s, fontOf(fam, 12 * s, false), { a: "center", c: SOFT });
+  };
+  if (four) {
+    const w = W.pw / 2, h = W.ph / 2;
+    for (let k = 0; k < 4; k++) cell((k % 2) * w, Math.floor(k / 2) * h, w, h, .5);
+    cutLine(W, W.pw / 2, 0, W.pw / 2, W.ph); cutLine(W, 0, W.ph / 2, W.pw, W.ph / 2);
+  } else cell(0, 0, W.pw, W.ph, 1);
+  return W;
+}
+
 /* ================= تعريف القوالب ================= */
 const TPL = {
   research: {
@@ -515,6 +782,31 @@ const TPL = {
     name: "إعلان", group: "any", desc: "صفحة وحدة بعنوان كبير وتفاصيل الموعد", rtl: true, logo: true,
     fields: [["org", "الجهة", "", 1], ["title", "عنوان الإعلان", "", 1], ["subtitle", "سطر تحت العنوان", "", 1], ["date", "التاريخ"], ["time", "الوقت"], ["place", "المكان", "", 1], ["contact", "للتواصل", "", 1]],
     secs: [""], d: { theme: "classic", font: "naskh", size: 14 }, build: buildPoster,
+  },
+  certificate: {
+    name: "شهادة شكر", group: "any", desc: "اكتب الأسماء وتطلع شهادة لكل اسم", rtl: true, logo: true, content: false, land: true,
+    fields: [["org", "الجهة", "", 1], ["title", "عنوان الشهادة", "شهادة شكر وتقدير", 1], ["names", "الأسماء (كل اسم في سطر)", "", 1, "area"], ["intro", "العبارة قبل الاسم (اختياري)", "", 1], ["reason", "سبب الشكر", "", 1, "area"], ["date", "التاريخ"], ["s1t", "صفة الموقّع الأول"], ["s1", "اسم الموقّع الأول"], ["s2t", "صفة الموقّع الثاني"], ["s2", "اسم الموقّع الثاني"]],
+    secs: [], d: { theme: "classic", font: "amiri", size: 14 }, build: buildCertificate,
+  },
+  planner: {
+    name: "جداول وكشوف", group: "any", desc: "جدول أسبوعي، قائمة مهام، أو كشف أسماء", rtl: true, content: false,
+    fields: [["kind", "النوع", "week", 1, "select", [["week", "جدول أسبوعي"], ["todo", "قائمة مهام"], ["sheet", "كشف أسماء"]]], ["title", "العنوان", "", 1], ["sub", "سطر تحت العنوان (اختياري)", "", 1], ["periods", "عدد الحصص / الأسطر", "7"], ["times", "عناوين الحصص أو الأوقات (كل واحد في سطر)", "", 1, "area", null, "week"], ["items", "الأسماء أو المهام (كل واحد في سطر)", "", 1, "area", null, "todo,sheet"], ["columns", "أعمدة الكشف (افصلها بفاصلة)", "الحضور، الواجبات، ملاحظات", 1, null, null, "sheet"]],
+    secs: [], d: { theme: "modern", font: "plex", size: 12 }, build: buildPlanner,
+  },
+  qr: {
+    name: "لوحة باركود", group: "any", desc: "رابط، منيو، أو واي فاي بباركود واضح", rtl: true, logo: true, content: false,
+    fields: [["kind", "النوع", "link", 1, "select", [["link", "رابط أو نص"], ["wifi", "شبكة واي فاي"]]], ["org", "اسم المحل / الجهة", "", 1], ["title", "العنوان الكبير", "", 1], ["sub", "سطر تحت العنوان", "", 1], ["link", "الرابط أو النص", "", 1, null, null, "link"], ["ssid", "اسم الشبكة", "", 0, null, null, "wifi"], ["pass", "كلمة المرور", "", 0, null, null, "wifi"], ["foot", "سطر في الأسفل (اختياري)", "", 1]],
+    secs: [], d: { theme: "modern", font: "plex", size: 14 }, build: buildQR,
+  },
+  worksheet: {
+    name: "ورقة عمل واختبار", group: "uni", desc: "للمعلمين: خانة الاسم والدرجة، وخيارات مرتبة", rtl: true, logo: true,
+    fields: [["org", "المدرسة / الجهة"], ["title", "عنوان الورقة", "ورقة عمل", 1], ["subject", "المادة"], ["grade", "الصف / الشعبة"], ["teacher", "المعلم/ة"], ["date", "التاريخ"], ["duration", "الزمن (اختياري)"], ["total", "الدرجة الكاملة (اختياري)"], ["instructions", "التعليمات (اختياري)", "", 1, "area"]],
+    secs: ["السؤال الأول", "السؤال الثاني"], d: { theme: "classic", font: "naskh", size: 13, spacing: "1" }, build: buildWorksheet,
+  },
+  flashcards: {
+    name: "بطاقات مراجعة", group: "uni", desc: "سؤال وجواب على الوجهين، مع خطوط القص", rtl: true, content: false,
+    fields: [["title", "المادة / الموضوع (يطلع صغير على البطاقة)", "", 1], ["cards", "البطاقات: كل بطاقة في سطر (السؤال | الجواب)", "", 1, "area"]],
+    secs: [], d: { theme: "modern", font: "naskh", size: 14, duplex: true }, build: buildFlashcards,
   },
   cvar: {
     name: "سيرة ذاتية", group: "work", desc: "بالعربي، مع صورة اختيارية", rtl: true, photo: true,
@@ -576,6 +868,23 @@ const SAMPLE = {
     f: { org: "جامع الحي", title: "درس أسبوعي", subtitle: "في تفسير جزء عمّ", date: "كل خميس", time: "بعد صلاة المغرب", place: "جامع الحي، القاعة الملحقة", contact: "للاستفسار: 0550000000" },
     secs: ["يسرّنا دعوتكم لحضور الدرس الأسبوعي\nالدعوة عامة للجميع، ويوجد مصلى للنساء"],
   },
+  certificate: {
+    f: { org: "مدرسة الرواد الأهلية", names: "عبدالله محمد الحربي\nسارة خالد العتيبي\nفيصل ناصر الدوسري", reason: "لتميزه وتفوقه الدراسي خلال الفصل الدراسي الأول، متمنين له دوام النجاح والتوفيق", date: "الفصل الدراسي الأول 1448هـ", s1t: "قائد المدرسة", s1: "أ. سعد بن عبدالرحمن القحطاني", s2t: "رائد النشاط", s2: "أ. ماجد العنزي" },
+  },
+  planner: {
+    f: { kind: "sheet", title: "كشف حضور حلقة التحفيظ", sub: "الأسبوع الأول · شهر ربيع الأول", items: "عبدالرحمن سعد\nمحمد فهد\nيوسف خالد\nعمر ناصر\nإبراهيم علي\nسلمان عبدالله", columns: "الأحد، الاثنين، الثلاثاء، الأربعاء، الخميس، ملاحظات", periods: "14" },
+  },
+  qr: {
+    f: { kind: "wifi", org: "مقهى الركن", title: "اتصل بالواي فاي", sub: "امسح الباركود بكاميرا الجوال", ssid: "AlRukn-Guest", pass: "coffee2026", foot: "نتمنى لك وقتًا ممتعًا" },
+  },
+  worksheet: {
+    f: { org: "مدرسة الرواد الأهلية", title: "اختبار قصير", subject: "العلوم", grade: "الثالث المتوسط", teacher: "أ. نورة السبيعي", date: "1448/3/20هـ", duration: "20 دقيقة", total: "10", instructions: "اقرأ الأسئلة جيدًا، وأجب عنها جميعًا في نفس الورقة." },
+    secs: ["1. الوحدة الأساسية لبناء الكائن الحي هي:\nأ) النسيج\nب) الخلية\nج) العضو\nد) الجهاز\n2. أي مما يلي يوجد في الخلية النباتية فقط؟\nأ) النواة\nب) الغشاء البلازمي\nج) الجدار الخلوي\nد) الميتوكوندريا",
+      "1. اشرح وظيفة الميتوكوندريا في الخلية. (درجتان)\n[سطور 3]\n2. قارن بين الخلية النباتية والحيوانية من حيث الشكل. (درجتان)\n[سطور 3]"],
+  },
+  flashcards: {
+    f: { title: "أحياء 101", cards: "ما الوحدة الأساسية لبناء الكائن الحي؟ | الخلية\nما وظيفة الميتوكوندريا؟ | إنتاج الطاقة للخلية\nأين توجد المادة الوراثية DNA؟ | في النواة\nما الذي يميز الخلية النباتية؟ | الجدار الخلوي والبلاستيدات الخضراء\nما وظيفة الغشاء البلازمي؟ | ينظم دخول المواد وخروجها\nما البناء الضوئي؟ | تحويل ضوء الشمس إلى طاقة كيميائية\nما الريبوسوم؟ | مكان بناء البروتين\nما الفجوة العصارية؟ | مخزن للماء والمواد في الخلية" },
+  },
   cvar: {
     f: { name: "عبدالله محمد الحربي", headline: "طالب علوم حاسب · مطوّر ويب", phone: "0550000000", email: "abdullah@example.com", city: "الرياض", link: "linkedin.com/in/abdullah" },
     secs: ["طالب في السنة الأخيرة بتخصص علوم الحاسب، لدي خبرة عملية في تطوير الويب وتحليل البيانات، وأبحث عن فرصة تدريب صيفي في هندسة البرمجيات.",
@@ -597,7 +906,7 @@ function fresh(tpl, sample) {
   const T = TPL[tpl], f = {};
   T.fields.forEach(([k, , def]) => { f[k] = def || ""; });
   const D = { v: 2, tpl, theme: T.d.theme, font: T.d.font, size: T.d.size, spacing: T.d.spacing || "1.5",
-    opts: { toc: !!T.d.toc, num: false, pages: "center", clean: true, greet: T.d.greet !== false, cover: false },
+    opts: { toc: !!T.d.toc, num: false, pages: "center", clean: true, greet: T.d.greet !== false, cover: false, duplex: T.d.duplex !== false, weekend: false, four: false, showLink: true },
     f, people: T.people ? [{ n: "", id: "" }] : [], logo: "", photo: "", mode: "parts", secs: T.secs.map((h) => ({ h, t: "" })), full: "" };
   if (sample && SAMPLE[tpl]) {
     const S = SAMPLE[tpl]; Object.assign(D.f, S.f);

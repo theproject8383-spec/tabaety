@@ -71,10 +71,10 @@ header.top{display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,
 .g-head{display:flex;align-items:baseline;gap:10px;margin:26px 0 12px}
 .g-head h2{margin:0;font-size:17px}.g-head span{font-size:13px;color:var(--ink-2)}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
-.tcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0;text-align:start;display:flex;flex-direction:column;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
+.tcard{text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:0;text-align:start;display:flex;flex-direction:column;overflow:hidden;transition:transform .2s,box-shadow .2s,border-color .2s}
 .tcard:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(20,24,27,.10);border-color:#C7D1D5}
 .tcard .thumb{background:linear-gradient(180deg,#EEF3F3,#E5ECEC);padding:16px 18px 0;display:flex;justify-content:center;align-items:flex-end;height:210px;overflow:hidden}
-.tcard canvas{width:78%;max-width:180px;aspect-ratio:595.28/841.89;background:#fff;box-shadow:0 2px 12px rgba(20,24,27,.14);border-radius:2px 2px 0 0;display:block;transition:transform .25s}
+.tcard canvas{width:78%;max-width:180px;aspect-ratio:595.28/841.89;align-self:flex-end;background:#fff;box-shadow:0 2px 12px rgba(20,24,27,.14);border-radius:2px 2px 0 0;display:block;transition:transform .25s}
 .tcard:hover canvas{transform:translateY(-4px)}
 .tcard .meta{padding:12px 14px 14px;display:flex;flex-direction:column;gap:3px}
 .tcard b{font-size:15.5px}.tcard .meta span{font-size:12.5px;color:var(--ink-2);line-height:1.55}
@@ -254,16 +254,17 @@ details.help[open] summary{border-bottom:1px solid var(--line)}
     <h1>ملفك <em>مرتّب وجاهز للطباعة</em> في دقايق</h1>
     <p>بحث، تقرير، خطاب، سيرة ذاتية، إعلان، أو أي مستند. اختر القالب والصق نصك، والغلاف والعناوين والجداول وأرقام الصفحات علينا.</p>
     <div class="how"><span><b>1</b>اختر القالب</span><span><b>2</b>الصق نصك</span><span><b>3</b>حمّله أو اطبعه في طابعتي</span></div>
+    <a href="/s/" id="scanLink" style="font-size:14px;font-weight:600;margin-top:4px">عندك ورقة مطبوعة أو هوية؟ صوّرها واطبعها ←</a>
   </div>
   <div class="resume" id="resume" hidden>
     <div><b id="resumeT"></b><span id="resumeS"></span></div>
     <button class="btn teal sm" id="resumeBtn" type="button">كمّل</button>
   </div>
-  <div class="g-head"><h2>لكل شي</h2><span>أي نص تبيه مرتب، أو إعلان بصفحة وحدة</span></div>
+  <div class="g-head"><h2>لكل شي</h2><span>مستند، إعلان، شهادات شكر، جداول وكشوف، ولوحات باركود</span></div>
   <div class="cards" id="cardsAny"></div>
   <div class="g-head"><h2>للشغل والأعمال</h2><span>خطاب رسمي، تقرير، وسيرة ذاتية</span></div>
   <div class="cards" id="cardsWork"></div>
-  <div class="g-head"><h2>للدراسة</h2><span>بحث، واجب، ملخص، وغلاف</span></div>
+  <div class="g-head"><h2>للدراسة والتعليم</h2><span>بحث، واجب، ملخص، أوراق عمل، بطاقات مراجعة، وغلاف</span></div>
   <div class="cards" id="cardsUni"></div>
 </main>
 
@@ -314,6 +315,7 @@ details.help[open] summary{border-bottom:1px solid var(--line)}
   </div>
 </div>
 
+<script src="/assets/vendor/qrcode.js"></script>
 <script src="engine.js"></script>
 <script src="templates.js"></script>
 <script>
@@ -329,6 +331,14 @@ const KIOSK = /^[A-Za-z0-9_-]{1,20}$/.test(Q.get("k") || "") ? Q.get("k") : "";
 const pages = (n) => n === 1 ? "صفحة وحدة" : n === 2 ? "صفحتين" : `${n} ${n <= 10 ? "صفحات" : "صفحة"}`;
 const isMobile = () => matchMedia("(max-width:759px)").matches;
 
+// نرسم صفحة على canvas بعرض معيّن (الصفحة ممكن تكون بالعرض مثل الشهادة)
+function paint(c, page, cssW, mark) {
+  const pw = page.land ? TF.PH : TF.PW, ph = page.land ? TF.PW : TF.PH, sc = cssW / pw * Math.min(2, devicePixelRatio || 1);
+  c.style.aspectRatio = `${pw}/${ph}`;
+  c.width = Math.round(pw * sc); c.height = Math.round(ph * sc);
+  TF.draw(c.getContext("2d"), page, sc, mark);
+}
+
 /* ================= الحفظ ================= */
 const KEY = "tabaety_fmt_v2";
 let STORE = { last: null, drafts: {} };
@@ -343,7 +353,13 @@ function save() {
     catch { try { const lite = JSON.parse(JSON.stringify(STORE)); Object.values(lite.drafts).forEach((d) => { d.logo = ""; d.photo = ""; }); localStorage.setItem(KEY, JSON.stringify(lite)); } catch { /* المتصفح ما يسمح بالحفظ */ } }
   }, 400);
 }
-const hasContent = (d) => !!d && !!((d.f?.title || d.f?.name || d.f?.subject || "").trim() || (d.people || []).some((p) => (p.n || "").trim()) || (d.secs || []).some((s) => s.t.trim()) || (d.full || "").trim());
+const hasContent = (d) => {
+  if (!d || !TPL[d.tpl]) return false;
+  const defs = Object.fromEntries(TPL[d.tpl].fields.map((f) => [f[0], f[2] || ""]));
+  const skip = ["kind", "periods", "salute", "uni", "college", "term", "teacher", "course", "city", "phone", "headline"];
+  return Object.entries(d.f || {}).some(([k, v]) => !skip.includes(k) && (v || "").trim() && v !== defs[k]) ||
+    (d.people || []).some((p) => (p.n || "").trim()) || (d.secs || []).some((s) => s.t.trim()) || !!(d.full || "").trim();
+};
 
 /* ================= المعرض ================= */
 async function renderGallery() {
@@ -351,8 +367,8 @@ async function renderGallery() {
   const keys = Object.keys(TPL);
   $("#cardsUni").innerHTML = keys.filter((k) => TPL[k].group === "uni").map(card).join("");
   $("#cardsWork").innerHTML = keys.filter((k) => TPL[k].group === "work").map(card).join("");
-  $("#cardsAny").innerHTML = keys.filter((k) => TPL[k].group === "any").map(card).join("");
-  $$(".tcard").forEach((b) => b.onclick = () => open(b.dataset.t));
+  $("#cardsAny").innerHTML = `<a class="tcard" href="/s/${KIOSK ? `?k=${KIOSK}` : ""}"><div class="thumb" style="background:linear-gradient(160deg,#5B4636,#3B2E25);align-items:center;padding:16px"><svg viewBox="0 0 240 160" width="88%" aria-hidden="true"><g transform="rotate(-8 120 80)"><rect x="70" y="10" width="100" height="140" rx="3" fill="#fff"/><g fill="#9AA6AB"><rect x="84" y="28" width="58" height="6" rx="2"/><rect x="84" y="44" width="72" height="4" rx="2"/><rect x="84" y="54" width="66" height="4" rx="2"/><rect x="84" y="64" width="72" height="4" rx="2"/><rect x="84" y="80" width="50" height="4" rx="2"/></g></g><g fill="none" stroke="#5FD8E6" stroke-width="3"><path d="M62 30v-16h16M178 14h16v16M194 136v16h-16M78 152H62v-16"/></g></svg></div><div class="meta"><b>صوّر واطبع</b><span>سكانر بالكاميرا: أوراق، دفاتر، والهوية بمقاسها الحقيقي</span></div></a>` + keys.filter((k) => TPL[k].group === "any").map(card).join("");
+  $$(".tcard[data-t]").forEach((b) => b.onclick = () => open(b.dataset.t));
   const last = STORE.last && STORE.drafts[STORE.last];
   if (last && hasContent(last)) {
     $("#resume").hidden = false;
@@ -361,12 +377,10 @@ async function renderGallery() {
     $("#resumeBtn").onclick = () => open(last.tpl);
   }
   await Promise.all([TF.loadFont("naskh"), TF.loadFont("plex")]);
-  for (const b of $$(".tcard")) {
+  for (const b of $$(".tcard[data-t]")) {
     const d = fresh(b.dataset.t, true), W = build(d), c = $("canvas", b);
-    const sc = (c.clientWidth || 160) / TF.PW * Math.min(2, devicePixelRatio || 1);
-    c.width = Math.round(TF.PW * sc); c.height = Math.round(TF.PH * sc);
     await TF.loadImages(W.images);
-    TF.draw(c.getContext("2d"), W.pages[0], sc, false);
+    paint(c, W.pages[0], c.clientWidth || 160, false);
     await new Promise((r) => setTimeout(r, 0));
   }
 }
@@ -431,9 +445,12 @@ function renderAll() {
 }
 function renderData() {
   const T = TPL[D.tpl], ltr = !T.rtl;
-  let h = `<div class="group"><div class="fields">${T.fields.map(([k, label, def, wide]) => {
-    const dir = ltr || ["email", "phone", "link"].includes(k) ? "ltr" : "auto";
-    return `<div class="fld${wide ? " wide" : ""}"><label for="f_${k}">${esc(label)}</label><input class="in" id="f_${k}" data-f="${k}" value="${esc(D.f[k])}" dir="${dir}" autocomplete="off" ${k === "email" ? 'inputmode="email"' : k === "phone" ? 'inputmode="tel"' : ""}></div>`;
+  const kindNow = D.f.kind;
+  let h = `<div class="group"><div class="fields">${T.fields.filter((fd) => !fd[6] || fd[6].split(",").includes(kindNow)).map(([k, label, def, wide, type, options]) => {
+    const dir = ltr || ["email", "phone", "link", "ssid", "pass"].includes(k) ? "ltr" : "auto";
+    if (type === "select") return `<div class="fld wide"><label>${esc(label)}</label><div class="seg" role="group" aria-label="${esc(label)}">${options.map(([val, l]) => `<button type="button" data-sel="${k}" data-v="${val}" aria-pressed="${D.f[k] === val}">${esc(l)}</button>`).join("")}</div></div>`;
+    if (type === "area") return `<div class="fld wide"><label for="f_${k}">${esc(label)}</label><textarea class="in" id="f_${k}" data-f="${k}" dir="${dir}" rows="5" style="resize:vertical;line-height:1.8">${esc(D.f[k])}</textarea></div>`;
+    return `<div class="fld${wide ? " wide" : ""}"><label for="f_${k}">${esc(label)}</label><input class="in" id="f_${k}" data-f="${k}" value="${esc(D.f[k])}" dir="${dir}" autocomplete="off" ${k === "email" ? 'inputmode="email"' : k === "phone" ? 'inputmode="tel"' : k === "periods" || k === "total" ? 'inputmode="numeric"' : ""}></div>`;
   }).join("")}</div></div>`;
   if (T.people) {
     h += `<div class="group"><h3>${D.tpl === "homework" ? "الطالب/ـة" : D.tpl === "report" ? "إعداد" : "الطلاب"}<span style="font-weight:400;font-size:12px">${D.tpl === "homework" ? "" : "أضف أكثر من اسم لو العمل جماعي"}</span></h3><div class="people" id="people">${D.people.map((p, i) => `
@@ -444,6 +461,7 @@ function renderData() {
   if (T.photo) h += imgPick("photo", "صورتك الشخصية (اختياري)", "تطلع دائرية أعلى السيرة", true);
   h += `<div class="reset-row"><button class="btn ghost" id="sample" type="button">جرّب بمثال جاهز</button><button class="btn ghost" id="reset" type="button" style="color:var(--bad)">ابدأ من جديد</button></div>`;
   $("#paneData").innerHTML = h;
+  $$("[data-sel]").forEach((b) => b.onclick = () => { D.f[b.dataset.sel] = b.dataset.v; renderData(); renderStyle(); update(true); });
   $$("[data-f]").forEach((i) => i.oninput = () => { D.f[i.dataset.f] = i.value; if (i.dataset.f === "title") $("#docName").textContent = TPL[D.tpl].name + (i.value ? ` · ${i.value}` : ""); update(); });
   $$("[data-pn]").forEach((i) => i.oninput = () => { D.people[+i.dataset.pn].n = i.value; update(); });
   $$("[data-pi]").forEach((i) => i.oninput = () => { D.people[+i.dataset.pi].id = i.value.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)); update(); });
@@ -528,18 +546,23 @@ function outline() {
 /* ================= الشكل ================= */
 function renderStyle() {
   const T = TPL[D.tpl], cv = D.tpl === "cvar" || D.tpl === "cven";
-  const sizes = cv ? [10, 11, 12] : D.tpl === "summary" ? [11, 12, 13, 14] : [12, 14, 16];
+  const sizes = cv ? [10, 11, 12] : ["summary", "worksheet"].includes(D.tpl) ? [11, 12, 13, 14] : [12, 14, 16];
   if (!sizes.includes(+D.size)) D.size = sizes[1] || sizes[0];
   const sw = (id, on, label, sub) => `<div class="opt"><label for="${id}">${label}${sub ? `<small>${sub}</small>` : ""}</label><span class="switch"><input type="checkbox" id="${id}" ${on ? "checked" : ""}><span></span></span></div>`;
   let h = `<div class="group"><h3>الشكل العام</h3><div class="themes">${Object.entries(THEMES).map(([k, t]) => `<button type="button" class="theme" data-theme="${k}" aria-pressed="${D.theme === k}"><canvas aria-hidden="true"></canvas><b>${t.name}</b></button>`).join("")}</div></div>`;
   if (T.rtl) h += `<div class="group"><h3>الخط</h3><div class="fonts">${Object.entries(FONTS).map(([k, f]) => `<button type="button" class="fontc" data-font="${k}" aria-pressed="${D.font === k}"><span class="s" style="font-family:${k === "naskh" ? "TNaskh" : k === "amiri" ? "TAmiri" : "TPlex"}">أبجد</span><b>${f.name}</b><span>${f.desc}</span></button>`).join("")}</div></div>`;
-  h += `<div class="group"><h3>الحجم والمسافات</h3><div class="opts">
+  const noSize = ["certificate", "qr", "flashcards", "planner"].includes(D.tpl), noSpacing = noSize || D.tpl === "poster";
+  if (!noSize) h += `<div class="group"><h3>الحجم والمسافات</h3><div class="opts">
     <div class="opt"><span>حجم الخط</span><div class="seg" id="sizes">${sizes.map((s) => `<button type="button" data-size="${s}" aria-pressed="${+D.size === s}">${s}</button>`).join("")}</div></div>
-    ${cv ? "" : `<div class="opt"><span>تباعد الأسطر</span><div class="seg" id="spacing">${[["1", "مفرد"], ["1.5", "1.5"], ["2", "مزدوج"]].map(([k, l]) => `<button type="button" data-sp="${k}" aria-pressed="${D.spacing === k}">${l}</button>`).join("")}</div></div>`}
+    ${cv || noSpacing ? "" : `<div class="opt"><span>تباعد الأسطر</span><div class="seg" id="spacing">${[["1", "مفرد"], ["1.5", "1.5"], ["2", "مزدوج"]].map(([k, l]) => `<button type="button" data-sp="${k}" aria-pressed="${D.spacing === k}">${l}</button>`).join("")}</div></div>`}
   </div></div>`;
   const o = [];
   if (D.tpl === "research" || D.tpl === "report") o.push(sw("o_toc", D.opts.toc, "فهرس المحتويات", "بأرقام الصفحات تلقائيًا"));
   if (D.tpl === "research" || D.tpl === "report") o.push(sw("o_num", D.opts.num, "ترقيم العناوين", "أولًا، ثانيًا، ثالثًا…"));
+  if (D.tpl === "flashcards") o.push(sw("o_duplex", D.opts.duplex, "على الوجهين", "السؤال قدام والجواب ورا. اطبعها على الوجهين وقصّها"));
+  if (D.tpl === "planner" && D.f.kind === "week") o.push(sw("o_weekend", D.opts.weekend, "الجمعة والسبت", "أضف أيام نهاية الأسبوع"));
+  if (D.tpl === "qr") o.push(sw("o_four", D.opts.four, "4 لوحات في الورقة", "مقاس صغير للطاولات، مع خطوط القص"));
+  if (D.tpl === "qr" && D.f.kind !== "wifi") o.push(sw("o_link", D.opts.showLink, "اكتب الرابط تحت الباركود"));
   if (D.tpl === "general") o.push(sw("o_cover", D.opts.cover, "صفحة غلاف", "العنوان والجهة والتاريخ في صفحة لحالها"));
   if (D.tpl === "letter") o.push(sw("o_greet", D.opts.greet, "عبارة السلام", "السلام عليكم ورحمة الله وبركاته، وبعد:"));
   if (T.content !== false && D.tpl !== "poster") o.push(`<div class="opt"><span>أرقام الصفحات</span><div class="seg" id="pnum">${[["center", "رقم"], ["xofy", "ص ١ من ٣"], ["none", "بدون"]].map(([k, l]) => `<button type="button" data-pn2="${k}" aria-pressed="${(D.opts.pages || "center") === k}">${l}</button>`).join("")}</div></div>`);
@@ -551,7 +574,7 @@ function renderStyle() {
   $$("[data-size]").forEach((b) => b.onclick = () => { D.size = +b.dataset.size; $$("[data-size]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); update(true); });
   $$("[data-sp]").forEach((b) => b.onclick = () => { D.spacing = b.dataset.sp; $$("[data-sp]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); update(true); });
   $$("[data-pn2]").forEach((b) => b.onclick = () => { D.opts.pages = b.dataset.pn2; $$("[data-pn2]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); update(true); });
-  [["o_toc", "toc"], ["o_num", "num"], ["o_greet", "greet"], ["o_clean", "clean"], ["o_cover", "cover"]].forEach(([id, k]) => { const el = $("#" + id); if (el) el.onchange = () => { D.opts[k] = el.checked; update(true); }; });
+  [["o_toc", "toc"], ["o_num", "num"], ["o_greet", "greet"], ["o_clean", "clean"], ["o_cover", "cover"], ["o_duplex", "duplex"], ["o_weekend", "weekend"], ["o_four", "four"], ["o_link", "showLink"]].forEach(([id, k]) => { const el = $("#" + id); if (el) el.onchange = () => { D.opts[k] = el.checked; update(true); }; });
 }
 // صور مصغّرة للأشكال الثلاثة ببيانات العميل نفسه
 let thumbT = 0;
@@ -562,10 +585,9 @@ function renderThemeThumbs() {
     for (const b of $$("[data-theme]")) {
       const d = { ...D, theme: b.dataset.theme, opts: { ...D.opts } };
       if (!hasContent(D)) Object.assign(d, fresh(D.tpl, true), { theme: b.dataset.theme, font: D.font });
-      const W = build(d), c = $("canvas", b), sc = (c.clientWidth || 110) / TF.PW * Math.min(2, devicePixelRatio || 1);
-      c.width = Math.round(TF.PW * sc); c.height = Math.round(TF.PH * sc);
+      const W = build(d), c = $("canvas", b);
       await TF.loadImages(W.images);
-      TF.draw(c.getContext("2d"), W.pages[0], sc, false);
+      paint(c, W.pages[0], c.clientWidth || 110, false);
     }
   }, 120);
 }
@@ -588,13 +610,9 @@ async function renderPreview() {
   for (let i = 0; i < n; i++) {
     let el = box.children[i];
     if (!el) { el = document.createElement("div"); el.className = "page"; el.innerHTML = `<canvas role="img"></canvas><span class="pn"></span>`; box.appendChild(el); }
-    const c = el.firstChild, cssW = el.clientWidth || 440, sc = cssW / TF.PW * dpr;
-    const sig = JSON.stringify(W.pages[i].ops) + "|" + Math.round(cssW);
-    if (PV.cache[i] !== sig) {
-      PV.cache[i] = sig;
-      c.width = Math.round(TF.PW * sc); c.height = Math.round(TF.PH * sc);
-      TF.draw(c.getContext("2d"), W.pages[i], sc, true);
-    }
+    const c = el.firstChild, cssW = el.clientWidth || 440;
+    const sig = JSON.stringify(W.pages[i].ops) + "|" + Math.round(cssW) + (W.pages[i].land ? "L" : "");
+    if (PV.cache[i] !== sig) { PV.cache[i] = sig; paint(c, W.pages[i], cssW, true); }
     c.setAttribute("aria-label", `الصفحة ${i + 1} من ${n}`);
     el.lastChild.textContent = `${i + 1}`;
   }
@@ -683,6 +701,7 @@ function idbPut(v) {
 /* ================= البداية ================= */
 window.tabaetyFmt = { get D() { return D; }, build: () => build(D), makeFile, open };
 (function boot() {
+  if (KIOSK) $("#scanLink").href = `/s/?k=${KIOSK}`;
   const t = Q.get("t");
   if (t && TPL[t]) open(t); else renderGallery();
   TF.loadFont("naskh"); TF.loadFont("plex");

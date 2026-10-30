@@ -121,11 +121,12 @@ function splitSections(text) {
 class Writer {
   constructor(o) {
     this.rtl = o.rtl !== false; this.M = o.margins || { t: 72, b: 72, l: 66, r: 66 };
+    this.land = !!o.land; this.pw = this.land ? PH : PW; this.ph = this.land ? PW : PH;
     this.pages = []; this.images = new Set(); this.marks = {}; this.newPage();
   }
-  newPage(kind) { this.p = { ops: [], kind: kind || "body" }; this.pages.push(this.p); this.y = this.M.t; return this.p; }
-  get x0() { return this.M.l; } get x1() { return PW - this.M.r; } get cw() { return PW - this.M.l - this.M.r; }
-  get bottom() { return PH - this.M.b; }
+  newPage(kind) { this.p = { ops: [], kind: kind || "body", land: this.land }; this.pages.push(this.p); this.y = this.M.t; return this.p; }
+  get x0() { return this.M.l; } get x1() { return this.pw - this.M.r; } get cw() { return this.pw - this.M.l - this.M.r; }
+  get bottom() { return this.ph - this.M.b; }
   room(h) { if (this.y + h > this.bottom + .01) { this.newPage(); return true; } return false; }
   // رسم مباشر
   text(s, x, y, f, o = {}) {
@@ -317,7 +318,8 @@ function loadImages(srcs) {
 function rr(ctx, x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect && r) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
 function draw(ctx, page, sc, mark) {
   ctx.setTransform(sc, 0, 0, sc, 0, 0);
-  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, PW, PH);
+  const pw = page.land ? PH : PW, ph = page.land ? PW : PH;
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, pw, ph);
   ctx.textBaseline = "alphabetic";
   for (const o of page.ops) {
     switch (o.k) {
@@ -340,7 +342,7 @@ function draw(ctx, page, sc, mark) {
     }
   }
   if (mark) {
-    ctx.save(); ctx.translate(PW / 2, PH / 2); ctx.rotate(-Math.PI / 6);
+    ctx.save(); ctx.translate(pw / 2, ph / 2); ctx.rotate(-Math.PI / 6);
     ctx.font = "700 26px TPlex, sans-serif"; ctx.fillStyle = "rgba(10,107,116,.085)"; ctx.textAlign = "center"; ctx.direction = "rtl";
     for (let y = -600, r = 0; y <= 600; y += 112, r++) for (let x = -560 + (r % 2 ? 140 : 0); x <= 560; x += 280) ctx.fillText("معاينة · طابعتي", x, y);
     ctx.restore();
@@ -351,7 +353,7 @@ function draw(ctx, page, sc, mark) {
 async function pdf(pages, dpi = 200, onProgress) {
   const sc = dpi / 72, enc = new TextEncoder(), parts = [], offs = []; let len = 0;
   const push = (x) => { const b = typeof x === "string" ? enc.encode(x) : x; parts.push(b); len += b.length; };
-  const c = document.createElement("canvas"); c.width = Math.round(PW * sc); c.height = Math.round(PH * sc);
+  const c = document.createElement("canvas");
   const ctx = c.getContext("2d");
   push(new Uint8Array([37, 80, 68, 70, 45, 49, 46, 52, 10, 37, 226, 227, 207, 211, 10]));
   const obj = (n, body) => { offs[n] = len; push(`${n} 0 obj\n`); body.forEach(push); push("\nendobj\n"); };
@@ -359,10 +361,12 @@ async function pdf(pages, dpi = 200, onProgress) {
   obj(1, ["<< /Type /Catalog /Pages 2 0 R >>"]);
   obj(2, [`<< /Type /Pages /Count ${N} /Kids [${pages.map((_, i) => `${3 + 3 * i} 0 R`).join(" ")}] >>`]);
   for (let i = 0; i < N; i++) {
+    const pw = pages[i].land ? PH : PW, ph = pages[i].land ? PW : PH;
+    c.width = Math.round(pw * sc); c.height = Math.round(ph * sc);
     draw(ctx, pages[i], sc, false);
     const jpg = new Uint8Array(await (await new Promise((r) => c.toBlob(r, "image/jpeg", .9))).arrayBuffer());
-    const pg = 3 + 3 * i, ct = pg + 1, im = pg + 2, cs = `q ${PW} 0 0 ${PH} 0 0 cm /Im0 Do Q`;
-    obj(pg, [`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW} ${PH}] /Resources << /XObject << /Im0 ${im} 0 R >> >> /Contents ${ct} 0 R >>`]);
+    const pg = 3 + 3 * i, ct = pg + 1, im = pg + 2, cs = `q ${pw} 0 0 ${ph} 0 0 cm /Im0 Do Q`;
+    obj(pg, [`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pw} ${ph}] /Resources << /XObject << /Im0 ${im} 0 R >> >> /Contents ${ct} 0 R >>`]);
     obj(ct, [`<< /Length ${cs.length} >>\nstream\n${cs}\nendstream`]);
     obj(im, [`<< /Type /XObject /Subtype /Image /Width ${c.width} /Height ${c.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpg.length} >>\nstream\n`, jpg, "\nendstream"]);
     onProgress?.((i + 1) / N);
@@ -387,5 +391,23 @@ function loadFont(fam) {
   return loaded[key];
 }
 
-window.TF = { PW, PH, fontOf, mw, tokens, blocks, clean, splitSections, Writer, flow, draw, pdf, loadImages, loadFont, tdir };
+/* ---------- باركود QR (مربعات حادة تطلع واضحة في الطباعة) ---------- */
+function qr(W, text, x, y, size, color = "#141414") {
+  if (!window.qrcode || !text) return false;
+  qrcode.stringToBytes = qrcode.stringToBytesFuncs["UTF-8"];
+  const q = qrcode(0, "M"); q.addData(text); q.make();
+  const n = q.getModuleCount(), m = size / (n + 8), ox = x + m * 4, oy = y + m * 4;
+  for (let r = 0; r < n; r++) {
+    let c = 0;
+    while (c < n) {
+      if (!q.isDark(r, c)) { c++; continue; }
+      let e = c; while (e + 1 < n && q.isDark(r, e + 1)) e++;
+      W.p.ops.push({ k: "f", x: ox + c * m - .05, y: oy + r * m - .05, w: (e - c + 1) * m + .1, h: m + .1, c: color });
+      c = e + 1;
+    }
+  }
+  return true;
+}
+
+window.TF = { qr, PW, PH, fontOf, mw, tokens, blocks, clean, splitSections, Writer, flow, draw, pdf, loadImages, loadFont, tdir };
 })();
