@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex">
+<title>صوّر واطبع — طابعتي</title>
+<meta name="description" content="صوّر أوراقك أو هويتك بالجوال، ونعدّل الميلان ونوضّح الكتابة، وتطبعها في طابعتي.">
+<link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<style>
+@font-face{font-family:'TPlex';src:url(/assets/fonts/plex-400.woff) format('woff');font-weight:400;font-display:swap}
+@font-face{font-family:'TPlex';src:url(/assets/fonts/plex-700.woff) format('woff');font-weight:700;font-display:swap}
+:root{--ink:#14181B;--ink-2:#5E6A73;--ink-3:#8A959C;--line:#DCE2E5;--line-2:#EBEFF1;--ground:#F4F6F6;--card:#fff;--accent:#0A6B74;--accent-ink:#084F56;--accent-tint:#E1F0F1;--bad:#B83A26;--ok:#1D7F48;--ok-tint:#E3F3E9;--shadow:0 1px 2px rgba(20,24,27,.06),0 6px 20px rgba(20,24,27,.06)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+html,body{margin:0;background:var(--ground);color:var(--ink);font-family:'TPlex','Segoe UI',Tahoma,sans-serif}
+button,input{font-family:inherit;font-size:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header.top{display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,28px);background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.brand .logo{width:34px;height:34px;border-radius:9px;background:#0A6B74;color:#fff;display:grid;place-items:center;flex:none}
+.brand b{font-size:16.5px;display:block;line-height:1.2}.brand small{font-size:12px;color:var(--ink-2)}
+.top .sp{flex:1}
+.back{white-space:nowrap;border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 12px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.back:hover{border-color:var(--accent);color:var(--accent)}
+main{max-width:980px;margin:0 auto;padding:clamp(18px,4vw,40px) clamp(14px,3vw,28px) 120px}
+h1{margin:0;font-size:clamp(26px,4.2vw,38px);line-height:1.25}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{margin:10px 0 0;color:var(--ink-2);font-size:clamp(15px,1.7vw,17px);line-height:1.75;max-width:640px}
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:26px}
+.mode{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:0;text-align:start;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.mode:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(20,24,27,.10)}
+.mode .art{height:170px;background:linear-gradient(160deg,#5B4636,#3B2E25);display:grid;place-items:center;position:relative;overflow:hidden}
+.mode .art svg{width:70%;max-width:240px;height:auto;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.mode .meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px}
+.mode b{font-size:17px}.mode span{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.tips{margin-top:22px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.tip{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:13.5px;color:var(--ink-2);line-height:1.6}
+.tip b{display:block;color:var(--ink);font-size:14px;margin-bottom:2px}
+.lock{display:flex;gap:10px;align-items:flex-start;margin-top:16px;font-size:13px;color:var(--ink-2);line-height:1.7}
+.lock svg{flex:none;margin-top:3px;color:var(--ok)}
+
+.ws-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.ws-head h2{margin:0;font-size:22px}.ws-head span{font-size:13.5px;color:var(--ink-2)}
+.seg{display:inline-flex;background:var(--line-2);border-radius:11px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:9px;padding:7px 12px;font-size:13.5px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;font-size:13.5px;color:var(--ink-2)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+.pg{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow)}
+.pg .im{aspect-ratio:595/842;background:#fff;border-radius:4px;display:grid;place-items:center;overflow:hidden;border:1px solid var(--line-2);cursor:pointer}
+.pg .im img{max-width:100%;max-height:100%;display:block}
+.pg .tools{display:flex;justify-content:space-between;align-items:center;gap:4px}
+.pg .tools b{font-size:12.5px;color:var(--ink-2);flex:1;text-align:center}
+.ib{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--ink-2);display:grid;place-items:center;padding:0;font-size:14px}
+.ib:hover:not([disabled]){border-color:var(--accent);color:var(--accent)}.ib[disabled]{opacity:.35;cursor:default}
+.ib.del:hover{border-color:#E8B9B0;color:var(--bad)}
+.add{border:1.5px dashed #C3CED2;border-radius:14px;background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:240px;color:var(--accent);font-weight:700;font-size:14.5px;padding:14px;position:relative}
+.add:hover{border-color:var(--accent);background:var(--accent-tint)}
+.add small{font-weight:400;color:var(--ink-2);font-size:12px}
+.add .row2{display:flex;gap:8px;width:100%}
+.pick{flex:1;border:1px solid var(--line);background:#fff;border-radius:11px;padding:9px 6px;font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;justify-content:center;gap:6px}
+.pick:hover{border-color:var(--accent)}
+.busy{position:absolute;inset:0;background:rgba(255,255,255,.8);display:grid;place-items:center;border-radius:14px;font-size:13px;color:var(--ink-2)}
+.spin{width:26px;height:26px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:sp 1s linear infinite;margin:0 auto 6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* الهوية */
+.idw{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;align-items:start}
+.slots{display:flex;flex-direction:column;gap:14px}
+.slot{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);position:relative}
+.slot h3{margin:0;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.slot .card{aspect-ratio:85.6/54;border-radius:10px;background:var(--line-2);display:grid;place-items:center;overflow:hidden;border:1px dashed #C3CED2;color:var(--ink-3);font-size:13px;cursor:pointer}
+.slot .card.has{border:0;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.slot .card img{width:100%;height:100%;object-fit:cover;display:block}
+.sheet-prev{background:#E4E9EA;border-radius:16px;padding:18px;display:grid;place-items:center;position:sticky;top:80px}
+.sheet-prev canvas{width:100%;max-width:420px;aspect-ratio:595.28/841.89;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.15);border-radius:2px}
+.opts{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:14px}
+
+/* الشريط السفلي */
+.foot{position:fixed;inset:auto 0 0 0;z-index:25;display:flex;justify-content:center;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:12px clamp(14px,3vw,28px) calc(12px + env(safe-area-inset-bottom))}
+.foot-in{width:100%;max-width:980px;display:flex;gap:10px;align-items:center}
+.foot-in .note{flex:1;font-size:12.5px;color:var(--ink-2)}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.2}
+.btn.teal{background:var(--accent);color:#fff}.btn.teal:hover{background:var(--accent-ink)}
+.btn.light{background:#fff;border:1px solid var(--line)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn svg{width:18px;height:18px}
+
+/* محرر القص */
+.crop{position:fixed;inset:0;z-index:70;background:#0D1416;display:flex;flex-direction:column;color:#fff}
+.crop-h{display:flex;align-items:center;gap:10px;padding:12px 14px;padding-top:calc(12px + env(safe-area-inset-top))}
+.crop-h b{flex:1;font-size:15.5px}.crop-h span{font-size:12.5px;color:#9FB2B7}
+.crop-stage{flex:1;position:relative;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.crop-stage canvas.src{position:absolute;left:0;top:0}
+.crop-stage svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.crop-stage .shade{fill:rgba(0,0,0,.5);fill-rule:evenodd}
+.crop-stage .edge{fill:none;stroke:#5FD8E6;stroke-width:2.2}
+.crop-stage .h{fill:rgba(13,20,22,.55);stroke:#5FD8E6;stroke-width:2.6;cursor:grab}
+.crop-stage .hit{fill:transparent;cursor:grab}
+.loupe{position:absolute;width:118px;height:118px;border-radius:50%;border:3px solid #fff;box-shadow:0 4px 18px rgba(0,0,0,.5);pointer-events:none;overflow:hidden;background:#000}
+.crop-f{display:flex;gap:8px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));justify-content:center;flex-wrap:wrap}
+.crop-f .btn{min-width:0}
+.crop-f .btn.ghost{background:rgba(255,255,255,.1);color:#fff}
+.crop-f .btn.ghost:hover{background:rgba(255,255,255,.18)}
+.crop-f .btn.teal{flex:1;max-width:260px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#14181B;color:#fff;border-radius:12px;padding:10px 16px;font-size:13.5px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+
+@media (max-width:720px){
+  .modes{grid-template-columns:1fr}.mode .art{height:140px}
+  .tips{grid-template-columns:1fr}
+  .idw{grid-template-columns:1fr}
+  .sheet-prev{position:static}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .add{min-height:200px}
+  .foot-in .note{display:none}.foot-in .btn{flex:1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/" aria-label="طابعتي — الصفحة الرئيسية">
+    <span class="logo"><svg aria-hidden="true" width="23" height="23" viewBox="0 0 100 100" fill="currentColor"><path d="M30 6H70V20H30Z" fill-opacity=".45"/><path d="M22 20H78A18 18 0 0 1 96 38V48A18 18 0 0 1 78 66H22A18 18 0 0 1 4 48V38A18 18 0 0 1 22 20ZM30 52H70A2 2 0 0 1 72 54V58A2 2 0 0 1 70 60H30A2 2 0 0 1 28 58V54A2 2 0 0 1 30 52Z" fill-rule="evenodd"/><path d="M34 56H66V88L58 96H34Z"/></svg></span>
+    <span><b>طابعتي</b><small>صوّر واطبع</small></span>
+  </a>
+  <span class="sp"></span>
+  <button class="back" id="homeBtn" type="button" hidden>→ رجوع</button>
+</header>
+
+<main id="home">
+  <h1>صوّر بجوالك، <em>واطبعها كأنها من الماسح</em></h1>
+  <p class="lead">نلقط حدود الورقة لحالنا، نعدّل الميلان، ونبيّض الخلفية ونوضّح الكتابة. ولو صوّرت هويتك، تطلع بمقاسها الحقيقي مثل صورة المكتبة بالضبط.</p>
+  <div class="modes">
+    <button class="mode" type="button" data-mode="doc">
+      <div class="art"><svg viewBox="0 0 240 160" aria-hidden="true"><g transform="rotate(-8 120 80)"><rect x="70" y="10" width="100" height="140" rx="3" fill="#fff"/><g fill="#9AA6AB"><rect x="84" y="28" width="58" height="6" rx="2"/><rect x="84" y="44" width="72" height="4" rx="2"/><rect x="84" y="54" width="66" height="4" rx="2"/><rect x="84" y="64" width="72" height="4" rx="2"/><rect x="84" y="74" width="50" height="4" rx="2"/><rect x="84" y="90" width="72" height="4" rx="2"/><rect x="84" y="100" width="62" height="4" rx="2"/></g></g><g fill="none" stroke="#5FD8E6" stroke-width="3"><path d="M62 30v-16h16M178 14h16v16M194 136v16h-16M78 152H62v-16"/></g></svg></div>
+      <div class="meta"><b>مستند</b><span>صفحة أو أكثر: أوراق، دفتر، سبورة، فاتورة، عقد. كل الصفحات في ملف واحد.</span></div>
+    </button>
+    <button class="mode" type="button" data-mode="id">
+      <div class="art"><svg viewBox="0 0 240 160" aria-hidden="true"><g transform="rotate(6 120 80)"><rect x="40" y="30" width="160" height="101" rx="10" fill="#DCEBE6"/><rect x="40" y="30" width="160" height="22" rx="10" fill="#1E7A5A"/><rect x="40" y="44" width="160" height="8" fill="#1E7A5A"/><rect x="150" y="62" width="38" height="48" rx="4" fill="#A3948A"/><g fill="#33424A"><rect x="54" y="64" width="80" height="6" rx="2"/><rect x="54" y="78" width="64" height="6" rx="2"/><rect x="54" y="92" width="74" height="6" rx="2"/><rect x="54" y="112" width="90" height="7" rx="2"/></g></g><g fill="none" stroke="#5FD8E6" stroke-width="3"><path d="M30 34v-14h14M196 20h14v14M210 128v14h-14M44 142H30v-14"/></g></svg></div>
+      <div class="meta"><b>هوية أو بطاقة</b><span>الوجه والظهر في ورقة وحدة بمقاسها الحقيقي: الهوية، الإقامة، الرخصة، البطاقة الجامعية.</span></div>
+    </button>
+  </div>
+  <div class="tips">
+    <div class="tip"><b>سطح غامق</b>حط الورقة على طاولة أغمق منها، عشان نلقط حدودها بسهولة.</div>
+    <div class="tip"><b>إضاءة جيدة</b>صوّر في مكان منوّر، وانتبه لظل الجوال على الورقة.</div>
+    <div class="tip"><b>من فوق</b>خل الجوال فوق الورقة قدر الإمكان، والميلان البسيط علينا.</div>
+  </div>
+  <p class="lock"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>صورك تتعالج داخل جوالك، وما تنرفع لأي مكان إلا لو اخترت «اطبعه في طابعتي»، وتنحذف بعد الطباعة.</span></p>
+</main>
+
+<!-- المستند -->
+<main id="docWs" hidden>
+  <div class="ws-head"><div><h2>مستند</h2><span id="docCount">صوّر أول صفحة</span></div>
+    <div class="seg" id="docFilter" role="group" aria-label="شكل الصفحات">
+      <button type="button" data-f="doc" aria-pressed="true">واضح</button><button type="button" data-f="color" aria-pressed="false">ألوان</button><button type="button" data-f="gray" aria-pressed="false">رمادي</button><button type="button" data-f="original" aria-pressed="false">الأصل</button>
+    </div>
+  </div>
+  <div class="grid" id="pages"></div>
+</main>
+
+<!-- الهوية -->
+<main id="idWs" hidden>
+  <div class="ws-head"><div><h2>هوية أو بطاقة</h2><span>صوّر الوجه والظهر، ونرتّبهم في ورقة A4 وحدة</span></div></div>
+  <div class="idw">
+    <div class="slots">
+      <div class="slot" data-side="front"><h3>الوجه <span class="acts"></span></h3><div class="card" tabindex="0" role="button" aria-label="صوّر وجه البطاقة">اضغط وصوّر الوجه</div>
+        <div class="row2" style="display:flex;gap:8px"><button class="pick" type="button" data-cam="front">📷 صوّر</button><button class="pick" type="button" data-gal="front">🖼 من الصور</button></div></div>
+      <div class="slot" data-side="back"><h3>الظهر (اختياري) <span class="acts"></span></h3><div class="card" tabindex="0" role="button" aria-label="صوّر ظهر البطاقة">اضغط وصوّر الظهر</div>
+        <div class="row2" style="display:flex;gap:8px"><button class="pick" type="button" data-cam="back">📷 صوّر</button><button class="pick" type="button" data-gal="back">🖼 من الصور</button></div></div>
+      <div class="opts">
+        <div class="opt"><span>المقاس</span><div class="seg" id="idSize"><button type="button" data-s="1" aria-pressed="true">الحقيقي</button><button type="button" data-s="1.5" aria-pressed="false">مكبّر</button></div></div>
+        <div class="opt"><span>الألوان</span><div class="seg" id="idFilter"><button type="button" data-f="color" aria-pressed="true">ألوان</button><button type="button" data-f="gray" aria-pressed="false">رمادي</button><button type="button" data-f="original" aria-pressed="false">الأصل</button></div></div>
+        <div class="opt"><span>نسخ على نفس الورقة</span><div class="seg" id="idCopies"><button type="button" data-c="1" aria-pressed="true">نسخة</button><button type="button" data-c="2" aria-pressed="false">نسختين</button></div></div>
+      </div>
+    </div>
+    <div class="sheet-prev"><canvas id="idSheet" aria-label="معاينة ورقة الهوية" role="img"></canvas></div>
+  </div>
+</main>
+
+<div class="foot" id="foot" hidden><div class="foot-in">
+  <span class="note" id="footNote">تقدر تحمّل الملف أو ترسله لطابعتي مباشرة.</span>
+  <button class="btn light" id="dl" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v11m0 0 4.5-4.5M12 15l-4.5-4.5M5 19h14"/></svg>تحميل PDF</button>
+  <button class="btn teal" id="pr" type="button" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V3h10v6M7 17H5a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2M7 14h10v7H7z"/></svg>اطبعه في طابعتي</button>
+</div></div>
+
+<div class="crop" id="crop" hidden role="dialog" aria-modal="true" aria-label="تعديل القص">
+  <div class="crop-h"><b id="cropT">عدّل الحواف</b><span>اسحب الزوايا على حدود الورقة</span></div>
+  <div class="crop-stage" id="cropStage"><canvas class="src" id="cropCanvas"></canvas><svg id="cropSvg"></svg><canvas class="loupe" id="loupe" width="236" height="236" hidden></canvas></div>
+  <div class="crop-f">
+    <button class="btn ghost" id="cCancel" type="button">إلغاء</button>
+    <button class="btn ghost" id="cAll" type="button">كل الصورة</button>
+    <button class="btn ghost" id="cAuto" type="button">تلقائي</button>
+    <button class="btn teal" id="cOk" type="button">تم ✓</button>
+  </div>
+</div>
+
+<input type="file" id="camIn" accept="image/*" capture="environment" hidden>
+<input type="file" id="galIn" accept="image/*" multiple hidden>
+
+<script src="/f/engine.js"></script>
+<script src="scan.js"></script>
+<script src="/assets/print-handoff.js"></script>
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const Q = new URLSearchParams(location.search);
+const KIOSK = /^[A-Za-z0-9_-]{1,20}$/.test(Q.get("k") || "") ? Q.get("k") : "";
+const pagesTxt = (n) => n === 1 ? "صفحة وحدة" : n === 2 ? "صفحتين" : `${n} ${n <= 10 ? "صفحات" : "صفحة"}`;
+const MM = 72 / 25.4, CARD = [85.6 * MM, 53.98 * MM];
+const toast = (t) => { const d = document.createElement("div"); d.className = "toast"; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); };
+
+/* ================= التنقل ================= */
+let MODE = null;
+function go(mode) {
+  MODE = mode;
+  $("#home").hidden = !!mode; $("#docWs").hidden = mode !== "doc"; $("#idWs").hidden = mode !== "id";
+  $("#homeBtn").hidden = !mode; $("#foot").hidden = !mode;
+  history.replaceState(null, "", `?${mode ? "m=" + mode : ""}${KIOSK ? (mode ? "&" : "") + "k=" + KIOSK : ""}`);
+  if (mode === "doc") renderPages();
+  if (mode === "id") renderId();
+  refreshFoot(); scrollTo(0, 0);
+}
+$$(".mode").forEach((b) => b.onclick = () => go(b.dataset.mode));
+$("#homeBtn").onclick = () => go(null);
+
+/* ================= التقاط الصور ================= */
+let pending = null;   // وين تروح الصورة الجاية
+function capture(target, gallery) {
+  pending = target;
+  const inp = gallery ? $("#galIn") : $("#camIn");
+  inp.value = ""; inp.click();
+}
+$("#camIn").onchange = (e) => handleFiles([...e.target.files]);
+$("#galIn").onchange = (e) => handleFiles([...e.target.files]);
+async function handleFiles(files) {
+  if (!files.length || !pending) return;
+  const target = pending;
+  for (const f of target.side ? files.slice(0, 1) : files) {
+    let prev;
+    try { prev = await TScan.loadFile(f, 1400); } catch { toast("ما قدرنا نقرأ الصورة، جرّب صورة ثانية."); continue; }
+    const det = TScan.detect(prev);
+    const quad = det.quad || TScan.defaultQuad(prev, target.side ? .15 : .06);
+    const res = await cropEditor(prev, quad, !det.quad, target.side ? "عدّل حواف البطاقة" : "عدّل حواف الورقة");
+    if (!res) continue;
+    const norm = res.map(([x, y]) => [x / prev.width, y / prev.height]);
+    if (target.side) { ID[target.side] = { file: f, quad: norm, rot: 0, url: null }; await processId(target.side); renderId(); }
+    else {
+      const p = { file: f, quad: norm, rot: 0, url: null, busy: true };
+      if (target.replace != null) { const old = PAGES[target.replace]; Object.assign(old, { quad: norm, busy: true }); renderPages(); await processPage(old); }
+      else { PAGES.push(p); renderPages(); await processPage(p); }
+      renderPages();
+    }
+  }
+  refreshFoot();
+}
+
+/* ================= محرر القص ================= */
+function cropEditor(prev, quad0, guessed, title) {
+  return new Promise((resolve) => {
+    const box = $("#crop"), stage = $("#cropStage"), cv = $("#cropCanvas"), svg = $("#cropSvg"), lp = $("#loupe");
+    $("#cropT").textContent = title;
+    box.hidden = false; document.body.style.overflow = "hidden";
+    let q = quad0.map((p) => p.slice()), sc = 1, ox = 0, oy = 0;
+    const layout = () => {
+      const W = stage.clientWidth, H = stage.clientHeight, pad = 26;
+      sc = Math.min((W - pad * 2) / prev.width, (H - pad * 2) / prev.height);
+      const dw = prev.width * sc, dh = prev.height * sc; ox = (W - dw) / 2; oy = (H - dh) / 2;
+      const dpr = Math.min(2, devicePixelRatio || 1);
+      cv.width = Math.round(dw * dpr); cv.height = Math.round(dh * dpr); cv.style.width = dw + "px"; cv.style.height = dh + "px"; cv.style.left = ox + "px"; cv.style.top = oy + "px";
+      cv.getContext("2d").drawImage(prev, 0, 0, cv.width, cv.height);
+      draw();
+    };
+    const S = (p) => [ox + p[0] * sc, oy + p[1] * sc];
+    const draw = () => {
+      const W = stage.clientWidth, H = stage.clientHeight, P = q.map(S);
+      const poly = P.map((p) => p.join(",")).join(" ");
+      svg.innerHTML = `<path class="shade" d="M0 0H${W}V${H}H0Z M${P.map((p) => p.join(" ")).join("L")}Z"/><polygon class="edge" points="${poly}"/>` +
+        P.map((p, i) => `<circle class="hit" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="30"/><circle class="h" data-i="${i}" cx="${p[0]}" cy="${p[1]}" r="12" pointer-events="none"/>`).join("");
+    };
+    let drag = -1, off = [0, 0];
+    const loupe = (i) => {
+      const p = q[i], z = 3, R = 118, ctx = lp.getContext("2d"), k = lp.width / R;
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = "#000"; ctx.fillRect(0, 0, lp.width, lp.height);
+      ctx.setTransform(k * z * sc, 0, 0, k * z * sc, lp.width / 2 - p[0] * k * z * sc, lp.height / 2 - p[1] * k * z * sc);
+      ctx.drawImage(prev, 0, 0);
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.strokeStyle = "#5FD8E6"; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.moveTo(lp.width / 2 - 18, lp.height / 2); ctx.lineTo(lp.width / 2 + 18, lp.height / 2); ctx.moveTo(lp.width / 2, lp.height / 2 - 18); ctx.lineTo(lp.width / 2, lp.height / 2 + 18); ctx.stroke();
+      const s = S(p), left = s[0] < stage.clientWidth / 2;
+      lp.style.left = (left ? stage.clientWidth - R - 14 : 14) + "px"; lp.style.top = "14px"; lp.hidden = false;
+    };
+    const down = (e) => {
+      const t = e.target.closest("[data-i]"); if (!t) return;
+      drag = +t.dataset.i; const r = stage.getBoundingClientRect(), s = S(q[drag]);
+      off = [s[0] - (e.clientX - r.left), s[1] - (e.clientY - r.top)];
+      stage.setPointerCapture(e.pointerId); loupe(drag); e.preventDefault();
+    };
+    const move = (e) => {
+      if (drag < 0) return;
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left + off[0] - ox) / sc, y = (e.clientY - r.top + off[1] - oy) / sc;
+      q[drag] = [Math.max(0, Math.min(prev.width, x)), Math.max(0, Math.min(prev.height, y))];
+      draw(); loupe(drag);
+    };
+    const up = () => { drag = -1; lp.hidden = true; };
+    stage.addEventListener("pointerdown", down); stage.addEventListener("pointermove", move);
+    stage.addEventListener("pointerup", up); stage.addEventListener("pointercancel", up);
+    const ro = new ResizeObserver(layout); ro.observe(stage);
+    const done = (v) => {
+      ro.disconnect(); stage.removeEventListener("pointerdown", down); stage.removeEventListener("pointermove", move); stage.removeEventListener("pointerup", up); stage.removeEventListener("pointercancel", up);
+      box.hidden = true; document.body.style.overflow = ""; removeEventListener("keydown", key); resolve(v);
+    };
+    const key = (e) => { if (e.key === "Escape") done(null); if (e.key === "Enter") done(TScan.order(q.map((p) => p.slice()))); };
+    addEventListener("keydown", key);
+    $("#cCancel").onclick = () => done(null);
+    $("#cOk").onclick = () => done(TScan.order(q.map((p) => p.slice())));
+    $("#cAll").onclick = () => { q = [[0, 0], [prev.width, 0], [prev.width, prev.height], [0, prev.height]]; draw(); };
+    $("#cAuto").onclick = () => { const d = TScan.detect(prev); if (d.quad) { q = d.quad; draw(); } else toast("ما قدرنا نلقى الحدود، عدّلها بيدك."); };
+    layout(); $("#cOk").focus();
+    if (guessed) toast("ما لقينا الحدود بوضوح، عدّلها بيدك");
+  });
+}
+
+/* ================= المعالجة ================= */
+async function render(file, normQuad, opt) {
+  const src = await TScan.loadFile(file, opt.max || 2600);
+  const quad = normQuad.map(([x, y]) => [x * src.width, y * src.height]);
+  if (opt.card) {   // بطاقة مصوّرة بالطول: نخليها بالعرض
+    const [w, h] = TScan.outSize(quad); opt = { ...opt, size: h > w ? [opt.size[1], opt.size[0]] : opt.size, rot: (opt.rot + (h > w ? 1 : 0)) % 4 };
+  }
+  await new Promise((r) => setTimeout(r, 0));
+  const out = TScan.process(src, quad, opt);
+  src.width = src.height = 0;
+  const blob = await new Promise((r) => out.toBlob(r, "image/jpeg", .9));
+  const res = { url: URL.createObjectURL(blob), w: out.width, h: out.height };
+  out.width = out.height = 0;
+  return res;
+}
+
+/* ================= المستند ================= */
+const PAGES = []; let DOCF = "doc";
+async function processPage(p) {
+  p.busy = true;
+  try { const r = await render(p.file, p.quad, { mode: DOCF, rot: p.rot }); if (p.url) URL.revokeObjectURL(p.url); Object.assign(p, r); }
+  catch (e) { console.error(e); toast("صار خطأ في معالجة الصورة"); }
+  p.busy = false;
+}
+function renderPages() {
+  const g = $("#pages");
+  g.innerHTML = PAGES.map((p, i) => `<div class="pg"><div class="im" data-edit="${i}" role="button" tabindex="0" aria-label="عدّل الصفحة ${i + 1}">${p.url ? `<img src="${p.url}" alt="الصفحة ${i + 1}">` : ""}</div>
+    <div class="tools"><button class="ib" type="button" data-mv="${i}" data-d="-1" aria-label="قدّمها" ${i ? "" : "disabled"}>→</button><button class="ib" type="button" data-rot="${i}" aria-label="دوّرها">↻</button><b>${i + 1}</b><button class="ib del" type="button" data-del="${i}" aria-label="احذفها">✕</button><button class="ib" type="button" data-mv="${i}" data-d="1" aria-label="أخّرها" ${i < PAGES.length - 1 ? "" : "disabled"}>←</button></div>
+    ${p.busy ? `<div class="busy"><div><div class="spin"></div>نجهّزها…</div></div>` : ""}</div>`).join("") +
+    `<div class="add"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8a2 2 0 0 1 2-2h2l1.5-2h5L16 6h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></svg>${PAGES.length ? "أضف صفحة" : "صوّر أول صفحة"}<small>تقدر تضيف أكثر من صفحة</small>
+      <div class="row2"><button class="pick" type="button" id="addCam">📷 صوّر</button><button class="pick" type="button" id="addGal">🖼 الصور</button></div></div>`;
+  $("#docCount").textContent = PAGES.length ? `${pagesTxt(PAGES.length)} · اضغط على أي صفحة لتعديل قصّها` : "صوّر أول صفحة";
+  $("#addCam").onclick = () => capture({}, false);
+  $("#addGal").onclick = () => capture({}, true);
+  $$("[data-edit]").forEach((el) => { const f = () => recrop(+el.dataset.edit); el.onclick = f; el.onkeydown = (e) => { if (e.key === "Enter") f(); }; });
+  $$("[data-rot]").forEach((b) => b.onclick = async () => { const p = PAGES[+b.dataset.rot]; p.rot = (p.rot + 1) % 4; renderPages(); await processPage(p); renderPages(); });
+  $$("[data-del]").forEach((b) => b.onclick = () => { const p = PAGES.splice(+b.dataset.del, 1)[0]; if (p?.url) URL.revokeObjectURL(p.url); renderPages(); refreshFoot(); });
+  $$("[data-mv]").forEach((b) => b.onclick = () => { const i = +b.dataset.mv, j = i + +b.dataset.d; [PAGES[i], PAGES[j]] = [PAGES[j], PAGES[i]]; renderPages(); });
+  refreshFoot();
+}
+async function recrop(i) {
+  const p = PAGES[i], prev = await TScan.loadFile(p.file, 1400);
+  const res = await cropEditor(prev, p.quad.map(([x, y]) => [x * prev.width, y * prev.height]), false, `عدّل الصفحة ${i + 1}`);
+  if (!res) return;
+  p.quad = res.map(([x, y]) => [x / prev.width, y / prev.height]); renderPages(); await processPage(p); renderPages();
+}
+$$("#docFilter [data-f]").forEach((b) => b.onclick = async () => {
+  if (DOCF === b.dataset.f) return; DOCF = b.dataset.f;
+  $$("#docFilter [data-f]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  PAGES.forEach((p) => p.busy = true); renderPages();
+  for (const p of PAGES) { await processPage(p); renderPages(); }
+});
+function docPages() {
+  const m = 14;
+  return PAGES.filter((p) => p.url).map((p) => ({ ops: [{ k: "i", src: p.url, x: m, y: m, w: TF.PW - 2 * m, h: TF.PH - 2 * m }] }));
+}
+
+/* ================= الهوية ================= */
+const ID = { front: null, back: null }; let IDF = "color", IDS = 1, IDC = 1;
+async function processId(side) {
+  const s = ID[side]; if (!s) return; s.busy = true; renderId();
+  try { const r = await render(s.file, s.quad, { mode: IDF, rot: s.rot, size: [1500, Math.round(1500 * 53.98 / 85.6)], max: 2400, card: true }); if (s.url) URL.revokeObjectURL(s.url); Object.assign(s, r); }
+  catch (e) { console.error(e); toast("صار خطأ في معالجة الصورة"); }
+  s.busy = false;
+}
+function renderId() {
+  $$(".slot").forEach((el) => {
+    const side = el.dataset.side, s = ID[side], card = $(".card", el);
+    card.classList.toggle("has", !!s?.url);
+    card.innerHTML = s?.url ? `<img src="${s.url}" alt="${side === "front" ? "وجه البطاقة" : "ظهر البطاقة"}">` : (side === "front" ? "اضغط وصوّر الوجه" : "اضغط وصوّر الظهر");
+    card.onclick = () => s ? recropId(side) : capture({ side }, false);
+    card.onkeydown = (e) => { if (e.key === "Enter") card.onclick(); };
+    $(".acts", el).innerHTML = s ? `<span style="display:flex;gap:6px"><button class="ib" type="button" data-irot="${side}" aria-label="دوّرها">↻</button><button class="ib del" type="button" data-idel="${side}" aria-label="احذفها">✕</button></span>` : "";
+    $(".row2", el).hidden = !!s;
+    el.querySelector(".busy")?.remove();
+    if (s?.busy) el.insertAdjacentHTML("beforeend", `<div class="busy"><div><div class="spin"></div>نجهّزها…</div></div>`);
+  });
+  $$("[data-cam]").forEach((b) => b.onclick = () => capture({ side: b.dataset.cam }, false));
+  $$("[data-gal]").forEach((b) => b.onclick = () => capture({ side: b.dataset.gal }, true));
+  $$("[data-irot]").forEach((b) => b.onclick = async () => { const s = ID[b.dataset.irot]; s.rot = (s.rot + 2) % 4; await processId(b.dataset.irot); renderId(); });
+  $$("[data-idel]").forEach((b) => b.onclick = () => { const s = ID[b.dataset.idel]; if (s?.url) URL.revokeObjectURL(s.url); ID[b.dataset.idel] = null; renderId(); });
+  drawSheet(); refreshFoot();
+}
+async function recropId(side) {
+  const s = ID[side], prev = await TScan.loadFile(s.file, 1400);
+  const res = await cropEditor(prev, s.quad.map(([x, y]) => [x * prev.width, y * prev.height]), false, "عدّل حواف البطاقة");
+  if (!res) return; s.quad = res.map(([x, y]) => [x / prev.width, y / prev.height]); await processId(side); renderId();
+}
+function idPages() {
+  const [cw, ch] = CARD.map((v) => v * IDS), cards = [ID.front, ID.back].filter((s) => s?.url);
+  if (!cards.length) return [];
+  const ops = [], gap = IDS > 1 ? 34 : 40;
+  const cols = IDC === 2 && IDS === 1 ? 2 : 1, rows = cards.length * (cols === 1 ? IDC : 1);
+  const blockW = cols * cw + (cols - 1) * 28, blockH = rows * ch + (rows - 1) * gap;
+  const x0 = (TF.PW - blockW) / 2; let y = Math.max(70, (TF.PH - blockH) / 2 - 40);
+  if (cols === 2) cards.forEach((s) => { for (let c = 0; c < 2; c++) ops.push({ k: "i", src: s.url, x: x0 + c * (cw + 28), y, w: cw, h: ch }); y += ch + gap; });
+  else for (let k = 0; k < IDC; k++) cards.forEach((s) => { ops.push({ k: "i", src: s.url, x: x0, y, w: cw, h: ch }); y += ch + gap; });
+  return [{ ops }];
+}
+async function drawSheet() {
+  const c = $("#idSheet"), pages = idPages(), dpr = Math.min(2, devicePixelRatio || 1), cssW = c.clientWidth || 360, sc = cssW / TF.PW * dpr;
+  c.width = Math.round(TF.PW * sc); c.height = Math.round(TF.PH * sc);
+  const ctx = c.getContext("2d");
+  if (!pages.length) {
+    ctx.setTransform(sc, 0, 0, sc, 0, 0); ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, TF.PW, TF.PH);
+    ctx.strokeStyle = "#C3CED2"; ctx.setLineDash([5, 5]); ctx.lineWidth = 1;
+    const [cw, ch] = CARD.map((v) => v * IDS); ctx.strokeRect((TF.PW - cw) / 2, 200, cw, ch); ctx.strokeRect((TF.PW - cw) / 2, 200 + ch + 40, cw, ch);
+    ctx.setLineDash([]); ctx.fillStyle = "#8A959C"; ctx.font = "13px TPlex"; ctx.textAlign = "center"; ctx.direction = "rtl"; ctx.fillText("الوجه", TF.PW / 2, 200 + ch / 2 + 4); ctx.fillText("الظهر", TF.PW / 2, 240 + ch * 1.5 + 4);
+    return;
+  }
+  await TF.loadImages(new Set(pages[0].ops.map((o) => o.src)));
+  TF.draw(ctx, pages[0], sc, false);
+}
+const segBind = (sel, attr, set) => $$(`${sel} [data-${attr}]`).forEach((b) => b.onclick = async () => { $$(`${sel} [data-${attr}]`).forEach((x) => x.setAttribute("aria-pressed", String(x === b))); await set(b.dataset[attr]); });
+segBind("#idSize", "s", (v) => { IDS = +v; drawSheet(); });
+segBind("#idCopies", "c", (v) => { IDC = +v; drawSheet(); });
+segBind("#idFilter", "f", async (v) => { IDF = v; for (const k of ["front", "back"]) if (ID[k]) await processId(k); renderId(); });
+addEventListener("resize", () => { if (MODE === "id") drawSheet(); });
+
+/* ================= الإخراج ================= */
+const outPages = () => MODE === "id" ? idPages() : docPages();
+function refreshFoot() {
+  const n = outPages().length, busy = MODE === "doc" ? PAGES.some((p) => p.busy) : [ID.front, ID.back].some((s) => s?.busy);
+  $("#dl").disabled = $("#pr").disabled = !n || busy;
+  $("#footNote").textContent = n ? `ملفك ${pagesTxt(n)} A4، جاهز تحمّله أو ترسله لطابعتي.` : MODE === "id" ? "صوّر وجه البطاقة عشان نجهّز الورقة." : "صوّر صفحة عشان تبدأ.";
+}
+async function makeBlob(onP) {
+  const pages = outPages(); const srcs = new Set(); pages.forEach((p) => p.ops.forEach((o) => srcs.add(o.src)));
+  await TF.loadImages(srcs); return TF.pdf(pages, 220, onP);
+}
+const fname = () => MODE === "id" ? "صورة الهوية.pdf" : "مستند ممسوح.pdf";
+$("#dl").onclick = async (e) => {
+  const b = e.currentTarget, old = b.innerHTML; b.disabled = true;
+  try { const blob = await makeBlob((p) => { b.textContent = `نجهّز الملف ${Math.round(p * 100)}%`; }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fname(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); }
+  catch (er) { console.error(er); toast("صار خطأ وقت تجهيز الملف"); }
+  b.innerHTML = old; b.disabled = false;
+};
+$("#pr").onclick = () => TPrint.open({ makeBlob, name: fname(), pagesLabel: pagesTxt(outPages().length), kiosk: KIOSK });
+
+window.tabaetyScan = { PAGES, ID, makeBlob, outPages, go };
+TF.loadFont("plex");
+(() => { const m = Q.get("m"); if (m === "doc" || m === "id") go(m); })();
+</script>
+</body>
+</html>
