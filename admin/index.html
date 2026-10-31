@@ -201,6 +201,8 @@ dialog .acts{display:flex;gap:8px;justify-content:flex-start;margin-top:14px}
 :root[data-theme="dark"] .loc-state.ok{background:#12322A;color:#8EE0C2;border-color:#1E4F41}
 :root[data-theme="dark"] .loc-state.warn{background:#3A2E14;color:#F1CC80;border-color:#5A4720}
 :root[data-theme="dark"] .loc-state.bad{background:#3B1D17;color:#F4A898;border-color:#5C2C22}
+.svc-b{border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:10px}
+.svc-n{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.svc-b .row{display:flex;align-items:center}.svc-n div{background:var(--ground);border-radius:10px;padding:8px;text-align:center}.svc-n b{display:block;font-size:20px;font-family:var(--mono)}.svc-n span{font-size:11.5px;color:var(--ink-2)}
 </style>
 </head>
 <body>
@@ -268,7 +270,7 @@ const dayKey = (t) => new Date(t).toLocaleDateString("en-CA", { timeZone: "Asia/
 const S = { db: null, demo: false, user: null, tab: "overview", kiosks: [], orders: [], payments: [], commands: [], settings: {},
   drawer: null, filters: { kiosk: "", status: "", source: "", q: "", days: "7" }, live: false };
 
-const ORDER_COLS = "id,kiosk_id,source,payment_status,print_status,total_pages,copies,duplex,sheets_needed,total_amount,price_per_page,created_at,quoted_at,paid_at,released_at,printed_at,cancelled_at,error_message,refund_status,refund_note,original_name,file_kind,print_attempts,file_deleted_at";
+const ORDER_COLS = "id,kiosk_id,source,origin,payment_status,print_status,total_pages,copies,duplex,sheets_needed,total_amount,price_per_page,created_at,quoted_at,paid_at,released_at,printed_at,cancelled_at,error_message,refund_status,refund_note,original_name,file_kind,print_attempts,file_deleted_at";
 
 function realDb(sb) {
   const q = async (p) => { const { data, error } = await p; if (error) throw error; return data; };
@@ -343,6 +345,8 @@ function orderStatus(o) {
   return ["mute", o.print_status || "—"];
 }
 const SOURCE = { web: "الموقع", whatsapp: "واتساب", test: "تجربة" };
+const ORIGIN = { format: "التنسيق", scan: "السكانر" };
+const srcLabel = (o) => (SOURCE[o.source] || o.source) + (o.origin ? ` · ${ORIGIN[o.origin] || o.origin}` : "");
 const pill = ([cls, label]) => `<span class="pill ${cls}"><i></i>${esc(label)}</span>`;
 const isRevenue = (o) => o.payment_status === "paid" && o.source !== "test" && o.refund_status !== "refunded";
 const customerLink = (kid) => `${CONFIG.customerUrl}?k=${encodeURIComponent(kid)}`;
@@ -360,6 +364,8 @@ async function reload() {
   const [kiosks, orders, payments, commands, settings] = await Promise.all([
     S.db.kiosks(), S.db.orders(since), S.db.payments(since), S.db.commands(), S.db.settings()]);
   Object.assign(S, { kiosks, orders, payments, commands, settings });
+  // أرقام خدمات التنسيق والسكانر (لو الدالة موجودة)
+  try { S.svc = typeof S.db.rpc === "function" ? await S.db.rpc("admin_service_stats", { p_days: 30 }) : null; } catch { S.svc = null; }
   render();
 }
 let reloadTimer = null;
@@ -440,11 +446,28 @@ PAGES.overview = () => {
       <div class="small muted" style="margin-top:8px">المجموع: <b class="mono" style="color:var(--ink)">${money(rev.reduce((a, b) => a + b, 0))}</b> ريال</div>
     </div>
   </div>
+  ${svcCard()}
   <div class="card" style="margin-top:14px"><h2>الطابعات</h2>
     ${active.length ? `<div class="grid g3">${active.map(printerCard).join("")}</div>` : `<div class="empty">ما فيه طابعات. <button class="btn sm primary" data-new-kiosk>أضف أول طابعة</button></div>`}
   </div>
   <div class="card" style="margin-top:14px"><h2>آخر الطلبات</h2>${ordersTable(recent, true)}</div>`;
 };
+
+// بطاقة خدمات التنسيق والسكانر: كم واحد استخدمها، وكم طلب وإيراد جابت
+function svcCard() {
+  const v = S.svc; if (!v) return "";
+  const ev = (svc, e) => (v.events || []).filter((x) => x.service === svc && x.event === e).reduce((a, x) => a + Number(x.n), 0);
+  const o = (svc) => v.orders?.[svc] || { orders: 0, paid: 0, revenue: 0, pages: 0 };
+  const TPLN = { research: "بحث", report: "تقرير", homework: "واجب", summary: "ملخص", cover: "غلاف", letter: "خطاب", general: "مستند حر", poster: "إعلان", certificate: "شهادة شكر", planner: "جداول وكشوف", qr: "لوحة باركود", worksheet: "ورقة عمل", flashcards: "بطاقات مراجعة", cvar: "سيرة ذاتية", cven: "CV" };
+  const block = (svc, title, href, openLbl) => `<div class="svc-b"><div class="row" style="justify-content:space-between"><b>${title}</b><a class="small" href="${href}" target="_blank" rel="noopener">فتح ↗</a></div>
+    <div class="svc-n"><div><b>${ev(svc, "open")}</b><span>${openLbl}</span></div><div><b>${ev(svc, "download")}</b><span>تحميل PDF</span></div><div><b>${ev(svc, "send")}</b><span>أرسلوه للطابعة</span></div></div>
+    <div class="small muted">${o(svc).paid} طلب مدفوع · <b class="mono" style="color:var(--ink)">${money(o(svc).revenue)}</b> ر.س · ${o(svc).pages} صفحة مطبوعة</div></div>`;
+  const tops = (v.templates || []).slice(0, 5);
+  return `<div class="card" style="margin-top:14px"><h2>خدمات التنسيق والسكانر <span class="muted small" style="font-weight:400">(آخر 30 يوم)</span></h2>
+    <div class="grid g2">${block("format", "نسّق ملفك", "/f/", "فتحوا قالب")}${block("scan", "صوّر واطبع", "/s/", "فتحوا السكانر")}</div>
+    ${tops.length ? `<div class="small muted" style="margin-top:10px">أكثر القوالب: ${tops.map((t) => `<span class="pill info" style="margin-inline-end:4px">${esc(TPLN[t.tpl] || t.tpl)} ${t.opens}</span>`).join("")}</div>` : ""}
+  </div>`;
+}
 
 function printerCard(k) {
   const st = kioskStatus(k);
@@ -463,7 +486,7 @@ function printerCard(k) {
 function ordersTable(list, compact = false) {
   if (!list.length) return `<div class="empty">ما فيه طلبات.</div>`;
   return `<div class="table-wrap"><table><thead><tr><th>الطلب</th><th>الطابعة</th>${compact ? "" : "<th>المصدر</th><th>الملف</th>"}<th>صفحات</th><th>المبلغ</th><th>الحالة</th><th>الوقت</th></tr></thead><tbody>
-  ${list.map((o) => `<tr class="click" data-order="${o.id}"><td class="mono ltr">#${ref(o.id)}</td><td class="mono">${esc(o.kiosk_id)}</td>${compact ? "" : `<td>${SOURCE[o.source] || o.source}</td><td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;unicode-bidi:plaintext">${esc(o.original_name || "—")}</td>`}
+  ${list.map((o) => `<tr class="click" data-order="${o.id}"><td class="mono ltr">#${ref(o.id)}</td><td class="mono">${esc(o.kiosk_id)}</td>${compact ? "" : `<td>${srcLabel(o)}</td><td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;unicode-bidi:plaintext">${esc(o.original_name || "—")}</td>`}
     <td class="mono">${o.total_pages || 0}×${o.copies || 1}${o.duplex ? " ⇆" : ""}</td><td class="mono">${money(o.total_amount)}</td><td>${pill(orderStatus(o))}</td><td class="small muted">${fmtTime(o.created_at)}</td></tr>`).join("")}
   </tbody></table></div>`;
 }
@@ -940,7 +963,7 @@ function orderDrawer(d) {
   <div class="db">
     <div class="card"><dl class="kv">
       <dt>الطابعة</dt><dd><a href="#" data-kiosk="${esc(o.kiosk_id)}" class="mono">${esc(o.kiosk_id)}</a></dd>
-      <dt>المصدر</dt><dd>${SOURCE[o.source] || o.source}</dd>
+      <dt>المصدر</dt><dd>${srcLabel(o)}</dd>
       <dt>الملف</dt><dd>${o.file_kind === "image" ? "صورة" : "PDF"} · ${o.total_pages} صفحة ${o.file_deleted_at ? pill(["mute", "انحذف"]) : ""}</dd>
       <dt>الخيارات</dt><dd>${o.copies} نسخة · ${o.duplex ? "وجهين" : "وجه واحد"} · ${o.sheets_needed ?? "—"} ورقة</dd>
       <dt>المبلغ</dt><dd class="mono">${money(o.total_amount)} ر.س ${o.price_per_page ? `<span class="small muted">(${money(o.price_per_page)}/ص)</span>` : ""}</dd>

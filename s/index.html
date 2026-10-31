@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
-<meta name="robots" content="noindex">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.tabaety.com/s/">
+<meta property="og:title" content="صوّر واطبع — طابعتي">
+<meta property="og:description" content="صوّر أوراقك أو هويتك بالجوال، ونعدّل الميلان ونوضّح الكتابة، والهوية تطلع بمقاسها الحقيقي.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.tabaety.com/s/">
+<meta property="og:locale" content="ar_SA">
 <title>صوّر واطبع — طابعتي</title>
 <meta name="description" content="صوّر أوراقك أو هويتك بالجوال، ونعدّل الميلان ونوضّح الكتابة، وتطبعها في طابعتي.">
 <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
@@ -209,6 +215,11 @@ h1 em{font-style:normal;color:var(--accent)}
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const Q = new URLSearchParams(location.search);
 const KIOSK = /^[A-Za-z0-9_-]{1,20}$/.test(Q.get("k") || "") ? Q.get("k") : "";
+const SB = "https://dloicztspjligjjowhps.supabase.co";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTA";
+const SERVICE = "scan";
+// عدّاد استخدام الخدمة (بدون أي بيانات شخصية)، عشان نعرف وش يستخدمه الناس
+const track = (event, tpl) => { try { fetch(`${SB}/rest/v1/rpc/svc_track`, { method: "POST", keepalive: true, headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_service: SERVICE, p_event: event, p_tpl: tpl || null, p_kiosk: KIOSK || null }) }).catch(() => {}); } catch { /* */ } };
 const pagesTxt = (n) => n === 1 ? "صفحة وحدة" : n === 2 ? "صفحتين" : `${n} ${n <= 10 ? "صفحات" : "صفحة"}`;
 const MM = 72 / 25.4, CARD = [85.6 * MM, 53.98 * MM];
 const toast = (t) => { const d = document.createElement("div"); d.className = "toast"; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2600); };
@@ -216,6 +227,7 @@ const toast = (t) => { const d = document.createElement("div"); d.className = "t
 /* ================= التنقل ================= */
 let MODE = null;
 function go(mode) {
+  if (mode && mode !== MODE) track("open", mode);
   MODE = mode;
   $("#home").hidden = !!mode; $("#docWs").hidden = mode !== "doc"; $("#idWs").hidden = mode !== "id";
   $("#homeBtn").hidden = !mode; $("#foot").hidden = !mode;
@@ -251,7 +263,7 @@ async function handleFiles(files) {
     else {
       const p = { file: f, quad: norm, rot: 0, url: null, busy: true };
       if (target.replace != null) { const old = PAGES[target.replace]; Object.assign(old, { quad: norm, busy: true }); renderPages(); await processPage(old); }
-      else { PAGES.push(p); renderPages(); await processPage(p); }
+      else { PAGES.push(p); renderPages(); await processPage(p); track("page", "doc"); }
       renderPages();
     }
   }
@@ -457,11 +469,11 @@ async function makeBlob(onP) {
 const fname = () => MODE === "id" ? "صورة الهوية.pdf" : "مستند ممسوح.pdf";
 $("#dl").onclick = async (e) => {
   const b = e.currentTarget, old = b.innerHTML; b.disabled = true;
-  try { const blob = await makeBlob((p) => { b.textContent = `نجهّز الملف ${Math.round(p * 100)}%`; }); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fname(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); }
+  try { const blob = await makeBlob((p) => { b.textContent = `نجهّز الملف ${Math.round(p * 100)}%`; }); track("download", MODE); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fname(); document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000); }
   catch (er) { console.error(er); toast("صار خطأ وقت تجهيز الملف"); }
   b.innerHTML = old; b.disabled = false;
 };
-$("#pr").onclick = () => TPrint.open({ makeBlob, name: fname(), pagesLabel: pagesTxt(outPages().length), kiosk: KIOSK });
+$("#pr").onclick = () => TPrint.open({ makeBlob, name: fname(), pagesLabel: pagesTxt(outPages().length), kiosk: KIOSK, from: "s", onSend: () => track("send", MODE) });
 
 window.tabaetyScan = { PAGES, ID, makeBlob, outPages, go };
 TF.loadFont("plex");

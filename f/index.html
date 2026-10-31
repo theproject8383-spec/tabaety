@@ -4,7 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#FFFFFF">
-<meta name="robots" content="noindex">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.tabaety.com/f/">
+<meta property="og:title" content="نسّق ملفك — طابعتي">
+<meta property="og:description" content="بحث، تقرير، خطاب، سيرة ذاتية، شهادات وأوراق عمل. اختر القالب والصق نصك، ويطلع ملفك مرتب وجاهز للطباعة.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.tabaety.com/f/">
+<meta property="og:locale" content="ar_SA">
 <title>نسّق ملفك — طابعتي</title>
 <meta name="description" content="بحث، تقرير، واجب، ملخص، خطاب أو سيرة ذاتية. اختر القالب، الصق نصك، وملفك يطلع مرتب وجاهز للطباعة.">
 <link rel="icon" href="/assets/brand/favicon.svg" type="image/svg+xml">
@@ -40,7 +46,7 @@ header.top{display:flex;align-items:center;gap:12px;padding:10px clamp(14px,3vw,
 .brand .logo{width:34px;height:34px;border-radius:9px;background:#0A6B74;color:#fff;display:grid;place-items:center;flex:none}
 .brand b{font-size:16.5px;display:block;line-height:1.2}.brand small{font-size:12px;color:var(--ink-2)}
 .top .sp{flex:1}
-.beta{font-size:11.5px;font-weight:700;color:#6B4508;background:var(--warn-tint);border-radius:99px;padding:4px 10px;white-space:nowrap}
+.beta{font-size:11.5px;font-weight:700;color:var(--ok);background:var(--ok-tint);border-radius:99px;padding:4px 10px;white-space:nowrap}
 .saved{font-size:12px;color:var(--ink-3);white-space:nowrap;display:flex;align-items:center;gap:6px}
 .saved i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
 
@@ -245,7 +251,7 @@ details.help[open] summary{border-bottom:1px solid var(--line)}
   </a>
   <span class="sp"></span>
   <span class="saved" id="saved" hidden><i></i>محفوظ تلقائيًا</span>
-  <span class="beta">مجاني خلال الفترة التجريبية</span>
+  <span class="beta">مجاني</span>
 </header>
 
 <!-- ======== المعرض ======== -->
@@ -328,6 +334,9 @@ const SB = "https://dloicztspjligjjowhps.supabase.co";
 const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTA";
 const Q = new URLSearchParams(location.search);
 const KIOSK = /^[A-Za-z0-9_-]{1,20}$/.test(Q.get("k") || "") ? Q.get("k") : "";
+const SERVICE = "format";
+// عدّاد استخدام الخدمة (بدون أي بيانات شخصية)، عشان نعرف وش يستخدمه الناس
+const track = (event, tpl) => { try { fetch(`${SB}/rest/v1/rpc/svc_track`, { method: "POST", keepalive: true, headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_service: SERVICE, p_event: event, p_tpl: tpl || null, p_kiosk: KIOSK || null }) }).catch(() => {}); } catch { /* */ } };
 const pages = (n) => n === 1 ? "صفحة وحدة" : n === 2 ? "صفحتين" : `${n} ${n <= 10 ? "صفحات" : "صفحة"}`;
 const isMobile = () => matchMedia("(max-width:759px)").matches;
 
@@ -388,6 +397,7 @@ async function renderGallery() {
 /* ================= فتح قالب ================= */
 let TAB = "data";
 function open(tpl, opts = {}) {
+  if (!opts.sample) track("open", tpl);
   const old = STORE.drafts[tpl];
   D = old && old.v === 2 && !opts.sample ? old : fresh(tpl, !!opts.sample);
   // ننقل البيانات الشخصية من آخر ملف عشان ما يكتبها مرتين
@@ -643,6 +653,7 @@ async function download(btn) {
   const old = btn.innerHTML; btn.disabled = true;
   try {
     const blob = await makeFile((p) => { btn.textContent = `نجهّز الملف ${Math.round(p * 100)}%`; });
+    track("download", D.tpl);
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fname();
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000);
   } catch (e) { console.error(e); alert("صار خطأ وقت تجهيز الملف، جرّب مرة ثانية."); }
@@ -686,6 +697,7 @@ async function handoff() {
     const blob = await makeFile((p) => { $("#hp i").style.width = Math.round(p * 90) + "%"; b.textContent = `نجهّز الملف ${Math.round(p * 100)}%`; });
     await idbPut({ blob, name: fname(), pages: PV.n, at: Date.now() });
     $("#hp i").style.width = "100%";
+    track("send", D.tpl);
     location.href = `/p/?k=${encodeURIComponent(pick)}&from=f`;
   } catch (e) { console.error(e); b.disabled = false; b.textContent = "أرسل الملف للطابعة"; alert("ما قدرنا نجهّز الملف للإرسال. جرّب «تحميل PDF» وارفعه من صفحة الطابعة."); }
 }

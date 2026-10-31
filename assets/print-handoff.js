@@ -30,7 +30,7 @@ function idbPut(v) {
     r.onsuccess = () => { const tx = r.result.transaction("handoff", "readwrite"); tx.objectStore("handoff").put(v, "file"); tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); };
   });
 }
-async function open({ makeBlob, name, pagesLabel, kiosk }) {
+async function open({ makeBlob, name, pagesLabel, kiosk, from = "f", onSend }) {
   if (!document.getElementById("tp-css")) { const st = document.createElement("style"); st.id = "tp-css"; st.textContent = css; document.head.appendChild(st); }
   const m = document.createElement("div"); m.className = "tp-modal"; m.setAttribute("role", "dialog"); m.setAttribute("aria-modal", "true");
   m.innerHTML = `<div class="tp-sheet"><div class="tp-h"><b>اطبعه في طابعتي</b><button class="tp-x" type="button" aria-label="إغلاق">✕</button></div><div class="tp-b"><p style="margin:30px 0;text-align:center;color:#5E6A73">نجيب الطابعات…</p></div><div class="tp-f"><button class="tp-go" type="button" disabled>أرسل الملف للطابعة</button></div></div>`;
@@ -62,7 +62,8 @@ async function open({ makeBlob, name, pagesLabel, kiosk }) {
       const blob = await makeBlob((p) => { bar.style.width = Math.round(p * 90) + "%"; go.textContent = `نجهّز الملف ${Math.round(p * 100)}%`; });
       await idbPut({ blob, name, at: Date.now() });
       bar.style.width = "100%";
-      location.href = `/p/?k=${encodeURIComponent(pick)}&from=f`;
+      onSend?.();
+      location.href = `/p/?k=${encodeURIComponent(pick)}&from=${encodeURIComponent(from)}`;
     } catch (e) { console.error(e); go.disabled = false; go.textContent = "أرسل الملف للطابعة"; alert("ما قدرنا نجهّز الملف للإرسال. جرّب «تحميل PDF» وارفعه من صفحة الطابعة."); }
   };
 }
