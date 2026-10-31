@@ -716,6 +716,7 @@ async function onFile(file) {
     if (!S.order) {
       const r = await api("POST", "/orders", { kiosk_id: S.kioskId });
       S.order = r.order_id; S.token = r.token; saveOrder();
+      if (S.origin) markOrigin(S.order, S.origin);
     }
     bar.classList.remove("indet"); $("#upMsg").textContent = "نرفع الملف…";
     S.view = await uploadFile(blob, sendName, (p) => {
@@ -778,7 +779,13 @@ async function doRelease() {
   }
 }
 
-// ---------- استلام الملف من صفحة التنسيق ----------
+// ---------- الطلب جاي من خدمة التنسيق أو السكانر: نعلّمه عشان نعرف وش يجيب طلبات ----------
+function markOrigin(id, origin) {
+  const SB = "https://dloicztspjligjjowhps.supabase.co", ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTA";
+  try { fetch(`${SB}/rest/v1/rpc/web_set_origin`, { method: "POST", keepalive: true, headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_order: id, p_origin: origin }) }).catch(() => {}); } catch { /* */ }
+}
+
+// ---------- استلام الملف من صفحة التنسيق أو السكانر ----------
 function takeHandoff() {
   return new Promise((res) => {
     try {
@@ -808,7 +815,9 @@ function takeHandoff() {
     return show("fatal");
   }
   // ملف جاي من صفحة التنسيق (/f/)
-  const hand = q.get("from") === "f" ? await takeHandoff() : null;
+  const from = q.get("from");
+  const hand = from === "f" || from === "s" ? await takeHandoff() : null;
+  if (hand) S.origin = from === "s" ? "scan" : "format";
   if (hand) history.replaceState(null, "", `?k=${encodeURIComponent(S.kioskId)}`);
   const saved = loadSavedOrder();
   if (hand) {
