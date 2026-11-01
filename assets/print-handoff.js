@@ -3,7 +3,7 @@
 (function () {
 "use strict";
 const SB = "https://dloicztspjligjjowhps.supabase.co";
-const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTA";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTAXpb4whQ6h_NZwpe0bD43Ucye9M";
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const css = `
 .tp-modal{position:fixed;inset:0;z-index:80;background:rgba(10,20,24,.45);display:grid;place-items:center;padding:16px;animation:tpf .2s}

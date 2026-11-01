@@ -216,7 +216,7 @@ const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [..
 const Q = new URLSearchParams(location.search);
 const KIOSK = /^[A-Za-z0-9_-]{1,20}$/.test(Q.get("k") || "") ? Q.get("k") : "";
 const SB = "https://dloicztspjligjjowhps.supabase.co";
-const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTA";
+const ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTAXpb4whQ6h_NZwpe0bD43Ucye9M";
 const SERVICE = "scan";
 // عدّاد استخدام الخدمة (بدون أي بيانات شخصية)، عشان نعرف وش يستخدمه الناس
 const track = (event, tpl) => { try { fetch(`${SB}/rest/v1/rpc/svc_track`, { method: "POST", keepalive: true, headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_service: SERVICE, p_event: event, p_tpl: tpl || null, p_kiosk: KIOSK || null }) }).catch(() => {}); } catch { /* */ } };
