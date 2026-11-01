@@ -781,7 +781,7 @@ async function doRelease() {
 
 // ---------- الطلب جاي من خدمة التنسيق أو السكانر: نعلّمه عشان نعرف وش يجيب طلبات ----------
 function markOrigin(id, origin) {
-  const SB = "https://dloicztspjligjjowhps.supabase.co", ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTA";
+  const SB = "https://dloicztspjligjjowhps.supabase.co", ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsb2ljenRzcGpsaWdqam93aHBzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU3NDkxNTIsImV4cCI6MjEwMTMyNTE1Mn0.uxb31-8o4dBF09sTAXpb4whQ6h_NZwpe0bD43Ucye9M";
   try { fetch(`${SB}/rest/v1/rpc/web_set_origin`, { method: "POST", keepalive: true, headers: { apikey: ANON, Authorization: `Bearer ${ANON}`, "Content-Type": "application/json" }, body: JSON.stringify({ p_order: id, p_origin: origin }) }).catch(() => {}); } catch { /* */ }
 }
 
